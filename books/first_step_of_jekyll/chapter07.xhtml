@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>７章　Liquid制御構文</h2>
+
+<p>変数<strong>site</strong>からは<code>posts</code>を介してPostに関する情報にもアクセスできます。Liquidテンプレートでは<strong>if</strong>, <strong>case</strong>, <strong>for</strong>などの制御構文が使えるので、これを使って各Postの内容を読みだしてみます。</p>
+
+<p>その前に記事をもう一つ増やしておきます。</p>
+
+<div class="highlight"><pre><code class="bash">% touch _posts/2012-05-03-Ruby-is-Great.md
+</code></pre></div>
+
+
+<p>エディタで記事を書きます。</p>
+
+<pre><code>---
+layout: post
+title: Rubyは最高
+tags: [ruby, language]
+---
+##Rubyとは
+Rubyは、手軽なオブジェクト指向プログラミングを実現するための種々の機能を持つオブジェクト指向スクリプト言語です。
+</code></pre>
+
+<p>そしてindex.mdを次のようにします。</p>
+
+<pre><code>---
+layout: layout
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+
+&lt;!-- 以下を追加 --&gt;
+&lt;ul&gt;
+{% for post in site.posts %}
+  &lt;li&gt;
+    &lt;a href="{{ post.url }}"&gt;{{ post.date | date_to_long_string }} : {{ post.title }}&lt;/a&gt;
+  &lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+&lt;!--  --&gt;
+
+server_port: {{ site.server_port }}
+
+markdown: {{ site.markdown }}
+
+permalink: {{ site.permalink }}
+
+{{ site }}
+
+**Copyright © {{ site.author.name }} 2012 All rights reserved. Please contact to {{ site.author.email }}.**
+</code></pre>
+
+<p><code>for post in site.posts</code>でpostオブジェクトをイテレートして、<strong>url</strong>, <strong>date</strong>, <strong>title</strong>の各要素を読み出し、リンクを生成します。</p>
+
+<p>ブラウザで見てみます。</p>
+
+<p><img src="images/jk13.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>クリックしてみます。</p>
+
+<p><img src="images/jk14.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>いいですね。</p>
+  </body>
+</html>

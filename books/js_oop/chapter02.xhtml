@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>Ruby脳が理解するJavaScriptのオブジェクト指向</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１章　オブジェクトの生成</h2>
+
+<p>JavaScriptでのオブジェクトの生成は、Rubyのハッシュのような構文で行います。オブジェクトは一または複数のプロパティを持てます。プロパティとは、そのオブジェクトに紐付いたデータ（オブジェクトを含む）で、ラベルで参照できるものです。今、<code>name</code>と<code>age</code>というラベルで参照できるデータを持った２つのオブジェクトcharlie, earlを生成します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">12</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">earl</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Earl&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">14</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Charlie&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 12</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Earl&#39;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 14</span>
+</code></pre></div>
+
+
+<p>各オブジェクトのプロパティに対するアクセスは、上記のようにRubyのメソッド呼び出しのような方法で、<code>.(ピリオド)</code>を使って行うことができます。</p>
+
+<p>また、オブジェクトに対するプロパティの追加や変更は、変数に値を代入するが如くに極めて簡単に行えます（ちなみに、変数はグローバルオブジェクトのプロパティです）。各オブジェクトに、生まれた日からの日数を計算する<code>ageInDays</code>プロパティを追加してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">earl</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+</code></pre></div>
+
+
+<p>Rubyと異なりJavaScriptにおいて関数（定義）はオブジェクトであり、このようにプロパティにセットできます（もちろんRubyにはProcやMethodオブジェクトがあるので同じことができます）。プロパティ名を介して参照される関数は、<code>()</code>(括弧)を付することで実行されます。従ってRubyと異なり<code>()</code>は必須です。以下ではプロパティにセットされた関数を<code>メソッド</code>と呼ぶことがあります。</p>
+
+<p>未定義のプロパティの参照に対しては<code>undefined</code>が返されます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">job</span><span class="p">;</span> <span class="c1">// undefined</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

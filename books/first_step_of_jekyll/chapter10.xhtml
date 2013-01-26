@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１０章　プラグイン</h2>
+
+<p>Jekyllはプラグインによりその変換機能を拡張できます。プラグインには<strong>Generator</strong>, <strong>Converter</strong>, <strong>Tag</strong>という３種類があります。詳細については次を参照してください。</p>
+
+<p><a href="http://melborne.github.com/2012/05/09/translation-of-jekyll-plugins/" title="Jekyll Wiki Pluginsの説明ページを勝手に翻訳しました">Jekyll Wiki Pluginsの説明ページを勝手に翻訳しました</a></p>
+
+<p>シンタックスハイライトに係るプラグインについて前章で説明しましたが、ここではTeXによる数式を貼り付ける<a href="https://gist.github.com/834610" title="MathJax">MathJax.rb</a>というTagプラグインを使ってみます。</p>
+
+<p><code>MathJax.rb</code>はブラウザ上でTeXを表示できるようにする<a href="http://www.mathjax.org/" title="www.mathjax.org">MathJax.js</a>に対応したプラグインです。</p>
+
+<p>ルートに<code>_plugins/</code>ディレクトリを生成し、リンク先から<code>MathJax.rb</code>をダウンロードして配置します。</p>
+
+<div class="highlight"><pre><code class="bash">% mkdir _plugins
+% mv ~/Downloads/MathJax.rb _plugins/mathjax.rb
+</code></pre></div>
+
+
+<p>_layouts/layout.htmlで<code>MAthJax.js</code>を読み込めるようにします。</p>
+
+<div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/assets/css/style.css&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/assets/css/syntax.css&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>  <span class="c">&lt;!-- ここを追加 --&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  
+  <span class="nt">&lt;p&gt;</span>- rendered with layout template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+
+<p>準備ができたので、<code>_posts/2012-05-01-Jekyll-Tutorial.md</code>に数式を追加します。</p>
+
+<pre><code>{% math %}
+Formular\ from Wikipedia\\
+
+\int_0^3 9x^2 + 2x + 4\, dx = 3x^3 + x^2 + 4x + C \Big\rbrack_0^3 = 102\\
+
+e^{x+iy} = e^x(\cos y + i\sin y)\\
+
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+{% endmath %}
+</code></pre>
+
+<p>サーバーを再起動してブラウザで確認します。</p>
+
+<p><img src="images/jk16.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>きれいな数式が表示されました。</p>
+  </body>
+</html>

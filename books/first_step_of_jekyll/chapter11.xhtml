@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１１章　まとめ</h2>
+
+<p>チュートリアルは以上です。</p>
+
+<p>最後にここに記述したJekyllの機能をまとめておきます。</p>
+
+<ol class='wrapup'>
+<li><p><code>jekyll</code>コマンドは<code>_site</code>ディレクトリ以下に変換ファイルを生成する。</p></li>
+<li><p>YAML Front-Matter付きのファイルはその設定に従い変換され、YAML Front-Matter無しのファイルはそのままコピーされる。</p></li>
+<li><p>ページごとの設定はそのYAML Front-Matterで行い、サイト全体の設定は_config.ymlで行う。</p></li>
+<li><p>記事ファイルは<code>:year-:month-:day-:title</code>のフォーマットで、_postsディレクトリ以下に配置する。</p></li>
+<li><p>レイアウトファイルは_layoutディレクトリ以下に配置する。</p></li>
+<li><p>サイト情報にはグローバル変数<code>site</code>でアクセスできる。</p></li>
+<li><p>ページ情報にはグローバル変数<code>page</code>でアクセスできる。</p></li>
+<li><p>Liquidテンプレート<code>{{ }}</code>または<code>{% %}</code>を使ってサイトまたはページオブジェクトの埋め込みができる。</p></li>
+<li><p><code>_plugins</code>ディレクトリ以下にPlugin Scriptを配置することにより、機能拡張が可能である。</p></li>
+</ol>
+
+  </body>
+</html>

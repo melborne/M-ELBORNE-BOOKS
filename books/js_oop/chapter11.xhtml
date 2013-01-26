@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１０章　new 演算子問題に対する解決策を考える</h2>
+
+<p>JavaScriptにおいて同種のオブジェクトを複数生成するには、クラス風記法のコンストラクタ関数とnew演算子の組合せを利用するのが便利だと学びました。その一方で、この特殊コンストラクタはnewを忘れると深刻なバグを生むという問題が指摘されています。ここではこの問題の解決策を考えてみます。「newを使うな！」というのは簡単ですが、なんらかの代替案が必要です。</p>
+
+<p>最も単純で効果的な策は、特殊コンストラクタとnew演算子をラップする関数を用意して、ユーザはこの関数を使ってオブジェクトを生成するようにすることでしょう。この関数を使う限り、ユーザがnewを付け忘れてコンストラクタ内のプロパティがグローバルな世界を汚染するというリスクはなくなります。</p>
+
+<p>前回作ったiPhone5コンストラクタをベースとして、これを改良しつつ目的の関数を構築します。まずはiPhone5コンストラクタを再掲します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">iPhone5</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">iPhone5</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">call</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Calling to &quot;</span> <span class="o">+</span> <span class="nx">number</span> <span class="o">+</span> <span class="s2">&quot; ...&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">iTunes</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">artist</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Playing: =&gt; `&quot;</span> <span class="o">+</span> <span class="nx">title</span> <span class="o">+</span> <span class="s2">&quot;` of &quot;</span> <span class="o">+</span> <span class="nx">artist</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">camera</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Photo!&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">panorama</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Panorama Photo!!&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">jonathan</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPhone5</span><span class="p">(</span><span class="mi">12345</span><span class="p">,</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">scott</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPhone5</span><span class="p">(</span><span class="mi">12346</span><span class="p">,</span> <span class="s1">&#39;Scott&#39;</span><span class="p">);</span>
+
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12345</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jonathan&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-692-7753&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-692-7753 ...&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Imagine&#39;</span><span class="p">,</span> <span class="s1">&#39;John Lennon&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Imagine` of John Lennon&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Jonathan Take a Panorama Photo!!&#39;</span>
+
+<span class="nx">scott</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12346</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
+</code></pre></div>
+
+
+<p><code>new</code>演算子を使ってiPhone5コンストラクタから２つのオブジェクトを生成しています。もうコードの説明は不要ですよね。</p>
+  </body>
+</html>

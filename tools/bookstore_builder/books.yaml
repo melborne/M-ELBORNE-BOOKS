@@ -1,0 +1,120 @@
+20121201start_ruby:
+  title: これからRubyを始める人たちへ
+  image: 2012/start_ruby.jpg
+  gumroad: RjRO
+  summary: 主として他言語におけるプログラミング経験者向けに書かれたプログラミング言語「Ruby」の入門書
+  author: kyoendo 
+  format: EPUB / DRMフリー
+  pages: 文庫本50頁相当
+  price: 100円
+  release: 2012年12月1日
+  toc:
+    - １章　Rubyの特徴</li>
+    - ２章　最初のRubyのコード</li>
+    - ３章　２つ目のRubyのコード</li>
+    - ４章　Rubyのクラス階層</li>
+    - ５章　My First Web Application</li>
+    - ６章　メタプログラミング</li>
+    - ７章　本の紹介</li>
+    - 最後に</li>
+    - 謝辞</li>
+  blog:
+    "/2012/04/09/to-newbie/": これからRubyを始める人たちへ
+20121207jekyll:
+  title: 30分のチュートリアルでJekyllを理解する
+  image: 2012/jekyll_cover.jpg
+  gumroad: xfJY
+  summary: ブログサイトの構築を通してJekyllの基礎を学ぶチュートリアル
+  author: kyoendo
+  format: EPUB / DRMフリー
+  pages: 文庫本50頁相当
+  price: 100円
+  release: 2012年12月1日
+  toc:
+    - １章　Jekyllとは
+    - ２章　Jekyllを知る
+    - ３章　記事の作成
+    - ４章　デフォルト設定の変更
+    - ５章　CSSによるスタイル設定
+    - ６章　グローバル変数「site」
+    - ７章　Liquid制御構文
+    - ８章　グローバル変数「page」
+    - ９章　Liquidによるシンタックスハイライト
+    - １０章　プラグイン
+    - １１章　まとめ
+    - 本書について
+  blog:
+    "/2012/05/13/first-step-of-jekyll/": 30分のチュートリアルでJekyllを理解する
+20121213ruby_parallelize:
+  title: irbから学ぶRubyの並列処理 ~ forkからWebSocketまで
+  image: 2012/ruby_parallel_cover.png
+  gumroad: PjVk
+  summary: fork, thread, actor, EventMachineなどのRubyの並列処理の基礎を学ぶチュートリアル
+  author: kyoendo
+  format: EPUB / DRMフリー
+  pages: 文庫本30頁相当
+  price: 100円
+  release: 2012年12月13日
+  toc:
+    - はじめに
+    - １章　REPL
+    - ２章　マルチユーザーREPL
+    - ３章　並列化REPL　その１
+    - ４章　並列化REPL　その２
+    - 謝辞
+  blog:
+    "/2011/09/29/irb-Ruby-fork-WebSocket/": irbから学ぶRubyの並列処理 ~ forkからWebSocketまで
+20121215js_oop:
+  title: Ruby脳が理解するJavaScriptのオブジェクト指向
+  image: 2012/js_oop_cover.png
+  gumroad: wNxf
+  summary: Rubyにおけるオブジェクト指向と対比しながらJavaScriptのオブジェクト指向を学ぶチュートリアル
+  author: kyoendo
+  format: EPUB / DRMフリー
+  pages: 文庫本115頁相当
+  price: 100円
+  release: 2012年12月15日
+  toc:
+    - はじめに
+    - １章　オブジェクトの生成
+    - ２章　プロパティ探索
+    - ３章　プロトタイプチェーンを使う
+    - ４章　オブジェクトコンストラクタ
+    - ５章　new 演算子
+    - ６章　new 演算子を使う
+    - ７章　継承
+    - ８章　更に継承
+    - ９章　Rubyにおける継承
+    - １０章　new 演算子問題に対する解決策を考える
+    - １１章　ラッパー関数
+    - １２章　ラッパー関数の一般化
+    - １３章　プロパティを取れるようにする
+    - １４章　Object.createメソッド
+    - １５章　オブジェクト関係図の比較
+    - １６章　JavaScript脳で理解するRubyのオブジェクト指向
+  blog:
+    "/2012/09/09/understand-js-oop-with-ruby-brain/": Ruby脳が理解するJavaScriptのオブジェクト指向
+    "/2012/09/15/understand-js-oop-with-ruby-brain-2/": Ruby脳が理解するJavaScriptのオブジェクト指向（その２）
+    "/2012/09/17/understand-js-oop-with-ruby-brain-3/": Ruby脳が理解するJavaScriptのオブジェクト指向（その３）
+    "/2012/09/11/understand-ruby-oop-with-js-brain/": JavaScript脳で理解するRubyのオブジェクト指向
+20121224lerning_rack:
+  title: エラーメッセージから学ぶRack
+  image: 2012/rack_cover.png
+  gumroad: ZqRt
+  summary: rackupコマンドの実行に対するエラー出力を追っていきながら、Rackを学ぶチュートリアル
+  author: kyoendo
+  format: EPUB / DRMフリー
+  pages: 文庫本145頁相当
+  price: 100円
+  release: 2012年12月24日
+  toc:
+    - １章　Rack、最初の一歩
+    - ２章　Rack、Middlewareの魔法
+    - ３章　僅か100行のLackで学ぶRackの中身
+    - ４章　あなたのRubyにもマトリョーシカを！
+    - 謝辞
+  blog:
+    "/2012/08/02/build-your-own-web-framework-with-rack/": エラーメッセージから学ぶRack - 最初の一歩
+    "/2012/08/06/use-rack-middleware/": エラーメッセージから学ぶRack - Middlewareの魔法
+    "/2012/08/08/learn-rack-with-lack/": Rackをminifyした僅か100行のLackで学ぶRackの中身
+    "/2012/08/10/build-a-matryoshka-with-ruby/": マトリョーシカはRackだけのものじゃない、あなたのRubyにもマトリョーシカを！

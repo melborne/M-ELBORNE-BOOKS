@@ -1,0 +1,14 @@
+電子書籍「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」EPUB版
+
+本書は、ブログ「hp12c」(http://melborne.github.com/)における「irbから学ぶRubyの並列処理 ~ forkからWebSocketまで」の記事の電子書籍版であり、チュートリアルに沿ってRubyの並列処理の基礎を理解する内容になっています。
+
+（目次）
+はじめに
+１章　REPL
+２章　マルチユーザーREPL
+３章　並列化REPL　その１
+４章　並列化REPL　その２
+謝辞
+
+文庫本換算で30頁相当、DRMフリーです。
+

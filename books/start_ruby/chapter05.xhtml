@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>これからRubyを始める人たちへ</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>５章　My First Web Application</h2>
+
+<p>ではgemを使って何か作ってみましょう。2番人気の<a href="http://www.sinatrarb.com/" title="Sinatra">Sinatra</a>と<a href="http://haml-lang.com/" title="haml">haml</a>というHTMLマークアップ言語でWebアプリを作ります。まずはこれらgemsをinstallします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% gem </span><span class="n">install</span> <span class="n">sinatra</span>
+<span class="sx">% gem </span><span class="n">install</span> <span class="n">haml</span>
+</code></pre></div>
+
+
+<p>そしてこれらのgemと最初に書いた<code>password_gen.rb</code>をrequireで読み込んで、それらを使ったコードを書きます。その前にpassword_gen.rbを少し直します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="k">def</span> <span class="nf">password_gen</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+  <span class="o">[*</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">,</span> <span class="o">*</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="o">*</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;Z&#39;</span><span class="o">].</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="o">.</span><span class="n">join</span>
+<span class="k">end</span>
+
+<span class="k">if</span> <span class="bp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
+  <span class="nb">puts</span> <span class="mi">10</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">password_gen</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p><code>puts 10.times...</code>を<code>if __FILE__ == $0 end</code>で囲います。このファイルを直接実行したときにだけ、if節が実行するようになります。</p>
+
+<p>そうです、パスワード・ジェネレーターサービスを作ります。さあコードを書きましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;sinatra&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;haml&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;./password_gen&quot;</span>
+
+<span class="n">get</span> <span class="s1">&#39;/&#39;</span> <span class="k">do</span>
+  <span class="n">haml</span> <span class="ss">:index</span>
+<span class="k">end</span>
+
+<span class="n">get</span> <span class="s1">&#39;/:size&#39;</span> <span class="k">do</span> <span class="o">|</span><span class="n">size</span><span class="o">|</span>
+  <span class="vi">@pwd</span> <span class="o">=</span> <span class="n">password_gen</span><span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
+  <span class="n">haml</span> <span class="ss">:pwd</span>
+<span class="k">end</span>
+
+<span class="cp">__END__</span>
+<span class="cp">@@layout</span>
+<span class="cp">%html</span>
+<span class="cp">  %body</span>
+<span class="cp">    = yield</span>
+
+<span class="cp">@@index</span>
+<span class="cp">%h1 Get your new password!</span>
+<span class="cp">- 8.step(62, 4).each do |n|</span>
+<span class="cp">  %h3</span>
+<span class="cp">    %a{:href =&gt; &quot;/#{n}&quot;}= &quot;#{n} Character-Long&quot;</span>
+
+<span class="cp">@@pwd</span>
+<span class="cp">%h2 Your new password is:</span>
+<span class="cp">%h1= @pwd</span>
+</code></pre></div>
+
+
+<p>この1ファイルで完成です。ええ、ほんとうに。</p>
+
+<p>簡単に解説します。まず<code>get '/' do end</code>は括弧が省略されたRubyのメソッド呼び出しです。rootパスに対するHTTPメソッドGETリクエストを受けて、haml言語で書かれたindexをレンダリングします。<code>get '/:size' do end</code>はrootパスに渡されたパラメータを受けて、これをpassword_genメソッドに渡して結果を@pwdインスタンス変数に取得し、pwdのレンダリングのときにこれが出力されるようにします。何となく読めるでしょうか。このように一見その目的に特化した構文に見えるけれども、実はRubyの柔軟性を使ったその文法に従った構文を内部DSLと言います。Rubyistは内部DSLが得意です。</p>
+
+<p>さあ、このコードを実行します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% ruby </span><span class="n">myfirst_webapp</span><span class="o">.</span><span class="n">rb</span>
+</code></pre></div>
+
+
+<p>すると<code>WEBrick</code>というWeb Serverが起動します。<code>http://localhost:4567/</code>にアクセスします。</p>
+
+<p><img src="images/webapp1.png" alt="Alt Browser Screen" /></p>
+
+<br clear='all' />
+
+
+<p>リンクをクリックして..</p>
+
+<p><img src="images/webapp2.png" alt="Alt Browser Screen" /></p>
+
+<p><img src="images/webapp3.png" alt="Alt Browser Screen" /></p>
+
+<br clear='all' />
+
+
+<p>希望の長さのパスワードが生成されてユーザに提供されます。</p>
+  </body>
+</html>

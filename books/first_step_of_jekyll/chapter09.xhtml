@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>９章　Liquidによるシンタックスハイライト</h2>
+
+<p>さて、次にRubyの記事にプログラムコードを書いてみます。JekyllではLiquidタグを利用することによって、<a href="http://pygments.org/" title="Pygments — Python syntax highlighter">Pygments</a>によるシンタックスハイライト（Syntax Highlighting）が可能です。前準備が必要です。以下を参考にPygmentsをインストールします。</p>
+
+<p><a href="https://github.com/mojombo/jekyll/wiki/Install" title="Install · mojombo/jekyll Wiki">Install · mojombo/jekyll Wiki</a></p>
+
+<p>次のコマンドを実行して<code>syntax.css</code>を生成します。</p>
+
+<div class="highlight"><pre><code class="bash">% pygmentize -S default -f html &gt; assets/css/syntax.css
+</code></pre></div>
+
+
+<p>_layouts/layout.htmlでこれを読み込めるようにします。</p>
+
+<div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>{{ page.title }}<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/assets/css/style.css&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/assets/css/syntax.css&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span> //ここを追加
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  {{ content }}
+  <span class="nt">&lt;p&gt;</span>- rendered with layout template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+
+<p>そして、_config.ymlにpygmentsを使う設定を追加します。</p>
+
+<pre><code>permalink: /:categories/:year-:month-:day/:title
+author:
+  name: Charlie
+  email: charlie@gmail.com
+
+markdown: rdiscount
+pygments: true
+</code></pre>
+
+<p>準備ができました。<code>_posts/2012-05-03-Ruby-is-Great.md</code>にRubyのコードを書きます。コードは{% highlight ruby %}と{% endhighlight %}というタグで囲みます。</p>
+
+<pre><code>---
+layout: post
+title: Rubyは最高
+tags: [ruby, language]
+---
+##Rubyとは
+Rubyは、手軽なオブジェクト指向プログラミングを実現するための種々の機能を持つオブジェクト指向スクリプト言語です。
+
+##Try Ruby
+{% highlight ruby linenos %}
+class Person
+  def initialize(name)
+    @name = name
+  end
+
+  def hello
+    "Hello, friend!\nMy name is #{@name}!"
+  end
+end
+
+charlie = Person.new('Charlie')
+puts charlie.hello
+
+# &gt;&gt; Hello, friend!
+# &gt;&gt; My name is Charlie!
+{% endhighlight %}
+
+
+{{ page }}
+</code></pre>
+
+<p>サーバーを再起動してブラウザで確認します。
+<img src="images/jk15.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>あとは好きなようにsyntax.cssを弄るだけです。gistに似せた僕のsytax.cssは<a href="https://github.com/melborne/melborne.github.com/blob/source/assets/themes/twitter-ext/css/syntax.css" title="melborne.github.com/assets/themes/twitter-ext/css/syntax.css at source · melborne/melborne.github.com · GitHub">ここ</a>にありますので、利用してください。</p>
+  </body>
+</html>

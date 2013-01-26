@@ -1,0 +1,5 @@
+publisher:
+title_small:Hiragino Maru Gothic Pro W4 55.0pt
+title_big:Geogia 120.0pt
+creator:
+

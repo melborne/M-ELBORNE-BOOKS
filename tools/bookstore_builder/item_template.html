@@ -1,0 +1,41 @@
+---
+layout: books
+title: {{ item.title }}
+---
+{{ "{% include JB/setup "}}%}
+
+<div class="bookInfo">
+  <div class="bookMain">
+    <img class="bookImage" src='{{ "{{ site.url "}}}}/assets/images/{{ item.image }}' alt='{{ item.image }}' />
+    <div class="buyButton">
+      <a href="http://gum.co/{{ item.gumroad }}" class="gumroad-button" id="{{ item.gumroad }}">この本を買う</a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+    </div>
+  </div>
+  
+  <div class="bookDesc">
+    <ul>
+      <li><span>書名：</span>{{ item.title }}</li>
+      <li><span>内容：</span>{{ item.summary }}</li>
+      <li><span>著者：</span>{{ item.author }}</li>
+      <li><span>フォーマット：</span>{{ item.format }}</li>
+      <li><span>頁数：</span>{{ item.pages }}</li>
+      <li><span>価格：</span>{{ item.price }}</li>
+      <li><span>初版：</span>{{ item.release }}</li>
+      <li><span>目次：</span>
+        <ul>
+          {% for chapter in item.toc %}
+          <li>{{ chapter }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+      <li><span>ブログ：</span>
+        <ul>
+          {% for blog in item.blog %}
+          <li><a href="{{ "{{ site.url " }}}}{{ blog[0] }}">{{ blog[1] }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+

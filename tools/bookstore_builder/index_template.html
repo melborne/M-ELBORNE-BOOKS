@@ -1,0 +1,20 @@
+---
+layout: books
+title: "M'ELBORNE BOOKS"
+---
+{{ "{% include JB/setup "}}%}
+
+<div class='books'>
+  {% for book in items -%}
+  <div class="book" id="{{ book.id }}">
+    <div class="cover">
+      <p class='price'>{{ book.price }}</p>
+      <a href="{{ book.id }}.html"><img src='{{ "{{ site.url "}}}}/assets/images/{{ book.image }}' alt='{{ book.image }}' /></a>
+    </div>
+    <div class="buyButton">
+      <a href="http://gum.co/{{ book.gumroad }}" class="gumroad-button" id="{{ book.gumroad }}">Gumroadで購入</a><script type="text/javascript" src="https://gumroad.com/js/gumroad-button.js"></script><script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+    </div>
+  </div>
+  {% endfor -%}
+</div>
+

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>４章　プログラムの貼り合せ - 遅延評価 -</h2>
+
+<p>次に、関数プログラミングの２つ目の強力な糊、つまりプログラムを貼り合せる糊について説明します。</p>
+
+<p>いま２つのプログラムｆとｇがあって、入力inputをこれらに適用する場合を考ます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">g</span> <span class="p">(</span><span class="n">f</span> <span class="n">input</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>プログラムｆは入力inputを受け取ってその出力を計算し、その出力はプログラムｇの入力として使われます。</p>
+
+<p>一般的なプログラム言語ではｆからの出力を一時的にメモリーに蓄えることでその実装を可能としますが、ケースによってはメモリー占有量が膨大になり得ます。</p>
+
+<p>関数プログラミングではプログラムｆとｇは厳密な同期の上で走ります。つまりプログラムｆはプログラムｇが必要とする分だけ実行されて残りは破棄されます。このことからプログラムｆは無限に出力を生成し続けるものであってもよいということになります。これによってプログラムの停止条件は、ループ本体と切り離すことができ、強力なモジュール化が可能になります。</p>
+
+<p>このようなプログラムの評価方式は「遅延評価」と呼ばれています。</p>
+
+<h2>ニュートンーラプソン法による平方根</h2>
+
+<p>遅延評価の力を使って、ニュートンーラプソン法による平方根のアルゴリズムを求めてみましょう。この方法でnの平方根を求めるとき任意の近似値xを選び、xとn/xの平均を取っていくことでより良い近似値xを得ます。これを繰り返し十分に良い近似値が得られたら処理を終えるようにします。良い近似値かの判断は隣接する近似値の差が許容誤差eps以下であるかにより判断します。</p>
+
+<p>Rubyにおける一般的な実装は以下のようになるでしょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">EPS</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>    <span class="c1"># 許容誤差</span>
+ <span class="no">A0</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="c1"># 初期近似値</span>
+ <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="no">EPS</span><span class="p">)</span>
+   <span class="kp">loop</span> <span class="k">do</span>
+     <span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+     <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span>           <span class="c1"># 次の近似値</span>
+     <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;</span> <span class="n">eps</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+
+ <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
+ <span class="n">sqrt</span> <span class="mi">5</span> <span class="c1"># =&gt; 2.236067977499978</span>
+ <span class="n">sqrt</span> <span class="mi">8</span> <span class="c1"># =&gt; 2.8284271250498643</span>
+</code></pre></div>
+
+
+<p>この実装ではループの停止条件は、ループに組み込まれてしまって分離が容易ではありません。遅延評価を使うことによって実装のモジュール化を行い、その部品が他の場面でも使えることを示します。</p>
+
+<p>基本的にRubyの関数（メソッド）は正格評価であり遅延評価されません。しかし関数をProcやEnumeratorオブジェクトとすることによって、その評価のタイミングを遅らせる、つまり遅延評価させることができます。</p>
+
+<p>まず次の近似値を計算する<strong>next_val</strong>を定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">next_val</span>
+   <span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">{</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">n</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>next_valは、求める平方根の数値nと近似値xを取って次の近似値を返しますが、これをcurry化されたProcオブジェクトを返すように実装します。これによって、２つの引数を渡すタイミングをコントロールできるようになります。つまり数値nだけを先に渡すことによってnext_valは、１つの引数xを受ける関数に変わります。</p>
+
+<p>例を示します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">next_for_five</span> <span class="o">=</span> <span class="n">next_val</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span>
+
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span> <span class="c1"># =&gt; 3.0</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="n">nx</span><span class="o">]</span> <span class="c1"># =&gt; 2.3333333333333335</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="n">nx</span><span class="o">]</span> <span class="c1"># =&gt; 2.238095238095238</span>
+ <span class="n">nx</span> <span class="o">=</span> <span class="n">next_for_five</span><span class="o">[</span><span class="n">nx</span><span class="o">]</span> <span class="c1"># =&gt; 2.2360688956433634</span>
+</code></pre></div>
+
+
+<p>次に、初期値に任意の関数を繰り返し適用して、その結果のリストを返す汎用関数<strong>repeat</strong>を定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+   <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="p">}</span> <span class="p">}</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>repeat関数は１つの引数を取って１つの結果を返す関数ｆと、ｆの初期値となるxを取りEnumeratorオブジェクトを返します。Enumeratorのブロックの中ではloopによってxを関数ｆに適用した結果が、繰り返しｙつまりEnumerator::Yielderオブジェクトに渡されますが、これはEnumeratorオブジェクトが呼び出されるまで実行されず、そのため無限ループにはなりません。</p>
+
+<p>このrepeat関数に先のnext_val関数を渡すことによって、平方根nの近似値のリストが得られるようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">approxs</span> <span class="o">=</span> <span class="n">repeat</span> <span class="n">next_val</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="c1"># =&gt; #&lt;Enumerator: #&lt;Enumerator::Generator:0x0a4aec&gt;:each&gt;</span>
+
+ <span class="n">ls</span> <span class="o">=</span> <span class="o">[]</span>
+ <span class="mi">5</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="n">ls</span> <span class="o">&lt;&lt;</span> <span class="n">approxs</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span>
+ <span class="n">ls</span> <span class="c1"># =&gt; [1.0, 3.0, 2.3333333333333335, 2.238095238095238, 2.2360688956433634]</span>
+</code></pre></div>
+
+
+<p>Enumeratorオブジェクトはその呼び出し（ここではnext）の度にループを１つ回して結果を１つ返します。repeatはその出力を利用する関数と同期して、それが必要とされる分だけ評価されます。つまりrepeatそれ自体は繰り返し回数の制限を持ちません。</p>
+
+<p>次に関数<strong>with_in</strong>を定義します。with_inは許容誤差と近似値のリスト（正確にはリストではなくEnumeratorオブジェクト）を引数に取り、許容誤差よりも小さい２つの連続する近似値を探します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">with_in</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">peek</span>
+   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span>
+   <span class="n">with_in</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>最初の行でEnumeratorオブジェクトの返す最初の２つの値をnextとpeekでa, bに取ります。<code>Enumerator#peek</code>はカーソルを進めないで先頭要素を取ります。２行目の終了条件が満たされない限り、処理は再帰的に繰り返されることになります。</p>
+
+<p>最後に、これらの部品を使って平方根を求める関数<strong>sqrt</strong>を定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">EPS</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>    <span class="c1"># 許容誤差</span>
+ <span class="no">A0</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="c1"># 初期近似値</span>
+ <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="no">EPS</span><span class="p">)</span>
+   <span class="n">with_in</span> <span class="n">eps</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">next_val</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">a0</span><span class="p">)</span>
+ <span class="k">end</span>
+
+ <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
+ <span class="n">sqrt</span> <span class="mi">3</span> <span class="c1"># =&gt; 1.7320508100147274</span>
+ <span class="n">sqrt</span> <span class="mi">5</span> <span class="c1"># =&gt; 2.236067977499978</span>
+ <span class="n">sqrt</span> <span class="mi">8</span> <span class="c1"># =&gt; 2.8284271250498643</span>
+</code></pre></div>
+
+
+<p>sqrt関数はこのようにしてモジュール化された３つの汎用部品<strong>next_val</strong>、<strong>repeat</strong>、<strong>with_in</strong>を貼り合せて作ることができました。</p>
+
+<p>sqrt関数はモジュールを合成して構成されているので、プログラムの基本的な構造を変えることなく変更が容易に行えます。</p>
+
+<p>今度は、２つの連続する近似値の差がゼロに近づくという条件の代わりに、２つの近似値の比が１に近づくという条件に変えてみます。これは非常に小さいまたは非常に大きい数に対してはより適切な結果を出します。</p>
+
+<p>この目的を達成するには、関数with_inに代わる関数<strong>relative</strong>を定義するだけでいいのです。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">relative</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+   <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">peek</span>
+   <span class="k">return</span> <span class="n">b</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">abs</span>
+   <span class="n">relative</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">enum</span><span class="p">)</span>
+ <span class="k">end</span>
+
+ <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="no">A0</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="no">EPS</span><span class="p">)</span>
+   <span class="n">relative</span> <span class="n">eps</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">next_approx</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">a0</span><span class="p">)</span>
+ <span class="k">end</span>
+
+ <span class="n">sqrt</span> <span class="mi">2</span> <span class="c1"># =&gt; 1.4142135623746899</span>
+ <span class="n">sqrt</span> <span class="mi">3</span> <span class="c1"># =&gt; 1.7320508100147274</span>
+ <span class="n">sqrt</span> <span class="mi">5</span> <span class="c1"># =&gt; 2.236067977499978</span>
+ <span class="n">sqrt</span> <span class="mi">8</span> <span class="c1"># =&gt; 2.8284271250498643</span>
+</code></pre></div>
+
+
+<p>他の部品を変えることなく新しいsqrt関数ができました。</p>
+
+<p>以上、関数型プログラミングにおける強力な２つの糊、「高階関数」と「遅延評価」の例をいくつか見てきました。これらの糊によりプログラムは柔軟に、汎用的な多数のモジュールに分割できることが分かりました。Rubyにおける関数型プログラミングの支援機能は、純粋な関数型プログラミング言語におけるそれには及ばないものの、Rubyプログラマに大きな力を与え得るのではないでしょうか。</p>
+  </body>
+</html>

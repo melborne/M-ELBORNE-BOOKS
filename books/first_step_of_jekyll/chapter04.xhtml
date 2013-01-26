@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>４章　デフォルト設定の変更</h2>
+
+<p>前のソースにおいてはファイル名から<strong>Jekyll  tutorial</strong>というタイトルが自動的にセットされていることが分かります。Front-Matterを使って、タイトルとついでに投稿日も変えてみましょう。<code>_posts/2012-05-01-Jekyll-Tutorial.md</code>を修正します。</p>
+
+<pre><code>---
+layout: post
+title: Jekyllのチュートリアル
+date: 2012-05-02
+---
+Jekyll is a simple, blog aware, static site generator.
+</code></pre>
+
+<p>日付を変えたので<strong>http://localhost:4000/2012/05/02/Jekyll-Tutorial.html</strong>にアクセスします。</p>
+
+<p><img src="images/jk05.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>投稿日とタイトルが変わりました。つまりYAML Front-Matterの記述によってデフォルトの設定が上書きされました。この場合、元のMarkdownファイルのファイル名における日付と、パスの日付が一致しなくなる点注意が必要です。</p>
+
+<h3>_config.ymlによる設定</h3>
+
+<p>個別ページの設定はそのFront-Matterで行うということが分かりました。では全体的な設定はどこでするのでしょうか。それはルートに_config.ymlというファイルを用意して、そこで行います。試しに記事のパス形式を変えてみます。ここではサーバーの再起動が必要です。</p>
+
+<pre><code>% echo permalink: /:categories/:year-:month-:day/:title &gt; _config.yml
+% jekyll
+% tree
+.
+├── _config.yml
+├── _layouts
+│   ├── layout.html
+│   └── post.html
+├── _posts
+│   └── 2012-05-01-Jekyll-Tutorial.md
+├── _site
+│   ├── 2012-05-02
+│   │   └── Jekyll-Tutorial
+│   │       └── index.html
+│   └── index.html
+└── index.md
+
+5 directories, 7 files
+</code></pre>
+
+<p><code>_site</code>ディレクトリを見てわかるように、記事のパスが変わりました。</p>
+  </body>
+</html>

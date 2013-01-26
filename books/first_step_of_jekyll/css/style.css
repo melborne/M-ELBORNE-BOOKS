@@ -1,0 +1,23 @@
+img {
+  border:0;
+  vertical-align: top;
+  clear: both;
+  margin: 5px 10px 5px 5px;
+  box-shadow: 0 1px 2px #888888;
+}
+
+h1, h2, h3 {
+  color: #8B1A1A;
+}
+
+ol {
+  list-style-type: none;
+}
+
+ol.wrapup {
+  list-style-type: decimal;
+}
+
+pre {
+  background-color: #eeeeff;
+}

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>Ruby脳が理解するJavaScriptのオブジェクト指向</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>５章　new 演算子</h2>
+
+<p>ここまで来れば僕が何を言いたいのかが分かると思います。</p>
+
+<p>「それ、<code>new</code>演算子でできるよ！」ってことですね。</p>
+
+<p>new演算子には関数コンストラクタを渡しますが、通常の関数の書き方でない特殊な構文の関数を構築して渡します。つまりクラスベースのオブジェクト指向におけるクラスをイミテートした構文の関数を使います。先のPerson関数と等価の関数コンストラクタは次のようになります。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">,</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>確かにクラスっぽい。</p>
+
+<p>関数コンストラクタ（これも当然オブジェクトです）には、それ専用の<code>prototype</code>という名のプロパティが用意されています。既定でここには空のオブジェクトがセットされています。関数をnewすることにより、そこから生成される各オブジェクトの__proto__プロパティにはコンストラクタのprototypeプロパティがセットされます。また、コンストラクタ内の<code>this</code>ですが、これは生成される各オブジェクトを指すようになるのです。それが<code>new</code>の機能です。</p>
+
+<p>さあPersonコンストラクタをnewしてオブジェクトを生成してみましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">earl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Earl&#39;</span><span class="p">,</span> <span class="mi">14</span><span class="p">);</span>
+ 
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Charlie&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 12</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Earl&#39;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 14</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 13140</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 15330</span>
+</code></pre></div>
+
+
+<p>いいですね！</p>
+
+<p>関数コンストラクタの注意点は、これはあくまで関数であり、newが無くても呼べてしまうということです。この場合、上記newの機能は働きません。つまり関数内部の<code>this</code>はオブジェクトを指すのではなく（オブジェクトが生成されないので当然です）、その呼び出し環境すなわち<code>グローバルオブジェクト</code>を指すことになるのです。そのリスクから<strong>「newは良くない部品」</strong>と言う意見もあるようです。</p>
+
+<h2>ここまでのまとめ</h2>
+
+<p>ここまでJavaScriptの「オブジェクトの生成」、「プロトタイプチェーン」、「オブジェクトコンストラクタ」、「new演算子」の各概念について順にみました。これらを通したJavaScriptのオブジェクト指向に対する僕の理解は概ね次のようなものです。</p>
+
+<ol>
+<li><p>すべてのオブジェクトは__proto__プロパティ（非標準）を持っていて、プロパティ探索に関し、ここにセットされたオブジェクトを順次たどりこれを解決する（プロトタイプチェーン）。__proto__にはデフォルトで空オブジェクトがセットされている。</p></li>
+<li><p>同種オブジェクト（属性値だけが異なるオブジェクト）を複数作るには、コンストラクタ関数を使うのが便利である。JavaScriptにはその目的のために、（クラスっぽい）専用記法によるコンストラクタ関数とnew演算子が用意されている。</p></li>
+<li><p>new演算子は、（１）コンストラクタの引数をプロパティとしたオブジェクトを生成して返し、（２）その際に、この生成オブジェクトの__proto__プロパティが、コンストラクタのprototypeプロパティにセットした唯一のオブジェクトを参照するようにリンクする、という処理を実行する。</p></li>
+<li><p>専用記法コンストラクタはnewを忘れるとバグを生むので、「newは良くない部品」とする意見がある。</p></li>
+</ol>
+
+  </body>
+</html>

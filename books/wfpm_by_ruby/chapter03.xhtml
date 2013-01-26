@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>Rubyを使って「なぜ関数プログラミングは重要か」を読み解く（前編）但し後編の予定なし</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>２章　関数の貼り合せ ─ リストにおける張り合せ ─</h2>
+
+<p>最初に単純な関数を貼り合わせてより複雑な関数が作れるということを見ていきます。このことをリストにおける簡単なリスト処理の問題で説明します。</p>
+
+<p>リストというのは、要素のない空リストであるか、または空リストを含む任意の要素のリストに任意の要素を結合（cons）したものである、という風に理解できます。Rubyにはリスト処理のためのArrayクラスがあるので、ここでは各関数をArrayクラスのメソッドとして定義していきます。</p>
+
+<p>上記定義に従って最初に<strong>cons</strong>をArrayのメソッドとして定義してみましょう。またリスト処理を容易にするために、関数言語風にhead（リストの先頭要素）と、tail（リストの先頭要素を除いた残り）を定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">cons</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="o">[</span><span class="n">a</span><span class="o">]</span> <span class="o">+</span> <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="k">alias</span> <span class="ss">:head</span> <span class="ss">:first</span>
+  <span class="k">def</span> <span class="nf">tail</span>
+    <span class="n">drop</span> <span class="mi">1</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="o">[].</span><span class="n">cons</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; [1]</span>
+<span class="o">[].</span><span class="n">cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2]</span>
+<span class="o">[].</span><span class="n">cons</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">head</span> <span class="c1"># =&gt; 1</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">tail</span> <span class="c1"># =&gt; [2, 3]</span>
+</code></pre></div>
+
+
+<p>最初に、リストの要素を足し合わせる<strong>sum0</strong>を定義します。これは再帰を使って以下のように書くことができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">sum0</span>
+    <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">head</span> <span class="o">+</span> <span class="n">tail</span><span class="o">.</span><span class="n">sum0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">sum0</span> <span class="c1"># =&gt; 15</span>
+</code></pre></div>
+
+
+<p>つまり空リストに対しては0を返すようにし、それ以外ではリストの最初の要素を残りの要素の和に足していくことで結果を得ます。</p>
+
+<p>ここで、この定義における加算に固有の要素つまり「0」と「+」を一般化すると、リスト処理の汎用メソッドreduceができ上がります（Rubyには既に同じ機能を持ったEnumerable#reduceが存在します）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">f</span><span class="o">[</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>Rubyではメソッドはそのままでは引数として渡すことができないので、ここではfとしてProcオブジェクトを受けるようにし<code>Proc#[]</code>で実行するようにしています（Proc#.callまたはProc#.()という呼びだし方法もあります）。</p>
+
+<p>今度はreduceとaddメソッドを使って<strong>sum</strong>を再定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">sum</span>
+    <span class="n">reduce</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">add</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span> <span class="c1"># lambda{ |a,b| a + b } と同じ</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">sum</span> <span class="c1"># =&gt; 15</span>
+</code></pre></div>
+
+
+<p>addメソッドはa,bを引数に取るProcオブジェクト、つまり手続きを返す高階関数です。</p>
+
+<p>同様にしてreduceとmultiplyメソッドを使って、要素を掛け合わせる<strong>product</strong>を定義します（RubyのArrayには別の目的のために同名のメソッドがあるので警告がでます）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">product</span>
+    <span class="n">reduce</span> <span class="n">multiply</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">multiply</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">product</span> <span class="c1"># =&gt; 120</span>
+</code></pre></div>
+
+
+<p>また真理値リストの要素のうち何れかが真かを検査する<strong>any_true</strong>と、すべての要素が真であることを検査する<strong>all_true</strong>を同様に定義できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">any_true</span>
+    <span class="n">reduce</span> <span class="nb">send</span><span class="p">(</span><span class="ss">:or</span><span class="p">),</span> <span class="kp">false</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">all_true</span>
+    <span class="n">reduce</span> <span class="nb">send</span><span class="p">(</span><span class="ss">:and</span><span class="p">),</span> <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">or</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="ow">or</span> <span class="n">b</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">and</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">b</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">tf1</span> <span class="o">=</span> <span class="o">[</span><span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">]</span>
+<span class="n">tf2</span> <span class="o">=</span> <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="o">]</span>
+
+<span class="n">tf1</span><span class="o">.</span><span class="n">any_true</span> <span class="c1"># =&gt; true</span>
+<span class="n">tf2</span><span class="o">.</span><span class="n">any_true</span> <span class="c1"># =&gt; true</span>
+<span class="n">tf1</span><span class="o">.</span><span class="n">all_true</span> <span class="c1"># =&gt; false</span>
+<span class="n">tf2</span><span class="o">.</span><span class="n">all_true</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+<p>Rubyにおいて<strong>or</strong>と<strong>and</strong>は予約語なのでそのままの形では引数として渡すことができません。ここではこの問題を回避するため、<code>Kernel#send</code>を使っています（Kernel#methodを使う方法もあります。）</p>
+
+<p>さてここで<code>reduce(f, a)</code>をcons(a)との対比で理解してみましょう。リスト[1,2,3]はconsを使って以下のように作ることができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[].</span><span class="n">cons</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+</code></pre></div>
+
+
+<p>reduce(f,a)は上の式のconsをすべてfに置き換え、[ ]をaに置き換えたものとみなすことができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>その結果、先のsumのreduce add, 0とproductのreduce multiply, 1は、それぞれ以下のように理解できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">0</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="mi">1</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>そうするとreduce cons, [ ]はリストを複写するものであることが理解できるでしょう。consをreduceに渡せるように少し改良して複写メソッドdupを定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">cons</span>
+    <span class="o">-&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="nb">self</span><span class="p">{</span> <span class="o">[</span><span class="n">a</span><span class="o">]</span> <span class="o">+</span> <span class="n">ls</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">empty?</span>
+    <span class="n">f</span><span class="o">[</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">dup</span>
+    <span class="n">reduce</span> <span class="n">cons</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">dup</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+</code></pre></div>
+
+
+<p>consは他の補助メソッドと同様に２つの引数を取るようにし、かつ[]メソッドで実行されるようProcオブジェクト化します。</p>
+
+<p>ここでdupにおけるreduceの第二引数にリストを渡せるようにすれば、リストを結合するappendが定義できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+    <span class="n">ls</span><span class="o">.</span><span class="n">reduce</span> <span class="n">cons</span><span class="p">,</span> <span class="nb">self</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="o">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="o">].</span><span class="n">append</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6]</span>
+</code></pre></div>
+
+
+<p>続いてリストの要素を２倍するメソッド<strong>double_all</strong>を定義します。double_allはreduceとdouble_and_consを使って次のように書くことができます。double_and_consは要素を倍にして結果をリストに結合するものです。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">reduce</span> <span class="n">double_and_cons</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">double_and_cons</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">,</span><span class="n">ls</span><span class="p">{</span> <span class="n">cons</span><span class="o">[</span><span class="mi">2</span><span class="o">*</span><span class="n">num</span><span class="p">,</span> <span class="n">ls</span><span class="o">]</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>ここで<strong>double_and_cons</strong>はさらにdoubleとf_and_consにモジュール化することができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">reduce</span> <span class="n">f_and_cons</span><span class="o">[</span><span class="n">double</span><span class="o">]</span><span class="p">,</span> <span class="o">[]</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">double</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">num</span> <span class="p">}</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">f_and_cons</span>
+    <span class="o">-&gt;</span><span class="n">f</span><span class="p">,</span><span class="n">el</span><span class="p">,</span><span class="n">ls</span><span class="p">{</span> <span class="n">cons</span><span class="o">[</span><span class="n">f</span><span class="o">[</span><span class="n">el</span><span class="o">]</span><span class="p">,</span> <span class="n">ls</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>double_allにおいてreduceはその第１引数としてProcオブジェクトを受け取る必要があります。ここではf_and_consをカリー化することにより、それがdoubleのみを取ってProcオブジェクトを返せるよう工夫しています。このような方法を関数の部分適用といいます。</p>
+
+<p>また2つの関数を合成する<strong>compose</strong>メソッドを定義することにより、consとdoubleを合成する方法もあります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">reduce</span> <span class="n">compose</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">double</span><span class="p">),</span> <span class="o">[]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">double</span>
+    <span class="o">-&gt;</span><span class="n">num</span><span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">num</span> <span class="p">}</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">{</span> <span class="n">f</span><span class="o">[</span><span class="n">g</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">,</span><span class="n">y</span><span class="o">]</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p>（このcomposeは受け取る引数の個数が固定的であり、汎用的なものではありません）</p>
+
+<p>double_allはconsと合成する関数を一般化することによって、更にモジュール化を進めることができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">double_all</span>
+    <span class="n">map</span> <span class="n">double</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">reduce</span> <span class="n">compose</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="o">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">ls</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">double_all</span> <span class="c1"># =&gt; [2, 4, 6, 8, 10]</span>
+</code></pre></div>
+
+
+<p><strong>map</strong>は任意のメソッドfをリストのすべての要素に適用します。mapはreduceと並ぶもう一つの汎用的なメソッドです（Rubyには同じ目的のArray#mapが存在するので警告がでます）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">].</span><span class="n">map</span> <span class="o">-&gt;</span><span class="n">x</span><span class="p">{</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span>
+<span class="sx">%w(ruby haskell scheme)</span><span class="o">.</span><span class="n">map</span> <span class="o">-&gt;</span><span class="n">s</span><span class="p">{</span> <span class="n">s</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;RUBY&quot;, &quot;HASKELL&quot;, &quot;SCHEME&quot;]</span>
+</code></pre></div>
+
+
+<p>このようにしてメソッドを高階関数と、いくつかの単純なメソッドの合成としてモジュール化することにより、リストのための多数のメソッドを効果的に定義することができました。</p>
+  </body>
+</html>

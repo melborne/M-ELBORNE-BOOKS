@@ -1,0 +1,6 @@
+digraph G {
+  layout="circo";
+  overlap="true";
+  node[style="filled",shape="circle",width="1.2",fontname="Futura"];
+  JavaScript[fillcolor="#94B341CC",fontcolor="#EEEEDD",fontsize="60",penwidth="20",color="#EEEEDD"];
+}

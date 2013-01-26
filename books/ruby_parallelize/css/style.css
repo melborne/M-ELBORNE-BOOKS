@@ -1,0 +1,15 @@
+img {
+  border:0;
+  vertical-align: top;
+  margin: 5px 10px 5px 5px;
+  box-shadow: 0 1px 2px #888888;
+}
+
+h1, h2, h3 {
+  color: #8B1A1A;
+}
+
+ol#toc {
+  list-style-type: none;
+}
+

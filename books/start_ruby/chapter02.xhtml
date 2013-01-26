@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>これからRubyを始める人たちへ</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>２章　最初のRubyのコード</h2>
+
+<p>Rubyはすぐ始めることができます。早速何か作ってみましょう。パスワード生成器を作りましょう。</p>
+
+<h3>パスワード生成器</h3>
+
+<p>もしあなたが他のプログラミング言語を知っているなら、まずそれで考えてみてください。英数字8文字からなるパスワードを10個作ります。</p>
+
+<p>Rubyでは次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">password_gen</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+  <span class="o">[*</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">,</span> <span class="o">*</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="o">*</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;Z&#39;</span><span class="o">].</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="o">.</span><span class="n">join</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span> <span class="mi">10</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">password_gen</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>どうですか？Rubyを知らなくても何となくコードが読めると思います。Rubyのコードは簡潔で可読性が高いです。</p>
+
+<p>プログラムの実行はTerminalで次のようにします。</p>
+
+<div class="highlight"><pre><code class="bash">% ruby password_gen.rb
+</code></pre></div>
+
+
+<p>出力は次のようになります。</p>
+
+<div class="highlight"><pre><code class="bash">HIa09itR
+k6GgIFLc
+ZKGwo1q7
+DXVYKpnZ
+F2uXCza7
+EJRiQyvV
+THJ6thBE
+4mTBscNK
+y6kEzx1Q
+vz5PLiKT
+</code></pre></div>
+
+
+<p>コードについて少し解説します。</p>
+
+<p>Rubyはオブジェクト指向言語ですから、プログラムはオブジェクトに対するメソッド呼び出しの形を取ります。<code>def end</code>はメソッド定義で、その引数にはdefault値をセットできます。メソッド定義の中では[ ](角括弧)で配列を作って、<code>sample</code>というメソッドを呼んでsizeの数だけ配列の要素をサンプリングしています。更にその返り値に<code>join</code>というメソッドを呼んで、サンプリングした配列の要素を結合しています。配列の中の<code>0..9</code>はRangeオブジェクトで、先頭の<code>*</code>(splat)演算子で配列に展開しています。メソッドは常に結果を返します。何処かで明示的にreturnしなければ最後の式の結果が返り値になります。</p>
+
+<p><code>10.times</code>は10オブジェクトに対してtimesメソッドを呼んでいます。そう数字もオブジェクトです。RubyにはPrimitive型のようなものはなく、すべてがクラスから生成されるオブジェクトです。ちなみにRubyでは<code>true</code>も<code>nil</code>もそれからクラス自身もオブジェクトです。<code>10.times</code>は0から9の繰り返しを表現する<code>Enumerator</code>というオブジェクトを返します。</p>
+
+<p><code>map</code>メソッドは渡したブロック（{}またはdo endで表現される）内の手続きを使って、Enumeratorの要素である0から9を置換します。ここで、定義した<code>password_gen</code>メソッドを呼んでいます。引数が不要の場合はメソッド呼び出しの括弧は省略できます。結果は配列の形で返ります。Rubyではmapのようなブロックを取るメソッドが多数登場します。ブロック内には自由に手続きを書けますから、つまりこれは高階関数（関数を引数に取る関数）の簡易版です。</p>
+
+<p>最初の<code>def end</code>のところでこれはメソッド定義だと説明しました。そう、これは関数ではありません。Rubyには関数はありません。すべてがオブジェクトに対するメソッド呼び出しです。先のコードのようにクラス定義の外側（これをトップレベルと呼びます）で定義されるメソッドは、クラスツリーの最上位に位置する<code>Object</code>クラスに定義されたものとして扱われます。そして外からは呼び出せない内部メソッドとなるようprivate指定されます。Rubyではprivate指定されたメソッドはオブジェクトを指定しない暗黙の呼び出しでしか呼べないよう設計されています。putsも同様です。このようにしてRubyでは、オブジェクト指向における設計の一貫性を維持しつつ、使い勝手の良い手続き的プログラミングができるようになっています。これがRubyの素晴らしい点です。</p>
+
+<h3>irbを使う</h3>
+
+<p>Rubyには<code>irb</code>という対話型実行環境が付属しています。Terminalでirbしてみます。</p>
+
+<div class="highlight"><pre><code class="bash">% irb
+</code></pre></div>
+
+
+<p>そしてコードを打ち込んでreturnしてください。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; <span class="nv">char_set</span> <span class="o">=</span> <span class="o">[</span>*0..9, *<span class="s1">&#39;a&#39;</span>..<span class="s1">&#39;z&#39;</span>, *<span class="s1">&#39;A&#39;</span>..<span class="s1">&#39;Z&#39;</span><span class="o">]</span>
+<span class="o">=</span>&gt; <span class="o">[</span>0, 1, 2, 3, 4, 5, 6, 7, 8, 9, <span class="s2">&quot;a&quot;</span>, <span class="s2">&quot;b&quot;</span>, <span class="s2">&quot;c&quot;</span>, <span class="s2">&quot;d&quot;</span>, <span class="s2">&quot;e&quot;</span>, <span class="s2">&quot;f&quot;</span>, <span class="s2">&quot;g&quot;</span>, <span class="s2">&quot;h&quot;</span>, <span class="s2">&quot;i&quot;</span>, <span class="s2">&quot;j&quot;</span>, <span class="s2">&quot;k&quot;</span>, <span class="s2">&quot;l&quot;</span>, <span class="s2">&quot;m&quot;</span>, <span class="s2">&quot;n&quot;</span>, <span class="s2">&quot;o&quot;</span>, <span class="s2">&quot;p&quot;</span>, <span class="s2">&quot;q&quot;</span>, <span class="s2">&quot;r&quot;</span>, <span class="s2">&quot;s&quot;</span>, <span class="s2">&quot;t&quot;</span>, <span class="s2">&quot;u&quot;</span>, <span class="s2">&quot;v&quot;</span>, <span class="s2">&quot;w&quot;</span>, <span class="s2">&quot;x&quot;</span>, <span class="s2">&quot;y&quot;</span>, <span class="s2">&quot;z&quot;</span>, <span class="s2">&quot;A&quot;</span>, <span class="s2">&quot;B&quot;</span>, <span class="s2">&quot;C&quot;</span>, <span class="s2">&quot;D&quot;</span>, <span class="s2">&quot;E&quot;</span>, <span class="s2">&quot;F&quot;</span>, <span class="s2">&quot;G&quot;</span>, <span class="s2">&quot;H&quot;</span>, <span class="s2">&quot;I&quot;</span>, <span class="s2">&quot;J&quot;</span>, <span class="s2">&quot;K&quot;</span>, <span class="s2">&quot;L&quot;</span>, <span class="s2">&quot;M&quot;</span>, <span class="s2">&quot;N&quot;</span>, <span class="s2">&quot;O&quot;</span>, <span class="s2">&quot;P&quot;</span>, <span class="s2">&quot;Q&quot;</span>, <span class="s2">&quot;R&quot;</span>, <span class="s2">&quot;S&quot;</span>, <span class="s2">&quot;T&quot;</span>, <span class="s2">&quot;U&quot;</span>, <span class="s2">&quot;V&quot;</span>, <span class="s2">&quot;W&quot;</span>, <span class="s2">&quot;X&quot;</span>, <span class="s2">&quot;Y&quot;</span>, <span class="s2">&quot;Z&quot;</span><span class="o">]</span>
+&gt;&gt; char_set.sample<span class="o">(</span>8<span class="o">)</span>
+<span class="o">=</span>&gt; <span class="o">[</span><span class="s2">&quot;q&quot;</span>, <span class="s2">&quot;d&quot;</span>, 0, <span class="s2">&quot;S&quot;</span>, <span class="s2">&quot;R&quot;</span>, <span class="s2">&quot;K&quot;</span>, <span class="s2">&quot;r&quot;</span>, <span class="s2">&quot;Q&quot;</span><span class="o">]</span>
+&gt;&gt; char_set.sample<span class="o">(</span>8<span class="o">)</span>.join
+<span class="o">=</span>&gt; <span class="s2">&quot;PI1EOBJg&quot;</span>
+</code></pre></div>
+
+
+<p>returnのたびにその式が評価されるのが分かると思います。こうしてRubyistはirbでちょっと試してその動作を確認しつつプログラムするのです。</p>
+
+<p>Rubyの格言の一つに「RubyのことはRubyに聞け」というのがあります。例えば、先の配列オブジェクトchar_setがどのようなメソッドを受け付けるのか知りたいとします。そんなときはirbでこうします。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; char_set.methods
+<span class="o">=</span>&gt; <span class="o">[</span>:inspect, :to_s, :to_a, :to_ary, :frozen?, :<span class="o">==</span>, :eql?, :hash, :<span class="o">[]</span>, :<span class="o">[]=</span>, :at, :fetch, :first, :last, :concat, :&lt;&lt;, :push, :pop, :shift, :unshift, :insert, :each, :each_index, :reverse_each, :length, :size, :empty?, :find_index, :index, :rindex, :join, :reverse, :reverse!, :rotate, :rotate!, :sort, :sort!, :sort_by!, :collect, :collect!, :map, :map!, :select, :select!, :keep_if, :values_at, :delete, :delete_at, :delete_if, :reject, :reject!, :zip, :transpose, :replace, :clear, :fill, :include?, :&lt;<span class="o">=</span>&gt;, :slice, :slice!, :assoc, :rassoc, :+, :*, :-, :&amp;, :|, :uniq, :uniq!, :compact, :compact!, :flatten, :flatten!, :count, :shuffle!, :shuffle, :sample, :cycle, :permutation, :combination, :repeated_permutation, :repeated_combination, :product, :take, :take_while, :drop, :drop_while, :pack, :entries, :sort_by, :grep, :find, :detect, :find_all, :flat_map, :collect_concat, :inject, :reduce, :partition, :group_by, :all?, :any?, :one?, :none?, :min, :max, :minmax, :min_by, :max_by, :minmax_by, :member?, :each_with_index, :each_entry, :each_slice, :each_cons, :each_with_object, :chunk, :slice_before, :nil?, :<span class="o">===</span>, :<span class="o">=</span>~, :!~, :class, :singleton_class, :clone, :dup, :initialize_dup, :initialize_clone, :taint, :tainted?, :untaint, :untrust, :untrusted?, :trust, :freeze, :methods, :singleton_methods, :protected_methods, :private_methods, :public_methods, :instance_variables, :instance_variable_get, :instance_variable_set, :instance_variable_defined?, :instance_of?, :kind_of?, :is_a?, :tap, :send, :public_send, :respond_to?, :respond_to_missing?, :extend, :display, :method, :public_method, :define_singleton_method, :__id__, :object_id, :to_enum, :enum_for, :equal?, :!, :!<span class="o">=</span>, :instance_eval, :instance_exec, :__send__<span class="o">]</span>
+</code></pre></div>
+
+
+<p>そこに<code>sample</code>というメソッドを見つけました。irbで<code>help</code>と打ってreturnします。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; <span class="nb">help</span>
+</code></pre></div>
+
+
+<p>promptが変わりますから、そこでsampleと打ちます。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; sample
+.sample
+
+<span class="o">(</span>from ruby core<span class="o">)</span>
+Implementation from Array
+----------------------------------------------
+  ary.sample        -&gt; obj
+  ary.sample<span class="o">(</span>n<span class="o">)</span>     -&gt; new_ary
+----------------------------------------------
+
+Choose a random element or n random elements from the array. The elements are chosen by using random and unique indices into the array in order to ensure that an element doesn<span class="err">&#39;</span>t repeat itself unless the array already contained duplicate elements. If the array is empty the first form returns nil and the second form returns an empty array.
+</code></pre></div>
+
+
+<p>Array#sampleに対するヘルプが表示されました。空returnでhelpを抜けます。</p>
+
+<p>ネットに日本語の<a href="http://doc.ruby-lang.org/ja/1.9.3/doc/index.html" title="Rubyリファレンスマニュアル">Rubyリファレンスマニュアル</a>があります。全メソッドを一覧したいという欲張りな人には、拙作<a href="http://rbref.heroku.com/" title="Ruby Reference Index">Ruby Reference Index</a>があります。</p>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>irbから学ぶRubyの並列処理</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>３章　並列化REPL　その１</h2>
+
+<p>ただ、先のサーバーには大きな問題があります。誰か一人が接続していると他の人が接続できない、つまり複数の人が同時に使えないのです。先のコードで１つの接続がacceptされると、loop内のgetsはその接続先ユーザからの入力を待ち続けることになる。この場合、そのユーザの接続が切れてはじめて、処理はループされacceptで別の接続を待ち受けられるようになるのです。これは大問題です。複数のターミナルから接続して試してみればわかるでしょう。</p>
+
+<p>さあ、ここで並列化の出番です。</p>
+
+<p>Rubyで並列化を実現するにはいくつかの方法があります。どんなやり方があるかちょっと考えて見てください。</p>
+
+<h3>個別接続による並列化</h3>
+
+<p>もっとも単純な方法は処理が終わるたびに、ユーザからの接続を毎回切る方法です。前のユーザの接続が切れれば、サーバーは別の接続を待てますからね。まあ、これを並列化と呼ぶのはどうかとも思いますが..</p>
+
+<p>コードは次のような感じになるでしょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">client</span><span class="o">.</span><span class="n">gets</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">close</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p><code>eval</code>したものをクライアントに返したら、そのソケットを閉じる。これによってそのクライアントの接続は切れるので、別のクライアントからの接続を待ち受けられるようになります。</p>
+
+<p>構成がシンプルでいいんですが、ユーザにとってはちょっと面倒ですね。使うたびに接続し直す必要があります。なんかWebサーバーのようですね..</p>
+
+<h3>forkによる並列化</h3>
+
+<p>２つ目は複数のプロセスを起動する方法です。Rubyでプロセスを並列化するには<code>Kernel#fork</code>を使います。</p>
+
+<p>forkのブロックで囲まれたコードは別プロセスで起動されるので、<code>loop{}</code>のところをforkのブロックに投げればよさそうです。やってみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="nb">fork</span> <span class="k">do</span>    <span class="c1"># 別プロセスで起動</span>
+    <span class="k">begin</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">client</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">client</span><span class="o">.</span><span class="n">gets</span> <span class="p">}</span>
+    <span class="k">rescue</span>
+    <span class="k">ensure</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">close</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>acceptでクライアントが接続するとforkで別プロセスが起動されて、その中でgetsの待ち受けがされますが、メインプロセスは外側のループで先頭に戻り、これでacceptで別のクライアントの接続を待てるようになります。</p>
+
+<p>では、複数のtelnetから接続して試してみましょう。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>telnet localhost 60000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+1 + 2
+3
+---------------------------------------
+<span class="nv">$ </span>telnet localhost 60000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+<span class="o">[</span>2011,10,1<span class="o">]</span>.join <span class="s1">&#39;-&#39;</span>
+2011-10-1
+</code></pre></div>
+
+
+<p>うまくいきました。</p>
+
+<p>念のためこの状況で複数のプロセスが立ってるか確認してみましょう。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ps aux | grep repl_server
+keyes     1335   0.3  0.1  2448356   1176 s001  R+    3:01PM   0:00.90 ruby repl_server.rb
+keyes     1303   0.3  0.0  2448356   1040 s001  S+    2:59PM   0:01.30 ruby repl_server.rb
+keyes     1301   0.3  0.2  2448356   3756 s001  R+    2:59PM   0:01.34 ruby repl_server.rb
+</code></pre></div>
+
+
+<p>３つのプロセスが立ってるのがわかります。</p>
+
+<p>ただ、プロセスは個々に独立したメモリ空間を専有するので、接続ユーザ数が多くなるとちょっと心配です。またチャットサーバーのようにユーザ間での情報のやり取りが必要な場合、プロセス間で通信させる必要があるので、そんなときはちょっと厄介そうですね。</p>
+
+<h3>Threadによる並列化</h3>
+
+<p>３つ目はスレッドを使う方法です。スレッドは１つのプロセス内で処理を並走させる仕組みです。並走する処理は同じプロセス内にあるから、その間でのデータ共有が容易という利点があります。</p>
+
+<p>では、Threadクラスを使ったサーバーを書いてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  
+  <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">cl</span><span class="o">|</span>
+    <span class="k">begin</span>
+      <span class="kp">loop</span> <span class="p">{</span> <span class="n">cl</span><span class="o">.</span><span class="n">puts</span> <span class="nb">eval</span> <span class="n">cl</span><span class="o">.</span><span class="n">gets</span> <span class="p">}</span>
+    <span class="k">rescue</span>
+    <span class="k">ensure</span>
+      <span class="n">cl</span><span class="o">.</span><span class="n">close</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>forkをThread.newに変えればいいだけなので簡単ですね。ただスレッドは同じプロセス内で並走するので、acceptしたclientをブロック引数を通して、ちゃんと渡さないと問題が生じます。</p>
+
+<p>同じように複数のtelnetから接続してみます。</p>
+
+<div class="highlight"><pre><code class="sh">Trying 127.0.0.1...
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+<span class="o">[</span>*1..10<span class="o">]</span>.select<span class="o">(</span>&amp;:even?<span class="o">)</span>
+2
+4
+6
+8
+10
+-------------------------------
+Connected to localhost.
+Escape character is <span class="s1">&#39;^]&#39;</span>.
+Array.ancestors
+Array
+Enumerable
+Object
+Kernel
+BasicObject
+-------------------------------
+<span class="nv">$ </span>ps aux |grep repl_server
+keyes     1712   0.3  0.2  2451964   3808 s001  S+    7:03PM   0:00.24 ruby repl_server.rb
+</code></pre></div>
+
+
+<p>プロセスは１つのままということが確認できました。</p>
+
+<p>前でスレッドがマルチプロセスよりもデータ共有が容易であると書いたので、そのサンプルも書いてみます。サーバーからの出力を接続しているすべてのクライアントに出力する例です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;socket&quot;</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">60000</span><span class="p">)</span>
+<span class="n">clients</span> <span class="o">=</span> <span class="o">[]</span>   <span class="c1"># 接続クライアントの管理用配列</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span>
+  <span class="n">clients</span> <span class="o">&lt;&lt;</span> <span class="n">client</span>  <span class="c1"># 接続クライアントを登録</span>
+  
+  <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">cl</span><span class="o">|</span>
+    <span class="k">begin</span>
+      <span class="kp">loop</span> <span class="k">do</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span> <span class="n">cl</span><span class="o">.</span><span class="n">gets</span>
+        <span class="n">clients</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">puts</span> <span class="n">output</span> <span class="p">}</span>  <span class="c1"># 結果を全クライアントに配信</span>
+      <span class="k">end</span>
+    <span class="k">rescue</span>
+    <span class="k">ensure</span>
+      <span class="n">cl</span><span class="o">.</span><span class="n">close</span>
+      <span class="n">clients</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="c1"># 切断したクライアントを管理対象外に</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>接続クライアント管理用の配列を用意して、結果を全員にブロードキャストすればいいですね。簡単です。</p>
+
+<p>ただ、スレッドモデルはスレッド間で共有するデータを書き換えるような場合の取り扱いがちょっと厄介です。加えて、やはり各スレッドごとにいつ来るかわからないデータを待っている、というのが無駄といえば無駄に感じられますね。</p>
+  </body>
+</html>

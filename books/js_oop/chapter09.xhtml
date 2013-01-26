@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>８章　更に継承</h2>
+
+<p>僕自身は上記生産システムに不満はありませんが、超効率主義のあなたは納得しないでしょうね。</p>
+
+<p>あなた「iPadはどうなってんのよ。別に作れってか」</p>
+
+<p>折角ここまで来たので、ご要望にお答えしまして上記生産システムにiPadの生産ラインも載せることにします。iPhoneとiPadのコアはご存知iOSですから、これをベースにしてiPadコンストラクタのラインも追加します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">iOS</span> <span class="p">()</span> <span class="p">{</span> <span class="p">};</span>
+
+<span class="nx">iOS</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">call</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Calling to &quot;</span> <span class="o">+</span> <span class="nx">number</span> <span class="o">+</span> <span class="s2">&quot; ...&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">iTunes</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">artist</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Playing: =&gt; `&quot;</span> <span class="o">+</span> <span class="nx">title</span> <span class="o">+</span> <span class="s2">&quot;` of &quot;</span> <span class="o">+</span> <span class="nx">artist</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">iPhone4</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">iPhone4</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iOS</span><span class="p">;</span>
+<span class="nx">iPhone4</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">camera</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Photo!&quot;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">iPhone5</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">iPhone5</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPhone4</span><span class="p">;</span>
+<span class="nx">iPhone5</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">panorama</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Panorama Photo!!&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">iPad</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">call</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;not implemented yet&#39;</span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nx">iPad</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iOS</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p>このコードのポイントは、iOSコンストラクタで生成したオブジェクトをiPhone4の<code>prototype</code>プロパティと、iPadの<code>prototype</code>プロパティにセットしている点です。またiOSコンストラクタの<code>prototype</code>プロパティにセットしたオブジェクトは、<code>call</code>と<code>iTunes</code>プロパティを持っていますが、iPadコンストラクタでは同名の<code>call</code>プロパティを定義してこれを無効化しています。</p>
+
+<p>これでiPadも同時に手に入れることができます。iPhone5とiPadを共にゲットしましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">jonathan</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPhone5</span><span class="p">(</span><span class="mi">12345</span><span class="p">,</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">scott</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPhone5</span><span class="p">(</span><span class="mi">12346</span><span class="p">,</span> <span class="s1">&#39;Scott&#39;</span><span class="p">);</span>
+
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12345</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jonathan&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-692-7753&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-692-7753 ...&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Imagine&#39;</span><span class="p">,</span> <span class="s1">&#39;John Lennon&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Imagine` of John Lennon&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Jonathan Take a Panorama Photo!!&#39;</span>
+
+<span class="nx">scott</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12346</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
+
+<span class="kd">var</span> <span class="nx">tim</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">iPad</span><span class="p">(</span><span class="mi">8765</span><span class="p">,</span> <span class="s1">&#39;Tim&#39;</span><span class="p">);</span>
+
+<span class="nx">tim</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 8765</span>
+<span class="nx">tim</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Tim&#39;</span>
+<span class="nx">tim</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Black Hourse And The Cherry Tree&#39;</span><span class="p">,</span> <span class="s1">&#39;KT Tunstall&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Black Hourse And The Cherry Tree` of KT Tunstall&#39;</span>
+<span class="nx">tim</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-694-7466&#39;</span><span class="p">);</span> <span class="c1">// &#39;not implemented yet&#39;</span>
+</code></pre></div>
+
+
+<p>いいですね！</p>
+
+<h3>オブジェクト関係図</h3>
+
+<p>新たなiPhone5およびiPad生産システムにおけるオブジェクトの関係図を見てみます。</p>
+
+<p><img src="images/js_proto03.png" alt="JS prototype chain noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>iPhone4コンストラクタの<code>prototype</code>プロパティにセットしたオブジェクトには<code>camera</code>プロパティがセットされる一方で、iPadコンストラクタの<code>prototype</code>プロパティにセットしたオブジェクトには対応プロパティは無いので、このコンストラクタで生成されるiPadにはカメラ機能はないということになります。</p>
+
+<p>また、iPadコンストラクタで生成されるiPadオブジェクトは、<code>call</code>プロパティを持ちます（このcallは'not implemented yet'を返します）。このためiPadオブジェクトから<code>call</code>プロパティを呼ぶと、iOSコンストラクタのprototypeプロパティにおける<code>call</code>プロパティではなくiPadオブジェクトに実装された<code>call</code>プロパティが呼ばれることになります。</p>
+
+<p>以上のようにして、私は誰よりも早くiPhone5を手に入れたのでした^ ^;</p>
+
+<p>JavaScriptでは異なる実装による複数の継承が実現できるようですが、ここではnew演算子を使った最も一般的な方法による継承を説明してみました。</p>
+  </body>
+</html>

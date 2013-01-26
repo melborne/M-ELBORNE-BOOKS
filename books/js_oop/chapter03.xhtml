@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>Ruby脳が理解するJavaScriptのオブジェクト指向</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>２章　プロパティ探索</h2>
+
+<p>しかし一方で、未定義ながら特定のプロパティに対しては所定の値が返されます。<code>constructor</code>プロパティを呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span> <span class="c1">// [Function: Object]</span>
+</code></pre></div>
+
+
+<p>charlieオブジェクトのコンストラクタはObject関数であるという結果が返ってきました。</p>
+
+<p>未定義のプロパティが呼べたという事実をどう解釈すればいいでしょうか。可能性の一つはオブジェクトの生成時にJavaScriptが自動でそのようなプロパティをセットしたということです。</p>
+
+<p>確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="c1">// true</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;constructor&#39;</span><span class="p">);</span> <span class="c1">// false</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;hasOwnProperty&#39;</span><span class="p">);</span> <span class="c1">// false</span>
+</code></pre></div>
+
+
+<p><code>hasOwnProperty</code>メソッドに対して、上で定義した<code>name</code>はtrueを返しましたが、<code>constructor</code>およびこの呼び出しメソッド自体もfalseを返しました。つまりこれらのプロパティはcharlieオブジェクトには存在しないのです。</p>
+
+<p>つまりcharlieオブジェクトにはそのプロパティ探索に関して、別のオブジェクトがリンクされているのです。この別のオブジェクトは<code>__proto__</code>プロパティで参照できます（但し、<strong>proto</strong>は非標準プロパティです）。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">;</span> <span class="c1">// {}</span>
+</code></pre></div>
+
+
+<p><code>{}</code>、つまり空のオブジェクトがcharlieオブジェクトにリンクしていることが分かりました。このオブジェクトをJavaScriptではプロトタイプオブジェクトといいます。Rubyにおけるサブクラスに対するスーパークラスの呼び方のようなものですね。では、このオブジェクトが先のプロパティを持っているかを確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;constructor&#39;</span><span class="p">)</span> <span class="c1">// true</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;hasOwnProperty&#39;</span><span class="p">)</span> <span class="c1">// true</span>
+</code></pre></div>
+
+
+<p>trueが返ってきました。ビンゴです。</p>
+
+<p>以上により、オブジェクトのプロパティが呼ばれたとき、そのオブジェクトに対象プロパティがあればそれを返すが、無い場合は__proto__プロパティにセットされたオブジェクトのプロパティを探索する。そして対象プロパティがそこにあればそれを返すということが分かりました。</p>
+
+<p>ここで仮に、プロトタイプオブジェクトにも対象プロパティが見つからなかった場合はどうなるのでしょうか。これは想像が付きますよね。プロトタイプオブジェクトもcharlieオブジェクトと同種のオブジェクトですから、__proto__プロパティを持ってるはずです。よって、ここから更にその先のオブジェクトを辿るのでしょう。charlieの先の先、つまりそのプロトタイプオブジェクトの__proto__にセットされたオブジェクトを見てみましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// null</span>
+</code></pre></div>
+
+
+<p>__proto__プロパティは存在したものの、期待に反して<code>null</code>が返ってきました。つまりこの場合、プロパティ探索の旅（プロトタイプチェーン）はここで終了ということですね。</p>
+  </body>
+</html>

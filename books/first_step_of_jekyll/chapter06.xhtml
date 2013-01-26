@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>６章　グローバル変数「site」</h2>
+
+<p>Jekyllでは生成されたサイトに対する情報は、グローバル変数siteを通してアクセスできます。siteがどんな情報を持っているか、ちょっと見てみます。<code>index.md</code>に戻って、次の一行を追加します。</p>
+
+<pre><code>---
+layout: layout
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+
+{{ site }}  &lt;!-- ここを追加 --&gt;
+</code></pre>
+
+<p>ブラウザで見てみます。</p>
+
+<p><img src="images/jk08.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p><code>site</code>で読みだし可能な設定情報が表示されました。情報はHash形式で記録されていますが、これら情報へのアクセスはメソッド呼び出しのようにドットチェーンで行えます。幾つか見てみます。index.mdを書き換えます。</p>
+
+<pre><code>---
+layout: layout
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+
+server_port: {{ site.server_port }}
+
+markdown: {{ site.markdown }}
+
+permalink: {{ site.permalink }}
+
+{{ site }}
+</code></pre>
+
+<p>アクセスします。</p>
+
+<p><img src="images/jk09.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>.(ドット)でアクセスできました。このうちpermalinkは_config.ymlでセットしたデータでした。_config.ymlに別の設定を追加して読み出せるか試してみます。</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">permalink</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/:categories/:year-:month-:day/:title</span>
+<span class="l-Scalar-Plain">author</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Charlie</span>
+  <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">charlie@gmail.com</span>
+
+<span class="l-Scalar-Plain">markdown</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rdiscount</span>
+</code></pre></div>
+
+
+<p>Markdownにrdiscountを使うように設定したので、<code>gem install rdiscount</code>する必要があるかも知れません。</p>
+
+<p>index.mdにauthorに関する事項を追記します。</p>
+
+<pre><code>---
+layout: layout
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+
+server_port: {{ site.server_port }}
+
+markdown: {{ site.markdown }}
+
+permalink: {{ site.permalink }}
+
+{{ site }}
+
+**Copyright © {{ site.author.name }} 2012 All rights reserved. Please contact to {{ site.author.email }}.**
+</code></pre>
+
+<p>サーバーを再起動してからアクセスします。</p>
+
+<p><img src="images/jk10.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>Copyrightの注意書きでnameとemailのメソッドチェーンが出来ています。</p>
+  </body>
+</html>

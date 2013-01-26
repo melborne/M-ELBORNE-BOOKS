@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>５章　CSSによるスタイル設定</h2>
+
+<p>さて、そろそろCSSによるスタイル設定をします。説明の最初でYAML Front-Matterを含まないファイルはそのまま_siteディレクトリにコピーされると説明しましたが、CSSファイルはそのようにして配置されるファイルの一つです。ここではassets/cssというディレクトリをルートに作って、単純なCSS定義をした<code>style.css</code>というファイルを用意します。</p>
+
+<div class="highlight"><pre><code class="bash">% mkdir -p assets/css
+% touch assets/css/style.css
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="css"><span class="nt">body</span> <span class="p">{</span>
+  <span class="k">background-color</span><span class="o">:</span> <span class="m">#dee</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">h1</span> <span class="p">{</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#11d</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">h2</span> <span class="p">{</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#161</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">header</span> <span class="p">{</span>
+  <span class="k">border-bottom</span><span class="o">:</span> <span class="m">10px</span> <span class="k">solid</span> <span class="m">#a33</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">footer</span> <span class="p">{</span>
+  <span class="k">background-color</span><span class="o">:</span> <span class="m">#a33</span><span class="p">;</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#fff</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p><code>_layouts/layout.html</code>でstyle.cssを読み込むようにします。</p>
+
+<div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>{{ page.title }}<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;/assets/css/style.css&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span> //ここを追加
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  {{ content }}
+  <span class="nt">&lt;p&gt;</span>- rendered with layout template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+
+<p>ブラウザで見てみます。まずはトップページ（http://localhost:4000/）にアクセスします。</p>
+
+<p><img src="images/jk06.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>次に、記事のページ（http://localhost:4000/2012-05-02/Jekyll-Tutorial/）にもアクセスします。</p>
+
+<p><img src="images/jk07.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>うまく適用されているようです。</p>
+  </body>
+</html>

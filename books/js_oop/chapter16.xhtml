@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１５章　オブジェクト関係図の比較</h2>
+
+<p>最後に、コンストラクタ関数 + <code>new</code>演算子を使ってオブジェクトを生成する場合と、<code>Object.create</code>を使って生成する場合における、オブジェクトの関係図を比較してみます。</p>
+
+<p>まずはコンストラクタ関数 + new演算子の場合。</p>
+
+<p><img src="images/js_proto01.png" alt="JS prototype chain noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>次に、Object.createの場合。</p>
+
+<p><img src="images/js_create01.png" alt="JS prototype chain noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>見ての通り、基本的なプロトタイプチェーン構造は同じです。上で説明した通りObject.createは、特殊コンストラクタ + new演算子をラップしたものに過ぎないとも言えるので、当然といえば当然です。しかしながら、次の３点で相違があります。</p>
+
+<ol>
+<li><p>コンストラクタ関数 + new演算子の場合、プロトタイプオブジェクトにはコンストラクタ関数を介してしかアクセスできないのに対して（事前に変数代入などすればこの限りではありません。）、Object.createの場合はアクセスできる。つまり前者ではプロトタイプオブジェクトとコンストラクタ関数は密結合されるが、後者でそれらは疎結合である。</p></li>
+<li><p>コンストラクタ関数 + new演算子の場合、ユーザがコンストラクタ関数に自由にアクセスできるのに対して、Object.createの場合はアクセスできない。</p></li>
+<li><p>Object.createではオブジェクトの生成時に、各プロパティの属性情報をコントロールできる。</p></li>
+</ol>
+
+
+<p>以上、Ruby脳がJavaScriptのオブジェクト指向を学んだまとめでした。</p>
+  </body>
+</html>

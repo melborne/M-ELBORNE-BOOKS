@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>３章　記事の作成</h2>
+
+<p>さてトップページができたので、記事を書きます。Jekyllでは記事のことを<strong>Post</strong>と呼びます。ルートに<code>_posts</code>ディレクトリを作成し、次のようなファイル名で記事ファイルを作ります。サーバーはそのままに別のターミナルを立ち上げて、以下を実行します。</p>
+
+<div class="highlight"><pre><code class="bash">% mkdir _posts
+% touch _posts/2012-05-01-Jekyll-Tutorial.md
+</code></pre></div>
+
+
+<p>エディタで次のようにMarkdownで記事を書きます。Front-Matterを忘れずに。</p>
+
+<pre><code>---
+---
+##Jekyll Tutorial
+Jekyll is a simple, blog aware, static site generator.
+</code></pre>
+
+<p><code>jekyll</code>コマンドを実行してから<code>tree</code>します。</p>
+
+<div class="highlight"><pre><code class="bash">% jekyll
+% tree
+.
+├── _layouts
+│   └── layout.html
+├── _posts
+│   └── 2012-05-01-Jekyll-Tutorial.md
+├── _site
+│   ├── 2012
+│   │   └── 05
+│   │       └── 01
+│   │           └── Jekyll-Tutorial.html
+│   └── index.html
+└── index.md
+
+6 directories, 5 files
+</code></pre></div>
+
+
+<p><code>_site</code>ディレクトリ以下に<code>/2012/05/01/Jekyll-Tutorial.html</code>というファイルが生成されたのが分かります。つまり_post以下に生成したファイルのファイル名のうち、その日付部分はファイルパスとして展開されるのです。ブラウザで<code>http://localhost:4000/2012/05/01/Jekyll-Tutorial.html</code>を開いてみましょう。</p>
+
+<p><img src="images/jk02.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>うまくいってるようです。</p>
+
+<h3>Postのレイアウト</h3>
+
+<p>次に記事にも専用のレイアウトを用意します。_layoutsディレクトリ以下に<code>post.html</code>を作って、次のような内容にします。</p>
+
+<div class="highlight"><pre><code class="bash">% touch _layouts/post.html
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code class="html">---
+layout: layout
+---
+<span class="nt">&lt;header&gt;</span>
+  <span class="nt">&lt;div&gt;</span>{{ page.date | date_to_string }}<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>{{ page.title }}<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/header&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&#39;main&#39;</span><span class="nt">&gt;</span>
+  {{ content }}
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;footer&gt;</span>
+  <span class="nt">&lt;p&gt;</span>- rendered with post template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+</code></pre></div>
+
+
+<p>Front-Matterでlayout.htmlを読み込むようにします。これによりpost.htmlはlayout.htmlのsub-template
+になります。header部分に投稿日とタイトルを表示するようLiquidで指定します。</p>
+
+<p>なお、<code>{{ page.date | date_to_string }}</code>はJekyllで拡張されたLiquidのフィルターという機能を使って、出力の整形を行なっています(<a href="https://github.com/mojombo/jekyll/wiki/Liquid-Extensions" title="Liquid Extensions · mojombo/jekyll Wiki">Liquid Extensions</a>)。layout.htmlと同様に、このテンプレートが読み込まれたことを見るために<strong>rendered with post template</strong>を追加しておきます。</p>
+
+<p>そして記事側(/2012-05-01-Jekyll-Tutorial.md)でこのテンプレートを読めるように、そのFront-Matterを記述します。</p>
+
+<pre><code>---
+layout: post
+---
+##Jekyll Tutorial
+Jekyll is a simple, blog aware, static site generator.
+</code></pre>
+
+<p>タイトルはテンプレート側で用意するようにしたので、ここでは消します。</p>
+
+<p>サーバーを再起動して変化を見ます。</p>
+
+<p><img src="images/jk04.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>ソースも見ます。</p>
+
+<div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>Jekyll Tutorial<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;header&gt;</span>
+  <span class="nt">&lt;div&gt;</span>01 May 2012<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Jekyll Tutorial<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/header&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&#39;main&#39;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p&gt;</span>Jekyll is a simple, blog aware, static site generator.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;footer&gt;</span>
+  <span class="nt">&lt;p&gt;</span>- rendered with post template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+  <span class="nt">&lt;p&gt;</span>- rendered with layout template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+
+<p>うまくテンプレートが読み込まれました。</p>
+  </body>
+</html>

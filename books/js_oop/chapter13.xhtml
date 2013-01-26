@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１２章　ラッパー関数の一般化</h2>
+
+<p>現状、ラッパー関数<code>iPhone5Create</code>はその名の通り、iPhone5オブジェクトしか生成できません。JavaScriptのあらゆるユーザがnewにタッチしなくていいようにするためには、これを一般化する必要があります。</p>
+
+<p>そのための第一歩として、コンストラクタ関数の<code>prototype</code>プロパティにセットされるオブジェクトを、引数を通して渡せるようにしてみます。一般化のためにラッパー関数名を<code>ObjectCreate</code>、コンストラクタ関数名を<code>F</code>としましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">ObjectCreate</span> <span class="p">(</span><span class="nx">base</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">F</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">F</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">base</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">F</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>大分シンプルになりました。</p>
+
+<p>さあ、ObjectCreate関数に渡すiPhone5オブジェクトを用意して、もう一度ここから２つのオブジェクトを生成してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">iPhone5</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">call</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Calling to &quot;</span> <span class="o">+</span> <span class="nx">number</span> <span class="o">+</span> <span class="s2">&quot; ...&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">iTunes</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">artist</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Playing: =&gt; `&quot;</span> <span class="o">+</span> <span class="nx">title</span> <span class="o">+</span> <span class="s2">&quot;` of &quot;</span> <span class="o">+</span> <span class="nx">artist</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">camera</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Photo!&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">panorama</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Panorama Photo!!&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">jonathan</span> <span class="o">=</span> <span class="nx">ObjectCreate</span><span class="p">(</span><span class="nx">iPhone5</span><span class="p">,</span> <span class="mi">12345</span><span class="p">,</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">scott</span> <span class="o">=</span> <span class="nx">ObjectCreate</span><span class="p">(</span><span class="nx">iPhone5</span><span class="p">,</span> <span class="mi">12346</span><span class="p">,</span> <span class="s1">&#39;Scott&#39;</span><span class="p">);</span>
+
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12345</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jonathan&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-692-7753&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-692-7753 ...&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Imagine&#39;</span><span class="p">,</span> <span class="s1">&#39;John Lennon&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Imagine` of John Lennon&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Jonathan Take a Panorama Photo!!&#39;</span>
+
+<span class="nx">scott</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12346</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
+</code></pre></div>
+
+
+<p>これもうまくいきました。</p>
+
+<p>さて現状ObjectCreateに渡すプロパティは<code>id</code>、<code>name</code>固定になっています。これを一般化する必要があります。最も単純な方法は、ObjectCreate関数ではプロパティの設定を行わないようにし、ObjectCreateの実行後、生成されたオブジェクトに対してプロパティ設定を直接行う方法です。</p>
+
+<p>やってみます。ObjectCreate関数を直します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">ObjectCreate</span> <span class="p">(</span><span class="nx">base</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">F</span> <span class="p">()</span> <span class="p">{</span>  <span class="p">};</span>
+  <span class="nx">F</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">base</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">F</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>ObjectCreate関数はベースとなるオブジェクトを取るだけの極めてシンプルなものになりました。</p>
+
+<p>オブジェクトを生成してから<code>id</code>と<code>name</code>プロパティを設定するんでしたね。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">jonathan</span> <span class="o">=</span> <span class="nx">ObjectCreate</span><span class="p">(</span><span class="nx">iPhone5</span><span class="p">);</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">scott</span> <span class="o">=</span> <span class="nx">ObjectCreate</span><span class="p">(</span><span class="nx">iPhone5</span><span class="p">);</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="mi">12346</span><span class="p">;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;Scott&#39;</span><span class="p">;</span>
+
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12345</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jonathan&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-692-7753&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-692-7753 ...&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Imagine&#39;</span><span class="p">,</span> <span class="s1">&#39;John Lennon&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Imagine` of John Lennon&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Jonathan Take a Panorama Photo!!&#39;</span>
+
+<span class="nx">scott</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12346</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
+</code></pre></div>
+
+
+<p>うまくいきました。</p>
+
+<p>別の種類のオブジェクトも生成してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">Twitter</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">tweet</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">words</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">account</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nx">words</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">reply</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">at</span><span class="p">,</span> <span class="nx">words</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="nx">at</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nx">words</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="nx">ObjectCreate</span><span class="p">(</span><span class="nx">Twitter</span><span class="p">);</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">account</span> <span class="o">=</span> <span class="s1">&#39;charlie&#39;</span><span class="p">;</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">tweet</span><span class="p">(</span><span class="s1">&#39;JavaScriptなう!&#39;</span><span class="p">);</span> <span class="c1">// &#39;charlie: JavaScriptなう!&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">reply</span><span class="p">(</span><span class="s1">&#39;earl&#39;</span><span class="p">,</span> <span class="s1">&#39;JSのOOPって難しくね？&#39;</span><span class="p">);</span> <span class="c1">// &#39;@earl: JSのOOPって難しくね？&#39;</span>
+</code></pre></div>
+
+
+<p>いいですね！</p>
+  </body>
+</html>

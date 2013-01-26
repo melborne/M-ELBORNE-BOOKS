@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>irbから学ぶRubyの並列処理</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１章　REPL</h2>
+
+<p>irbはRubyにおける対話型の実行環境です。これは一般にはREPLと呼ばれています。REPLはユーザの入力を読み取り(Read)、評価し(Eval)、出力する(Print) 処理を、繰り返します(Loop)。</p>
+
+<p>irbのコードは5000行にものぼるそうですが、その核心は次のように一行で書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="kp">loop</span><span class="p">{</span> <span class="nb">puts</span> <span class="nb">eval</span> <span class="nb">gets</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>getsでユーザ入力を読み取り、evalで評価し、putsで出力する処理を、loopで繰り返す。これでは、GEPLですけどね :)</p>
+
+<p>このコードを保存して(gepl.rb)、実行してみましょう。</p>
+
+<div class="highlight"><pre><code class="sh"><span class="nv">$ </span>ruby gepl.rb
+%w<span class="o">(</span>ruby lisp haskell<span class="o">)</span>.map<span class="o">(</span>&amp;:upcase<span class="o">)</span>
+RUBY
+LISP
+HASKELL       
+<span class="s2">&quot;hello, repl!&quot;</span>.gsub<span class="o">(</span><span class="s1">&#39;r&#39;</span>,<span class="s1">&#39;g&#39;</span><span class="o">)</span>
+hello, gepl!  
+</code></pre></div>
+
+
+<p>ちゃんと動いているようです。<code>Ctrl+C</code>で終了します。</p>
+
+<p>通常loopは無限ループを生成しますが、先のコードではgetsのところで処理が止まり、ユーザからの入力を待ち受けるようになります。ここがポイントです。</p>
+
+<p>ちなみにこのコードは、その入出力を明示的にして次のようにも書けます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">input</span> <span class="o">=</span> <span class="vg">$stdin</span><span class="o">.</span><span class="n">gets</span>
+  <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+  <span class="vg">$stdout</span><span class="o">.</span><span class="n">puts</span> <span class="n">output</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>デフォルトでグローバル変数$stdinと$stdoutには、標準入力、標準出力がセットされているので、キーボードからの入力が読み取られ、ディスプレイに出力がなされます。</p>
+  </body>
+</html>

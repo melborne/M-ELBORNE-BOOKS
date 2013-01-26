@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>Ruby脳が理解するJavaScriptのオブジェクト指向</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>３章　プロトタイプチェーンを使う</h2>
+
+<p>さて、この辺で最初のコードに戻ります。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">charlie</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">12</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">earl</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Earl&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">14</span>
+<span class="p">};</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">earl</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Charlie&#39;</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 12</span>
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+
+<span class="nx">earl</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Earl&#39;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 14</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+</code></pre></div>
+
+
+<p>このコードを見て、ムズムズしない人はいないでしょう。そう<code>ageInDays</code>メソッドがDRY原則に反しています。その結果どういった問題が生じるでしょう。</p>
+
+<p>仮に、銀河の歪みによって地球の公転周期が今の３倍、つまり１年が365*3=1095日になったらどうなりますか？その場合、あなたはすべての人オブジェクトのageInDaysメソッドを１つづつ修正しなければなりません（ここでの日数計算は過去に遡って適用されるものとします）。</p>
+
+<p>先ほどのプロパティ探索の機構を利用してこの問題を解決します。つまり人の原型となる<code>person</code>オブジェクトを定義してプロトタイプチェーンに組み込むのです。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">person</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;unknown&#39;</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+</code></pre></div>
+
+
+<p>personオブジェクトが生成できました。これをcharlie, earlの各オブジェクトのプロトタイプとなるよう、それらの<code>__proto__</code>プロパティにセットして、ageInDaysを呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">person</span><span class="p">;</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">person</span><span class="p">;</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 4380</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 5110</span>
+</code></pre></div>
+
+
+<p>結果に変化がありません。残念ながら失敗しています。原因はなんでしょう。</p>
+
+<p>そうでした、charlie,earlの各オブジェクトに直接定義したageInDaysメソッドがまだ生きていたのでした。これらを削除してもう一度呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="k">delete</span> <span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">;</span> <span class="c1">// true</span>
+<span class="k">delete</span> <span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">;</span> <span class="c1">// true</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+</code></pre></div>
+
+
+<p>数値に変化がありましたが、なんか計算がおかしいですね。原因は何でしょう。</p>
+
+<p>もう一度personオブジェクトを見てみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>もう分かりました。ageInDaysでperson.ageを呼んでいたのが原因でした。ここは呼び出し元、つまりcharlieまたはearlのageが呼ばれなければいけません。</p>
+
+<p>こういうときのためにJavaScriptには<code>this</code>という便利なキーワードがあります。<code>this</code>は呼び出し元のオブジェクトを差します。Rubyにおける<code>self</code>のようなものですね。</p>
+
+<p>早速、<code>this</code>を使ってperson.ageInDaysを書き換えます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">person</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 13140</span>
+<span class="nx">earl</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 15330</span>
+</code></pre></div>
+
+
+<p>今度こそうまくいきました。</p>
+
+<p>プロトタイプチェーンがどう変化したか確認してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// { name: &#39;unknown&#39;,</span>
+                  <span class="c1">//   age: 1,</span>
+                  <span class="c1">//   ageInDays: [Function] }</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// {}</span>
+
+<span class="nx">charlie</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// null</span>
+</code></pre></div>
+
+
+<p>見事にpersonオブジェクトが間に差し込まれています。</p>
+  </body>
+</html>

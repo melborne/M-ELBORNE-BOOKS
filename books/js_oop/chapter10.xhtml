@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>９章　Rubyにおける継承</h2>
+
+<p>対比のためRubyにおける対応コードを貼っておきます。Rubyにはクラスと似たしかしインスタンスを生成しないモジュールというエンティティがあります。IOSはこれを使って実装し、IPhone4クラスおよびIPadクラスにincludeすることで、その機能を各クラスに付与するようにしています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">IOS</span>
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="s2">&quot;Calling to </span><span class="si">#{</span><span class="n">number</span><span class="si">}</span><span class="s2"> ...&quot;</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">iTunes</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">artist</span><span class="p">)</span>
+    <span class="s2">&quot;Playing: =&gt; `</span><span class="si">#{</span><span class="n">title</span><span class="si">}</span><span class="s2">` of </span><span class="si">#{</span><span class="n">artist</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">IPhone4</span>
+  <span class="kp">include</span> <span class="no">IOS</span>
+  <span class="kp">attr_reader</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@id</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">camera</span>
+    <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> Take a Photo!&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">phil</span> <span class="o">=</span> <span class="no">IPhone4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10101</span><span class="p">,</span> <span class="s1">&#39;Phil&#39;</span><span class="p">);</span>
+
+<span class="n">phil</span><span class="o">.</span><span class="n">id</span> <span class="c1"># =&gt; 10101</span>
+<span class="n">phil</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Phil&quot;</span>
+<span class="n">phil</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;408-974-5050&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Calling to 408-974-5050 ...&quot;</span>
+<span class="n">phil</span><span class="o">.</span><span class="n">iTunes</span><span class="p">(</span><span class="s1">&#39;Valentine&#39;</span><span class="p">,</span> <span class="s1">&#39;Fiona Apple&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Playing: =&gt; `Valentine` of Fiona Apple&quot;</span>
+<span class="n">phil</span><span class="o">.</span><span class="n">camera</span> <span class="c1"># =&gt; &quot;Phil Take a Photo!&quot;</span>
+
+<span class="k">class</span> <span class="nc">IPhone5</span> <span class="o">&lt;</span> <span class="no">IPhone4</span>
+  <span class="kp">attr_reader</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span>
+    <span class="k">super</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">panorama</span>
+    <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> Take a Panorama Photo!!&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">jonathan</span> <span class="o">=</span> <span class="no">IPhone5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">12345</span><span class="p">,</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">)</span>
+<span class="n">scott</span> <span class="o">=</span> <span class="no">IPhone5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">12346</span><span class="p">,</span> <span class="s1">&#39;Scott&#39;</span><span class="p">)</span>
+
+<span class="n">jonathan</span><span class="o">.</span><span class="n">id</span> <span class="c1"># =&gt; 12345</span>
+<span class="n">jonathan</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Jonathan&quot;</span>
+<span class="n">jonathan</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;800-692-7753&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Calling to 800-692-7753 ...&quot;</span>
+<span class="n">jonathan</span><span class="o">.</span><span class="n">iTunes</span><span class="p">(</span><span class="s1">&#39;Imagine&#39;</span><span class="p">,</span> <span class="s1">&#39;John Lennon&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Playing: =&gt; `Imagine` of John Lennon&quot;</span>
+<span class="n">jonathan</span><span class="o">.</span><span class="n">panorama</span> <span class="c1"># =&gt; &quot;Jonathan Take a Panorama Photo!!&quot;</span>
+
+<span class="n">scott</span><span class="o">.</span><span class="n">id</span> <span class="c1"># =&gt; 12346</span>
+<span class="n">scott</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Scott&quot;</span>
+<span class="n">scott</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Calling to 800-275-2273 ...&quot;</span>
+<span class="n">scott</span><span class="o">.</span><span class="n">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Playing: =&gt; `My Hero` of Foo Fighters&quot;</span>
+<span class="n">scott</span><span class="o">.</span><span class="n">panorama</span> <span class="c1"># =&gt; &quot;Scott Take a Panorama Photo!!&quot;</span>
+
+<span class="k">class</span> <span class="nc">IPad</span>
+  <span class="kp">include</span> <span class="no">IOS</span>
+  <span class="kp">attr_reader</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@id</span><span class="p">,</span> <span class="vi">@name</span> <span class="o">=</span> <span class="nb">id</span><span class="p">,</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="s2">&quot;not implemented yet&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">tim</span> <span class="o">=</span> <span class="no">IPad</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">8765</span><span class="p">,</span> <span class="s1">&#39;Tim&#39;</span><span class="p">)</span>
+
+<span class="n">tim</span><span class="o">.</span><span class="n">id</span> <span class="c1"># =&gt; 8765</span>
+<span class="n">tim</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Tim&quot;</span>
+<span class="n">tim</span><span class="o">.</span><span class="n">iTunes</span><span class="p">(</span><span class="s1">&#39;Black Hourse And The Cherry Tree&#39;</span><span class="p">,</span> <span class="s1">&#39;KT Tunstall&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Playing: =&gt; `Black Hourse And The Cherry Tree` of KT Tunstall&quot;</span>
+<span class="n">tim</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;800-694-7466&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;not implemented yet&quot;</span>
+</code></pre></div>
+
+
+<h3>オブジェクト関係図</h3>
+
+<p>上記コードに対応する図は次のようになります。</p>
+
+<p><img src="images/rb_proto01.png" alt="Ruby class inheritance noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>Rubyではオブジェクトに対するアクセスはすべてメソッド呼び出しで、基本的にその実体はクラスが保持しています。各オブジェクトはその状態情報（ここではname, id）だけを保持しています。</p>
+
+<p>ここでは詳しい説明は割愛しますが、JavaScriptにおける図と対比して頂けると、２つの言語におけるオブジェクト指向の実現方法の違いが見えてくるかもしれません。</p>
+
+<p>サンプルコードは以下においておきます。</p>
+
+<p><a href="https://gist.github.com/3727490" title="iPhone5 constructor for describing JavaScript prototype chain — Gist">iPhone5 constructor for describing JavaScript prototype chain — Gist</a></p>
+  </body>
+</html>

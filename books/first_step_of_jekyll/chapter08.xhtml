@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>８章　グローバル変数「page」</h2>
+
+<p>変数siteはサイト全体の情報を持ったオブジェクトでした。一方で、個々のページの情報はグローバル変数pageが持っています。同様に<code>index.md</code>で読みだしてみます。</p>
+
+<pre><code>---
+layout: layout
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+
+server_port: {{ site.server_port }}
+
+markdown: {{ site.markdown }}
+
+permalink: {{ site.permalink }}
+
+&lt;!-- {{ site }} --&gt;
+
+**Copyright © {{ site.author.name }} 2012 All rights reserved. Please contact to {{ site.author.email }}.**
+
+{{ page }} &lt;!-- ここを追加 --&gt;
+</code></pre>
+
+<p><img src="images/jk11.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>トップページにアクセスすると変数<code>page</code>は、<strong>layout</strong>, <strong>title</strong>, <strong>url</strong>, <strong>content</strong>の各要素を持っていることが分かります。</p>
+
+<p>同じことを記事のページ(Post)でもしてみます。<code>_posts/2012-05-03-Ruby-is-Great.md</code>に追加します。</p>
+
+<pre><code>---
+layout: post
+title: Rubyは最高
+tags: [ruby, language]
+---
+##Rubyとは
+Rubyは、手軽なオブジェクト指向プログラミングを実現するための種々の機能を持つオブジェクト指向スクリプト言語です。
+
+{{ page }}
+</code></pre>
+
+<p>アクセスします。</p>
+
+<p><img src="images/jk12.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>Postでは、<strong>layout</strong>, <strong>title</strong>, <strong>date</strong>, <strong>url</strong>, <strong>id</strong>, <strong>categories</strong>, <strong>next</strong>, <strong>previous</strong>, <strong>tags</strong>, <strong>content</strong>の各情報にアクセスできることが分かります。</p>
+  </body>
+</html>

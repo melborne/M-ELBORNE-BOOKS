@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>Ruby脳が理解するJavaScriptのオブジェクト指向</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>４章　オブジェクトコンストラクタ</h2>
+
+<p>さて、引き続きpersonを型とする別のオブジェクトを生成してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">zena</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Zena&#39;</span><span class="p">,</span>
+  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">rio</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Rio&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">jackie</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Jackie&#39;</span><span class="p">,</span>
+  <span class="nx">age</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+  <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">person</span>
+<span class="p">};</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;zena&#39;</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+
+<span class="nx">rio</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Rio&#39;</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 18</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jackie&#39;</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 21</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>クラスベースのオブジェクト指向に慣れたRuby脳の僕にとって、このオブジェクト生成プロセスは面倒に感じられます。もっと簡便にオブジェクトを生成する方法はないでしょうか。</p>
+
+<p>JavaScriptの関数が使えそうです。そう関数でオブジェクトのコンストラクタを作るのです。nameとageを引数にとって、これらをプロパティとしたオブジェクトを返す、そんな関数です。コンストラクタらしく、大文字から始まるPersonコンストラクタを定義します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">proto</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span> <span class="nx">age</span> <span class="p">};</span>
+  <span class="nx">obj</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>ここでの重要なポイントは、ageInDaysプロパティを持ったプロトタイプオブジェクト（proto）を生成し、返されるオブジェクトの__proto__にこれをセットすることです。これで先のコードとほぼ同様のオブジェクトをコンストラクタを使って生成できそうです（personコンストラクタではname, ageのデフォルトを提供していない点が異なります）。</p>
+
+<p>やってみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">zena</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Zena&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">rio</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Rio&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">jackie</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Jackie&#39;</span><span class="p">,</span> <span class="mi">21</span><span class="p">);</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Zena&#39;</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+
+<span class="nx">rio</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Rio&#39;</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 18</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jackie&#39;</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 21</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<p>...</p>
+
+<p>と言いたいところですが、先のコンストラクタには問題があります。</p>
+
+<p>今、地球に小惑星が衝突してその公転周期が更に２倍、つまり１年が365*3*2=2190日になったとします。結果PersonコンストラクタのageInDaysを再定義する必要が生じました。さてどうやってageInDaysを再定義しましょうか。ageInDaysを持ったオブジェクトはPersonコンストラクタ内のローカル変数で保持されているので、直接アクセスできません。でも、待ってください。生成した特定のオブジェクト（例えばzena）の__proto__からアクセスできそうですね。やってみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>正しく再定義されたか確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 2190</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>確かにzenaの結果は倍になりましたが、他のオブジェクトの結果に変化はありません。何が問題でしょうか。もう一度Personコンストラクタの定義を見てみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">proto</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span> <span class="nx">age</span> <span class="p">};</span>
+  <span class="nx">obj</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>なるほど、ダメな理由がわかりました。</p>
+
+<p>これではPersonが実行される度にプロトタイプオブジェクトprotoが作成されてしまいます。つまりPersonで生成される各オブジェクトの__proto__にはそれぞれ別のプロトタイプオブジェクトがセットされてしまうのです。</p>
+
+<p>確認してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// false</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// false</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// false</span>
+</code></pre></div>
+
+
+<p>やはり別のオブジェクトでした。</p>
+
+<p>ではどうすればいいでしょうか。</p>
+
+<p>そう、各オブジェクトのプロトタイプオブジェクトをPersonに紐付ければいいのです。つまりプロトタイプオブジェクトをPersonの任意のプロパティにセットし、これを参照させればいいのです。やってみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">Person</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">ageInDays</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span> <span class="p">}</span> <span class="p">};</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="o">:</span> <span class="nx">age</span> <span class="p">};</span>
+  <span class="nx">obj</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>ageInDaysメソッドを持ったオブジェクトをPerson.protoプロパティにセットし、このプロパティを各オブジェクトの__proto__にセットします。一応、Person.protoがセットされている場合はif文で無駄な処理が繰り返されないようにします。</p>
+
+<p>さあもう一度オブジェクトを生成して試してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">zena</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Zena&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">rio</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Rio&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">jackie</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">(</span><span class="s1">&#39;Jackie&#39;</span><span class="p">,</span> <span class="mi">21</span><span class="p">);</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Zena&#39;</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 1</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 1095</span>
+
+<span class="nx">rio</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Rio&#39;</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 18</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 19710</span>
+
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jackie&#39;</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">age</span><span class="p">;</span> <span class="c1">// 21</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 22995</span>
+</code></pre></div>
+
+
+<p>プロトタイプオブジェクトのageInDaysメソッドを書き換えて、再度各オブジェクトから呼んでみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">Person</span><span class="p">.</span><span class="nx">proto</span><span class="p">.</span><span class="nx">ageInDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">zena</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 2190</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 39420</span>
+<span class="nx">jackie</span><span class="p">.</span><span class="nx">ageInDays</span><span class="p">();</span> <span class="c1">// 45990</span>
+</code></pre></div>
+
+
+<p>今度はうまくいきました。</p>
+
+<p>念のため各オブジェクトが共通のプロトタイプを参照しているか確認します。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// true</span>
+<span class="nx">zena</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// true</span>
+<span class="nx">rio</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">==</span> <span class="nx">jackie</span><span class="p">.</span><span class="nx">__proto__</span> <span class="c1">// true</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+  </body>
+</html>

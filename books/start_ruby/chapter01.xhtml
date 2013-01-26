@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>これからRubyを始める人たちへ</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１章　Rubyの特徴</h2>
+
+<p>Rubyは、まつもとゆきひろ氏（通称「Matz」）により設計されたオブジェクト指向プログラミング言語です。Rubyの特徴を一言で言うならば、それは「間口が広くて奥が深い言語」ということになります。</p>
+
+<p>「間口が広い」というのは、インタフェースがシンプルで誰でもが簡単に使い始められることを意味します。「奥が深い」というのは、プロフェッショナルによる長期使用に耐えうる本物の言語であるということを意味します。「間口が広い」ということと「奥が深い」ということは本来競合する概念ではありませんが、その両方をバランスよく組み合わせるには、対象に対する深い知識と広い視野、加えて人並み外れたセンスが必要です。</p>
+
+<p>Rubyはまつもと氏のその絶妙なバランス感覚によって生まれました。つまりRubyはプログラム言語における「スーパーマリオブラザーズ」であり、氏は言語界における「宮本茂」なのです。</p>
+
+<h2>Rubyのインストール</h2>
+
+<p>まずRubyをinstallする必要がありますが、もしあなたがWindowsユーザなら<a href="http://rubyinstaller.org/" title="RubyInstaller for Windows">RubyInstaller for Windows</a>というツールがあります。以下などを参考に最新版をインストールしてください。</p>
+
+<blockquote><p><a href="http://www.kkaneko.com/rinkou/ruby/rubyinstaller.html" title="Windows で Ruby バージョン 1.8.7 あるいは 1.9.2 のインストール (RubyInstaller を使用)">Windows で Ruby バージョン 1.8.7 あるいは 1.9.2 のインストール (RubyInstaller を使用)</a></p></blockquote>
+
+<p>もしあなたがMacユーザならRubyが最初から入っていますがversionがちょっと古いです。Terminalを開いて、次のようにしてversionを確認して下さい。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% ruby </span><span class="o">-</span><span class="n">v</span>
+</code></pre></div>
+
+
+<p>1.8.7が返ってきたなら1.9.2以降が必要です。</p>
+
+<p>Xcodeがあるとして、まずは<a href="http://mxcl.github.com/homebrew/" title="Homebrew">Homebrew</a>という、UNIXツールパッケージマネージャをinstallしてください。次にhomebrewで<a href="https://github.com/sstephenson/rbenv" title="rbenv">rbenv</a>という、RubyのVersionマネージャをinstallします。readlineもinstallします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% brew </span><span class="n">update</span>
+<span class="sx">% brew </span><span class="n">install</span> <span class="n">rbenv</span>
+<span class="sx">% brew </span><span class="n">install</span> <span class="n">ruby</span><span class="o">-</span><span class="n">build</span>
+<span class="sx">% brew </span><span class="n">install</span> <span class="nb">readline</span>
+<span class="sx">% brew </span><span class="n">link</span> <span class="nb">readline</span>
+</code></pre></div>
+
+
+<p>.bashrcなどに以下を追記します。</p>
+
+<div class="highlight"><pre><code class="bash">% <span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$HOME/.rbenv/bin:$PATH&quot;</span>
+% <span class="nb">eval</span> <span class="s2">&quot;$(rbenv init -)&quot;</span>
+</code></pre></div>
+
+
+<p>そしてRubyをinstallします。最初にrbenv installでinstall候補を表示して、1.9.3-p327辺りをinstallします。</p>
+
+<div class="highlight"><pre><code class="bash">% rbenv install
+% <span class="nv">CONFIGURE_OPTS</span><span class="o">=</span><span class="s2">&quot;--with-readline-dir=/usr/local&quot;</span> rbenv install 1.9.3-p327
+% rbenv rehash
+% rbenv global 1.9.3-p327
+</code></pre></div>
+
+
+<p><code>ruby -v</code>してversionを確認してください。</p>
+
+<h2>開発環境</h2>
+
+<p>Rubyistはもっぱらエディタを使います。IDEを使っている人は少ないです。Vim、Emacs、<a href="http://macromates.com/" title="TextMate">TextMate</a>が広く使われていますが、最近では<a href="http://www.sublimetext.com/" title="Sublime Text: The text editor you'll fall in love with">Sublime Text</a>の人気が急上昇中です。</p>
+  </body>
+</html>

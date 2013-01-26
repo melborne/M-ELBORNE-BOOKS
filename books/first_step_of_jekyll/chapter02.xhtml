@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>30分のチュートリアルでJekyllを理解する</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>２章　Jekyllを知る</h2>
+
+<p>これらのフレームワークは大変便利でJekyllに対する理解がそこそこでも、ブログの運営上大きな支障はありません。しかし、その一方でそのレールから少し外れたことをしようとすると、途端に立ちいかなくなるという問題があります。よくある話です。</p>
+
+<p>本書の目的は、チュートリアルを通してJekyllの概要を理解することです。Jekyllに対する理解が深まれば、上記フレームワークを使った場合でもその運用が楽になるはずです。</p>
+
+<p>チュートリアルでは上記フレームワークを使わずに、Jekyllだけでブログの基礎となるファイル群を１つずつ構築していきます。ここではUnix系OSの使用を前提にしていますので、他OSの場合は適宜読み替えて下さい。</p>
+
+<h3>トップページ</h3>
+
+<p><code>gem install jekyll</code>でJekyllを入手したら、ブログを作るディレクトリを用意します。</p>
+
+<div class="highlight"><pre><code class="bash">% mkdir jk
+</code></pre></div>
+
+
+<p>jkディレクトリに移動してトップページを作ります（jkはJekyllの略と理解してください）。JekyllではMarkdownが使えるので、index.mdを作ります。Markdownの文法については以下を参考にしてください。</p>
+
+<p><a href="http://blog.2310.net/archives/6" title="blog::2310 » Markdown文法の全訳">blog::2310 » Markdown文法の全訳</a></p>
+
+<div class="highlight"><pre><code class="text">% cd jk
+% echo #Welcome to my JK Home Page! &gt; index.md 
+</code></pre></div>
+
+
+<p>そしてjekyllコマンドを実行します。</p>
+
+<div class="highlight"><pre><code class="bash">% jekyll
+</code></pre></div>
+
+
+<p>エラーメッセージが出ますが無視して<code>tree</code>します。</p>
+
+<div class="highlight"><pre><code class="bash">% tree
+.
+├── _site
+│   └── index.md
+└── index.md
+
+1 directory, 2 files
+</code></pre></div>
+
+
+<p><code>_site</code>というディレクトリ以下にindex.mdがそのままコピーされてしまいました。つまりhtmlに変換されていません。ルートのindex.mdを直しましょう。先頭に<code>---</code>を２本入れます。</p>
+
+<pre><code>---
+---
+#Welcome to my JK Home Page!
+</code></pre>
+
+<p>もう一度<code>jekyll</code>して<code>tree</code>します。</p>
+
+<div class="highlight"><pre><code class="bash">% jekyll
+% tree
+.
+├── _site
+│   └── index.html
+└── index.md
+
+1 directory, 2 files
+</code></pre></div>
+
+
+<p>今度はうまくいきました。Jekyllではこの先頭の<code>---</code>で挟まれた領域を<code>YAML Front-Matter</code>(YAML前付け)といいます。ここにそのドキュメントの書誌事項を書きます。JekyllはYAML Front-Matter付きのドキュメントをその変換の対象とし、それ以外のドキュメントはそのまま_siteディレクトリ以下にコピーするのです。</p>
+
+<p>では結果をブラウザで確認します。次のようにします。</p>
+
+<div class="highlight"><pre><code class="bash">% jekyll --server
+
+<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> regeneration: 1 files changed
+<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> INFO  WEBrick 1.3.1
+<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> INFO  ruby 1.9.3 <span class="o">(</span>2012-02-16<span class="o">)</span> <span class="o">[</span>x86_64-darwin10.8.0<span class="o">]</span>
+<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> INFO  WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span>5476 <span class="nv">port</span><span class="o">=</span>4000
+</code></pre></div>
+
+
+<p>4000番ポートでWEBrickが立ち上がりました。http://localhost:4000を開きます。</p>
+
+<p><img src="images/jk01.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+
+
+<br clear='all' />
+
+
+<p>うまくいきました。</p>
+
+<h3>レイアウト</h3>
+
+<p>さて、ブラウザでview sourceなどして、ちょっとこのソースを確認してみます。</p>
+
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;h1</span> <span class="na">id=</span><span class="s">&#39;welcome_to_my_jk_home_page&#39;</span><span class="nt">&gt;</span>Welcome to my JK Home Page!<span class="nt">&lt;/h1&gt;</span>
+</code></pre></div>
+
+
+<p>当然ながらHTMLによる構造化レイアウトができていません。早速用意します。</p>
+
+<p>まずはルートに<code>_layouts</code>ディレクトリを作ります。layoutファイルをlayout.htmlとしてここに配置します。</p>
+
+<div class="highlight"><pre><code class="bash">% mkdir _layouts
+% touch _layouts/layout.html
+</code></pre></div>
+
+
+<p>layout.htmlをエディタで開いて、次のような内容にします。</p>
+
+<div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>{{ page.title }}<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  {{ content }}
+  <span class="nt">&lt;p&gt;</span>- rendered with layout template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+
+<p>html内の<code>{{  }}</code>はLiquidテンプレートによる埋め込み指定です。Jekyllでは<a href="https://github.com/Shopify/liquid" title="Shopify/liquid">Liquid</a>というテンプレートエンジンが使えます。titleでは<code>page.title</code>により対象ページのタイトルを、bodyでは<code>content</code>により対象ページのコンテンツを埋め込むように指定しています。ここではこのlayoutが読み込まれたことを分かるようにするために、<strong>rendered with layout template</strong>という文字を入れました。</p>
+
+<p>再度サーバーを起動して変化を見ます。ここでは<code>--auto</code>オプションを付けて起動してみます。</p>
+
+<div class="highlight"><pre><code class="bash">% jekyll --server --auto
+</code></pre></div>
+
+
+<p>ブラウザで確認します。
+<img src="images/jk01.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>残念ながら変化がありません。</p>
+
+<p>これはindex.mdでどのテンプレートを使うかをちゃんと指定していないからです。ここでYAML Front-Matterの出番です。<code>index.md</code>を次のように直します。</p>
+
+<pre><code>---
+layout: layout
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+</code></pre>
+
+<p>ここでは同時にタイトルもセットしました。サーバーはそのままにブラウザをリロードします。</p>
+
+<p><img src="images/jk03.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>今度はうまくいきました。<code>--auto</code>オブション指定により、変更が直ちに反映されました。ソースも見てみます。</p>
+
+<div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=utf-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>Oh! My JK<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1</span> <span class="na">id=</span><span class="s">&#39;welcome_to_my_jk_home_page&#39;</span><span class="nt">&gt;</span>Welcome to my JK Home Page!<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;p&gt;</span>- rendered with layout template -<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+  </body>
+</html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>これからRubyを始める人たちへ</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>４章　Rubyのクラス階層</h2>
+
+<p>さてRubyのクラスの説明を少しします。RubyのクラスシステムはUNIXのファイルシステムと同じ木構造です。クラスツリーのrootは<code>Object</code>クラスです。Objectクラスの持っている特性（つまりメソッド）は、そこにぶら下がっているクラス（つまりすべてのクラス）に継承されます。そしてぶら下がっているクラスで別の特性が追加されたなら、その追加の特性を含めてそこにぶら下がっているクラスに継承します。ここで言っている「継承」とは、下流から上流のメソッドを参照できるという意味です。</p>
+
+<p>ここでRubyが標準で持っているクラスシステムを見てみます。1.9系で少しクラスシステムが複雑になりました。ここでは1.8.7のものを見ます。</p>
+
+<div class="highlight"><pre><code class="bash">Object
+ |--Module
+ |  └-Class
+ |--Numeric
+ |  └-Float
+ |  └-Integer
+ |     └-Bignum
+ |     └-Fixnum
+ |--String
+ |--Symbol
+ |--Array
+ |--Hash
+ |--Range
+ |--Regexp
+ |--MatchData
+ |--IO
+ |  └-File
+ |--File::Stat
+ |--Dir
+ |--Time
+ |--Struct
+ |  └-Struct::Tms
+ |--Enumerable::Enumerator
+ |--Proc
+ |--Method
+ |--UnboundMethod
+ |--Thread
+ |--ThreadGroup
+ |--FalseClass
+ |--TrueClass
+ |--NilClass
+ |--Exception
+ |--Continuation
+ |--Process::Status
+ |--Binding
+ <span class="sb">`</span>--Data
+    └-NameError::message
+</code></pre></div>
+
+
+<p>これらはRubyに最初から組み込まれたクラスです。重要なもの・よく使うものを上の方に配置しました。Rubyを起動すると最初にこれらのクラスがメモリ空間に構築されて呼べるようになります。Rubyではクラスもメモリ空間に常駐するオブジェクトです。最重要クラスは<code>Object</code>、<code>Module</code>、<code>Class</code>です。これらがRubyの世界の基礎を構築しています。</p>
+
+<p>Rubyには別途<a href="http://doc.ruby-lang.org/ja/1.9.3/library/index.html" title=" ライブラリ一覧">標準添付のクラス群</a>があります。標準添付ライブラリと言います。これらは明示的にメモリに読み出す必要があります。読み出しには<code>require</code>を使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s1">&#39;date&#39;</span>
+
+<span class="nb">puts</span> <span class="no">Date</span><span class="o">.</span><span class="n">today</span>
+<span class="c1"># &gt;&gt; 2012-04-07</span>
+</code></pre></div>
+
+
+<p>読み出しによりこれらもクラスツリーのどこかにぶら下がることになります。あなたが作るoriginalのクラスも他の誰かが公開したクラスも、標準添付ライブラリと全く同様の扱いを受けます。</p>
+
+<p>クラスの主たる仕事はオブジェクトをメモリ空間に生成することです。そしてその標準的な作法はクラスに対し<code>new</code>メソッドを呼ぶことです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">string</span> <span class="o">=</span> <span class="nb">String</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;hello&quot;</span>
+<span class="n">array</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;hello&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;hello&quot;, &quot;hello&quot;, &quot;hello&quot;]</span>
+<span class="nb">hash</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span> <span class="c1"># =&gt; {}</span>
+<span class="n">range</span> <span class="o">=</span> <span class="no">Range</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="c1"># =&gt; 1..9</span>
+<span class="n">regexp</span> <span class="o">=</span> <span class="no">Regexp</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="sr">/r..y/</span><span class="p">)</span> <span class="c1"># =&gt; /r..y/</span>
+<span class="n">f</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;ls_l.rb&#39;</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;File:ls_l.rb&gt;</span>
+</code></pre></div>
+
+
+<p>もっとも、よく使われる組み込みクラスでは、結果を直接書けばオブジェクトが生成できるようになっています。そのようなものをリテラルといいます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span> <span class="c1"># =&gt; &quot;hello&quot;</span>
+<span class="n">array</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;hello&#39;</span><span class="o">]</span> <span class="c1"># =&gt; [&quot;hello&quot;, &quot;hello&quot;, &quot;hello&quot;]</span>
+<span class="nb">hash</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># =&gt; {}</span>
+<span class="n">range</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span> <span class="c1"># =&gt; 1..9</span>
+<span class="n">regexp</span> <span class="o">=</span> <span class="sr">/r..y/</span> <span class="c1"># =&gt; /r..y/</span>
+</code></pre></div>
+
+
+<p>各オブジェクトに対してはその生成元クラスで定義したメソッドが呼べるようになります。各組み込みクラスには大量のメソッドが定義されています。<a href="http://rbref.heroku.com/" title="Ruby Reference Index">Ruby Reference Index</a>における各クラスのpublic_instance_methodsの項を見てください。例えばArrayクラスには80を超えるメソッドが定義されています。これがRubyの便利さの源です。生成元クラスにメソッドが見つからなければ、Rubyはクラスツリーを逆にたどってメソッドを探しに行きます。これが継承の意味です。</p>
+
+<h2>モジュール</h2>
+
+<p>Rubyにはクラスとそっくりな「モジュール」というオブジェクトがあります。クラス同様そこにはメソッドが定義できます。しかしモジュールは先のクラスツリーにぶら下がることができません。オブジェクトを生成することもできません。代わりに、クラスに挿し木されます。それによって対象のクラスにメソッドを補給します。これを「Mix-in」といいます。一つのモジュールを複数のクラスに挿し木することもできます。<code>Enumerable</code>という繰り返しに係る機能を提供するモジュールは<code>Array</code> <code>Hash</code> <code>Range</code> <code>IO</code>など多数のクラスにMix-inされています。最重要モジュールは、ObjectクラスにMix-inされた<code>Kernel</code>モジュールです。</p>
+
+<h2>RubyGems</h2>
+
+<p>他の人が作ったクラスやモジュールは、もっぱら「RubyGems」という形式でパッケージされ公開・配布されています。それらは<a href="https://rubygems.org/" title="RubyGems.org">RubyGems.org</a>でホスティングされています。Rubyにはそこからパッケージを取得するためのrubygemsというツールが付属しています。これを使って<code>gem search</code>して<code>gem install</code>します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="sx">% gem </span><span class="n">search</span> <span class="n">rails</span> <span class="o">--</span><span class="n">remote</span>
+<span class="sx">% gem </span><span class="n">install</span> <span class="n">rails</span>
+</code></pre></div>
+
+
+<p>名前がはっきりしないような場合は<a href="https://rubygems.org/" title="RubyGems.org">RubyGems.org</a>で検索します。機能別で比較しながら見つけたいなら<a href="https://www.ruby-toolbox.com/" title="The Ruby Toolbox">The Ruby Toolbox</a>が便利です。RubyのWeb Application Frameworkにどんなものがあって、人気はどうなのか見てみます。</p>
+
+<p><a href="https://www.ruby-toolbox.com/categories/web_app_frameworks" title="The Ruby Toolbox - Web App Frameworks">The Ruby Toolbox - Web App Frameworks</a></p>
+
+<p><a href="http://rubyonrails.org/" title="Ruby on Rails">Ruby on Rails</a>の人気が図抜けているのがわかります。</p>
+  </body>
+</html>

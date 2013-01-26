@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>これからRubyを始める人たちへ</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>３章　２つ目のRubyのコード</h2>
+
+<p>次に、UNIXコマンドを一つ作ってみます。ディレクトリ内のファイルの情報一覧を表示する、つまり次のUNIXコマンドのRuby版です。</p>
+
+<div class="highlight"><pre><code class="bash">% ls -l
+</code></pre></div>
+
+
+<p>Rubyにはシェルコマンドをそのまま呼べる<code>system</code>というメソッドがあるので、コードは次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="nb">system</span> <span class="s1">&#39;ls -l&#39;</span>
+</code></pre></div>
+
+
+<p>これではRubyの紹介になりません。systemを使わないで書いてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">ls_l</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="n">long_format</span> <span class="o">=</span> <span class="sx">%w(mode nlink uid gid size mtime)</span>
+  <span class="n">stats</span> <span class="o">=</span>
+    <span class="no">Dir</span><span class="o">[</span><span class="n">path</span><span class="o">].</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">fname</span><span class="o">|</span>
+      <span class="n">stat</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+      <span class="n">long_format</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">pt</span><span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">send</span> <span class="n">pt</span> <span class="p">}</span> <span class="o">&lt;&lt;</span> <span class="n">fname</span>
+    <span class="k">end</span>
+
+  <span class="n">header</span> <span class="o">=</span> <span class="n">long_format</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">)</span>
+  <span class="n">body</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">st</span><span class="o">|</span> <span class="n">st</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">)</span> <span class="p">}</span>
+  <span class="o">[</span><span class="n">header</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span>
+<span class="k">end</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;*&#39;</span>
+<span class="nb">puts</span> <span class="n">ls_l</span> <span class="n">path</span>
+</code></pre></div>
+
+
+<p>実行すると次の結果が得られます。</p>
+
+<div class="highlight"><pre><code class="bash">% ruby ls_l.rb
+
+mode  nlink  uid  gid  size  mtime
+16877  3  501  20  102  2012-04-05 22:50:12 +0900  lib
+33188  1  501  20  450  2012-04-07 13:50:34 +0900  ls_l.rb
+33188  1  501  20  366  2012-04-05 08:29:55 +0900  myfirst_webapp.rb
+33188  1  501  20  276  2012-04-06 08:00:31 +0900  password_gen.rb
+16877  3  501  20  102  2012-04-05 22:49:54 +0900  test
+</code></pre></div>
+
+
+<p>今度のコードは読むのがちょっと難しいですね。解説します。</p>
+
+<p><code>%w( … )</code>は文字列を要素とする配列の簡略記法です。簡略しない書き方はこうです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">long_format</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="s1">&#39;nlink&#39;</span><span class="p">,</span> <span class="s1">&#39;uid&#39;</span><span class="p">,</span> <span class="s1">&#39;gid&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="s1">&#39;mtime&#39;</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>この配列を<code>long_format</code>という変数に代入しています。Rubyの変数には型という概念がありません。Rubyの変数はオブジェクトへの参照です。つまり名札です。</p>
+
+<p><code>Dir[path]</code>は一見、配列参照のように見えますが、これはDirオブジェクトに対するメソッド呼び出しです。irbで次のようにしてください。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; Dir<span class="o">[</span><span class="s1">&#39;*&#39;</span><span class="o">]</span>
+<span class="o">=</span>&gt; <span class="o">[</span><span class="s2">&quot;lib&quot;</span>, <span class="s2">&quot;ls_l.rb&quot;</span>, <span class="s2">&quot;myfirst_webapp.rb&quot;</span>, <span class="s2">&quot;password_gen.rb&quot;</span>, <span class="s2">&quot;test&quot;</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>次にこうしてください。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; Dir.<span class="o">[](</span><span class="s1">&#39;*&#39;</span><span class="o">)</span>
+<span class="o">=</span>&gt; <span class="o">[</span><span class="s2">&quot;lib&quot;</span>, <span class="s2">&quot;ls_l.rb&quot;</span>, <span class="s2">&quot;myfirst_webapp.rb&quot;</span>, <span class="s2">&quot;password_gen.rb&quot;</span>, <span class="s2">&quot;test&quot;</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>同じ結果が得られました。つまり<code>Dir[arg]</code>は<code>Dir.[](arg)</code>の簡略記法(syntax sugar)です。ちょっといたずらをします。irbで次のようにしてください。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; def Dir.<span class="o">[](</span>arg<span class="o">)</span>
+&gt;&gt;   arg * 10
+&gt;&gt; <span class="nv">end</span>
+<span class="o">=</span>&gt; nil
+</code></pre></div>
+
+
+<p>もう一度<code>Dir['*']</code>を実行します。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; Dir<span class="o">[</span><span class="s1">&#39;*&#39;</span><span class="o">]</span>
+<span class="o">=</span>&gt; <span class="s2">&quot;**********&quot;</span>
+&gt;&gt; Dir<span class="o">[</span><span class="s1">&#39;/bin&#39;</span><span class="o">]</span>
+<span class="o">=</span>&gt; <span class="s2">&quot;/bin/bin/bin/bin/bin/bin/bin/bin/bin/bin&quot;</span>
+</code></pre></div>
+
+
+<p>挙動が変わりました。つまりメソッドがoverrideされました。</p>
+
+<p>Rubyにはこのような見た目を良くするためのメソッド呼び出しの簡略記法がいろいろあります。以下もそうです。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; 1 + <span class="nv">2</span>
+<span class="o">=</span>&gt; 3
+&gt;&gt; <span class="o">[</span>1,2,3<span class="o">]</span> <span class="s">&lt;&lt; 4</span>
+<span class="s">=&gt; [1, 2, 3, 4</span><span class="o">]</span>
+&gt;&gt; <span class="nb">hash</span> <span class="o">=</span> <span class="o">{}</span>
+&gt;&gt; <span class="nb">hash</span><span class="o">[</span>:job<span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;rubyist&#39;</span>
+<span class="o">=</span>&gt; <span class="s2">&quot;rubyist&quot;</span>
+</code></pre></div>
+
+
+<p>これらは演算子に見えますが、メソッド呼び出しです。originalはこうです。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; 1.+<span class="o">(</span>2<span class="o">)</span>
+<span class="o">=</span>&gt; 3
+&gt;&gt; <span class="o">[</span>1,2,3<span class="o">]</span>.&lt;&lt;<span class="o">(</span>4<span class="o">)</span>
+<span class="o">=</span>&gt; <span class="o">[</span>1, 2, 3, 4<span class="o">]</span>
+&gt;&gt; hash.<span class="o">[]=(</span>:job, <span class="s1">&#39;rubyist&#39;</span><span class="o">)</span>
+<span class="o">=</span>&gt; <span class="s2">&quot;rubyist&quot;</span>
+</code></pre></div>
+
+
+<p>Rubyで演算子に見える記号の多くはメソッド呼び出しです。したがってoverrideしたり、オブジェクトの種類に応じてその挙動を変えることができます。ポリモーフィズムですね。</p>
+
+<p>ls_lの解説に戻ります。コードを再掲します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">ls_l</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="n">long_format</span> <span class="o">=</span> <span class="sx">%w(mode nlink uid gid size mtime)</span>
+  <span class="n">stats</span> <span class="o">=</span>
+    <span class="no">Dir</span><span class="o">[</span><span class="n">path</span><span class="o">].</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">fname</span><span class="o">|</span>
+      <span class="n">stat</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+      <span class="n">long_format</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">pt</span><span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">send</span> <span class="n">pt</span> <span class="p">}</span> <span class="o">&lt;&lt;</span> <span class="n">fname</span>
+    <span class="k">end</span>
+
+  <span class="n">header</span> <span class="o">=</span> <span class="n">long_format</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">)</span>
+  <span class="n">body</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">st</span><span class="o">|</span> <span class="n">st</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">)</span> <span class="p">}</span>
+  <span class="o">[</span><span class="n">header</span><span class="o">]</span> <span class="o">+</span> <span class="n">body</span>
+<span class="k">end</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;*&#39;</span>
+<span class="nb">puts</span> <span class="n">ls_l</span> <span class="n">path</span>
+</code></pre></div>
+
+
+<p><code>map</code>はpassword_genのところで説明しました。<code>Dir[path]</code>で得られたfilenameは<code>|fname|</code>でブロック内の手続きに順番に渡されます。<code>File.stat(fname)</code>はfnameを引数にFileオブジェクトの<code>stat</code>メソッドを呼んでいます。これでそのファイル属性をパッケージ化したオブジェクトが得られます。そしてまた<code>map</code>です。今度はlong_formatの要素（ファイル属性名）を順番にブロックに渡します。ここで、<code>send</code>メソッドでstatにファイル属性名を渡して、各属性名を属性値に置換します。通常、属性値の取得は次のようにします。</p>
+
+<div class="highlight"><pre><code class="bash">&gt;&gt; <span class="nv">stat</span> <span class="o">=</span> File.stat<span class="o">(</span><span class="s1">&#39;password_gen.rb&#39;</span><span class="o">)</span>
+&gt;&gt; stat.mode
+<span class="o">=</span>&gt; 33188
+&gt;&gt; stat.nlink
+<span class="o">=</span>&gt; 1
+&gt;&gt; stat.uid
+<span class="o">=</span>&gt; 501
+&gt;&gt; stat.gid
+<span class="o">=</span>&gt; 20
+&gt;&gt; stat.size
+<span class="o">=</span>&gt; 276
+&gt;&gt; stat.mtime
+<span class="o">=</span>&gt; 2012-04-06 08:00:31 +0900
+</code></pre></div>
+
+
+<p><code>send</code>メソッドはその文字列で各メソッドの呼び出しを可能にします。<code>&lt;&lt;</code>は上で見ました。<code>long_format.map</code>で返された配列にfnameを追加するメソッドです。</p>
+
+<p>最後に<code>path = ARGV[0] || '*'</code>の説明です。<code>ARGV</code>はcommand line引数を表す配列オブジェクトです。つまりこういうことです。</p>
+
+<div class="highlight"><pre><code class="bash">% ruby ls_l.rb <span class="s1">&#39;/usr/local/*&#39;</span>
+</code></pre></div>
+
+
+<p>この場合<code>ARGV[0]</code>には'/usr/local/*'が格納され、変数pathはこれを指すことになります。引数なしで<code>$ ruby ls_l.rb</code>とした場合、nilが入ります。その場合pathは代わりに'*'を参照します。つまり<code>path = ARGV[0] || '*'</code>は</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">path</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="p">?</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="p">:</span> <span class="s1">&#39;*&#39;</span>
+</code></pre></div>
+
+
+<p>あるいは</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">path</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+    <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+  <span class="k">else</span>
+    <span class="s1">&#39;*&#39;</span>
+  <span class="k">end</span>
+</code></pre></div>
+
+
+<p>と等価です。ちなみにRubyでは<code>if</code>を含む制御構造の多くが式です。つまり結果を返します。上の例では結果はpathに代入されます。</p>
+  </body>
+</html>

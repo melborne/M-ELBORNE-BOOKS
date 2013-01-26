@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>１１章　ラッパー関数</h2>
+
+<p>さて、まずは何も考えずにこのコンストラクタとnew演算子を関数でラップしてみます。関数名は<code>iPhone5Create</code>にしましょう。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">iPhone5Create</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">iPhone5</span> <span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">iPhone5</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">call</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s2">&quot;Calling to &quot;</span> <span class="o">+</span> <span class="nx">number</span> <span class="o">+</span> <span class="s2">&quot; ...&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">iTunes</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">artist</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s2">&quot;Playing: =&gt; `&quot;</span> <span class="o">+</span> <span class="nx">title</span> <span class="o">+</span> <span class="s2">&quot;` of &quot;</span> <span class="o">+</span> <span class="nx">artist</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">camera</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Photo!&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">panorama</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; Take a Panorama Photo!!&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">iPhone5</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+
+
+<p>特に難しいことは何もありません。iPhone5Create関数で受けた引数をiPhone5コンストラクタに引き渡すだけです。ではiPhone5Createに引数を渡して、先程と同様に２つのオブジェクトを生成してみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">jonathan</span> <span class="o">=</span> <span class="nx">iPhone5Create</span><span class="p">(</span><span class="mi">12345</span><span class="p">,</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">scott</span> <span class="o">=</span> <span class="nx">iPhone5Create</span><span class="p">(</span><span class="mi">12346</span><span class="p">,</span> <span class="s1">&#39;Scott&#39;</span><span class="p">);</span>
+
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12345</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jonathan&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-692-7753&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-692-7753 ...&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;Imagine&#39;</span><span class="p">,</span> <span class="s1">&#39;John Lennon&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `Imagine` of John Lennon&#39;</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Jonathan Take a Panorama Photo!!&#39;</span>
+
+<span class="nx">scott</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span> <span class="c1">// 12346</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Scott&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="s1">&#39;800-275-2273&#39;</span><span class="p">);</span> <span class="c1">// &#39;Calling to 800-275-2273 ...&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">iTunes</span><span class="p">(</span><span class="s1">&#39;My Hero&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo Fighters&#39;</span><span class="p">);</span> <span class="c1">// &#39;Playing: =&gt; `My Hero` of Foo Fighters&#39;</span>
+<span class="nx">scott</span><span class="p">.</span><span class="nx">panorama</span><span class="p">();</span> <span class="c1">// &#39;Scott Take a Panorama Photo!!&#39;</span>
+</code></pre></div>
+
+
+<p>うまくいきました。</p>
+
+<p>この時点でユーザがiPhone5コンストラクタをnewする場合と大きく異なるのは、ユーザはもはやiPhone5コンストラクタにアクセス出来ないという点です。その結果、new無しでiPhone5コンストラクタを呼んでしまうというリスクは消えました。確かめてみます。</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">iPhone5</span> <span class="c1">// ReferenceError: iPhone5 is not defined</span>
+
+<span class="kd">var</span> <span class="nx">jonathan</span> <span class="o">=</span> <span class="nx">iPhone5Create</span><span class="p">(</span><span class="mi">12345</span><span class="p">,</span> <span class="s1">&#39;Jonathan&#39;</span><span class="p">);</span>
+<span class="nx">jonathan</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// &#39;Jonathan&#39;</span>
+
+<span class="nx">iPhone5</span> <span class="c1">// ReferenceError: iPhone5 is not defined</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+  </body>
+</html>

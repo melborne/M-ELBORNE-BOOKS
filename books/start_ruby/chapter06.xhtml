@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>これからRubyを始める人たちへ</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>６章　メタプログラミング</h2>
+
+<p>次にRubyのメタプログラミングについても触れておきます。メタプログラミングとは、あなたに代わってランタイムつまり動的にプログラムにプログラムを書かせることです。<code>method_missing</code>というフックメソッドを使ったメタプログラミングをやってみます。まずは次のような仕掛けをしておきます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Country</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="n">meth_name</span> <span class="o">=</span> <span class="nb">name</span><span class="o">.</span><span class="n">to_s</span>
+    <span class="k">return</span> <span class="k">super</span> <span class="k">unless</span> <span class="n">meth_name</span><span class="o">.</span><span class="n">start_with?</span><span class="p">(</span><span class="s1">&#39;def__&#39;</span><span class="p">)</span>
+
+    <span class="n">meth_name</span> <span class="o">=</span> <span class="n">meth_name</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/^def__/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">singleton</span> <span class="o">=</span> <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span><span class="p">;</span> <span class="nb">self</span> <span class="k">end</span>
+    <span class="n">singleton</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2">=&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+        <span class="nb">instance_variable_set</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="n">define_method</span><span class="p">(</span><span class="n">meth_name</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">meth_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>ここには具体的なメソッド定義はありません。代わりにメソッド定義を動的に生成する<code>define_method</code>が定義されています。概要だけ説明すると、Countryおよびそのサブクラスが<code>def__</code>ではじまるメソッド呼び出しを受けたとき、def__以下のwordに係るsetterとgetterメソッドを自動生成します。次のように使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Japan</span> <span class="o">&lt;</span> <span class="no">Country</span>
+  <span class="sx">%w(capital language population)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="nb">send</span> <span class="s2">&quot;def__</span><span class="si">#{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="no">Japan</span><span class="o">.</span><span class="n">capital</span> <span class="o">=</span> <span class="s1">&#39;Tokyo&#39;</span>
+<span class="no">Japan</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s1">&#39;Japanese&#39;</span>
+<span class="no">Japan</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="mi">127433494</span>
+
+<span class="nb">puts</span> <span class="o">&lt;&lt;</span><span class="no">EOS</span>
+<span class="sh">Japan</span>
+<span class="sh">  Capital:    #{Japan.capital}</span>
+<span class="sh">  Language:   #{Japan.language}</span>
+<span class="sh">  Population: #{Japan.population}</span>
+<span class="no">EOS</span>
+
+<span class="c1"># &gt;&gt; Japan</span>
+<span class="c1"># &gt;&gt;   Capital:    Tokyo</span>
+<span class="c1"># &gt;&gt;   Language:   Japanese</span>
+<span class="c1"># &gt;&gt;   Population: 127433494</span>
+</code></pre></div>
+
+
+<p>CountryのサブクラスJapanで、def__ではじまるcapital以下のメソッドを呼び出します。しかしそのようなメソッドはJapanクラスにもCountryクラスにもさらにはその親であるObjectクラスにも定義されていないので、これらの呼び出しは結局、Countryのmethod_missingメソッドを呼び出すことになります。そしてそこに書かれたコードが実行されて、動的に<code>capital</code>, <code>capital=</code>, <code>language</code>, <code>language=</code>, <code>population</code>, <code>population=</code>の各メソッドが定義されることになります。一応確認してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Japan</span><span class="o">.</span><span class="n">methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="c1"># =&gt; [:capital=, :capital, :language=, :language, :population=, :population, :currency=, :currency]</span>
+</code></pre></div>
+
+
+<p>いいですね。</p>
+
+<p>クラス定義のやり方も説明せずに、いきなりメタプログラミングもないものです。ただRubyの強力さを伝えたかったのです。</p>
+  </body>
+</html>
