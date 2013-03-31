@@ -9,8 +9,8 @@ subtitle: ''
 subject: 'programming, ruby, tutorial, 入門'
 description: '本書は、ブログ「hp12c」( http://melborne.github.com/ )における「」の電子書籍版です。'
 creator: 'kyoendo'
-date: '2012-12-'
-liquid: '../template/plugins'
+date: '2013-'
+liquid: '../../template/plugins'
 ---
 
 <<<------>>>
@@ -21,7 +21,7 @@ liquid: '../template/plugins'
 
 > 
 
-ブログにおける誤記の修正およびメディア向けの調整を行って電子書籍化しました。EPUBデータの生成には、Rubyで作られた[melborne/maliq](https://github.com/melborne/maliq 'melborne/maliq')を使っています。
+ブログにおける誤記の修正およびメディア向けの調整を行って電子書籍化しました。epubデータの生成には、Rubyで作られた[melborne/maliq](https://github.com/melborne/maliq 'melborne/maliq')を使っています。mobiデータは、epubデータを[calibre](http://calibre-ebook.com/ "calibre")を使って変換生成しました。
 
 ## 著者について
 
