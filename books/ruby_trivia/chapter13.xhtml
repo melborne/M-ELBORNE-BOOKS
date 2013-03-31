@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>12. Array#first/last</h2>
+
+<p><code>Array#first/last</code>は個数の引数を取れます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">arr</span> <span class="o">=</span> <span class="o">[*</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="o">]</span>
+<span class="n">arr</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="n">arr</span><span class="o">.</span><span class="n">last</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 96, 97, 98, 99, 100]</span>
+</code></pre></div>
+
+
+<p>これはRangeにもあるので上の式は次のように書くのが正しいですね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">range</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="n">range</span><span class="o">.</span><span class="n">last</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 96, 97, 98, 99, 100]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>9. Integer#times</h2>
+
+<p><code>times</code>は処理を特定回数だけ繰り返したいときに使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">you_said</span> <span class="o">=</span> <span class="s1">&#39;てぶくろ&#39;</span>
+<span class="mi">6</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="nb">puts</span> <span class="n">you_said</span><span class="o">.</span><span class="n">reverse!</span> <span class="p">}</span> <span class="c1"># =&gt; 6</span>
+<span class="c1"># &gt;&gt; ろくぶて</span>
+<span class="c1"># &gt;&gt; てぶくろ</span>
+<span class="c1"># &gt;&gt; ろくぶて</span>
+<span class="c1"># &gt;&gt; てぶくろ</span>
+<span class="c1"># &gt;&gt; ろくぶて</span>
+<span class="c1"># &gt;&gt; てぶくろ</span>
+</code></pre></div>
+
+
+<p>timesはブロックを渡さないとEnumeratorを返します。よって複数のオブジェクトを生成するようなことにも使えます。20個のRGBカラーサンプルを作ってみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">20</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">[</span><span class="nb">rand</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span><span class="o">]</span> <span class="p">}</span> <span class="c1"># =&gt; [[45, 190, 194], [94, 43, 125], [6, 104, 181], [144, 92, 114], [34, 161, 214], [96, 69, 241], [216, 246, 133], [6, 237, 131], [194, 95, 214], [177, 252, 202], [184, 149, 142], [184, 166, 45], [41, 108, 115], [176, 100, 138], [124, 213, 89], [173, 123, 34], [137, 31, 47], [54, 92, 186], [118, 239, 217], [150, 184, 240]]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>オブジェクトの理解から始めるRuby</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>３章　クラスオブジェクト ─オブジェクトとしての顔─</h2>
+
+<p>確かにクラスはオブジェクトを生成するための雛形的なものです。しかし同時に、クラスはそれ自身もRuby実行空間に存在するオブジェクトなのです。</p>
+
+<p>オブジェクトにクラスという母があるように、すべてのクラスにも<strong>Class</strong>クラスという母があります。</p>
+
+<p>つまりすべてのクラスの雛形となっているのはClassクラスであり、クラスはすべてここから生成されているのです。<strong>class</strong>メソッドでこの事実を知ることができます（一部のクラスは省略しています）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Object</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="nb">Array</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
+<span class="no">Binding</span><span class="o">.</span><span class="n">class</span>          <span class="c1"># =&gt; Class</span>
+<span class="no">Data</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+<span class="no">Exception</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">class</span>              <span class="c1"># =&gt; Class</span>
+<span class="no">Encoding</span><span class="o">.</span><span class="n">class</span>         <span class="c1"># =&gt; Class</span>
+<span class="no">Enumerator</span><span class="o">.</span><span class="n">class</span>       <span class="c1"># =&gt; Class</span>
+<span class="ss">File</span><span class="p">:</span><span class="ss">:Stat</span><span class="o">.</span><span class="n">class</span>       <span class="c1"># =&gt; Class</span>
+<span class="no">Hash</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+<span class="no">IO</span><span class="o">.</span><span class="n">class</span>               <span class="c1"># =&gt; Class</span>
+<span class="no">File</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+<span class="no">MatchData</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
+<span class="no">Method</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">Module</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">Numeric</span><span class="o">.</span><span class="n">class</span>          <span class="c1"># =&gt; Class</span>
+<span class="no">Proc</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+<span class="ss">Process</span><span class="p">:</span><span class="ss">:Status</span><span class="o">.</span><span class="n">class</span>  <span class="c1"># =&gt; Class</span>
+<span class="no">Random</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">Range</span><span class="o">.</span><span class="n">class</span>            <span class="c1"># =&gt; Class</span>
+<span class="no">Regexp</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="nb">String</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">Struct</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">Symbol</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">Thread</span><span class="o">.</span><span class="n">class</span>           <span class="c1"># =&gt; Class</span>
+<span class="no">ThreadGroup</span><span class="o">.</span><span class="n">class</span>      <span class="c1"># =&gt; Class</span>
+<span class="no">Time</span><span class="o">.</span><span class="n">class</span>             <span class="c1"># =&gt; Class</span>
+<span class="no">UnboundMethod</span><span class="o">.</span><span class="n">class</span>    <span class="c1"># =&gt; Class</span>
+<span class="no">TrueClass</span><span class="o">.</span><span class="n">class</span>        <span class="c1"># =&gt; Class</span>
+<span class="no">FalseClass</span><span class="o">.</span><span class="n">class</span>       <span class="c1"># =&gt; Class</span>
+<span class="no">NilClass</span><span class="o">.</span><span class="n">class</span>         <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>そうなると、Classクラスの母は一体誰なのかという疑問が持ち上がります。Classクラスにclassメソッドを送ってこの疑問に答えましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Class</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>驚くべきことに、Classクラスの母もこのClassクラス自身だったのです！</p>
+
+<p>あなたが後から作るクラスも、その母はあなたではなくClassクラスです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Creature</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>またある特定のクラスのサブクラスもその母はスーパークラスではなく、Classクラスです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>  <span class="c1"># CreatureクラスのサブクラスPersonを定義</span>
+
+<span class="k">end</span>
+
+<span class="no">Person</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; Class</span>
+</code></pre></div>
+
+
+<p>兎にも角にも、あらゆるクラスは、<strong>Class</strong>という一つのクラスから生成されているのです。</p>
+
+<p>つまりRuby実行空間には、最初にClassクラスから生成されたClassクラスがあり、そのClassクラスが次いで他のすべてのクラスを生成し、最後にこの生成された各種のクラスからオブジェクトが生成される、という構図が描かれます。</p>
+
+<p><img src="images/ruby_class.png" alt="Alt title noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>クラスからオブジェクトを生成するときはユーザがnewメソッドを使ってその生成を明示し、これを変数などに格納してアクセスできるようにする必要があります。しかしクラスの生成にその必要はありません。class定義式の解析時にRubyが自動でそれらを生成します。生成されたクラスにはそのクラス名を冠した定数が付けられ、これによりユーザによるクラスへのアクセスが可能になります。</p>
+
+<p>このことを確認するために、恣意的にClassクラスのnewクラスメソッドを使ってクラスを生成してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span> <span class="no">Creature</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Creature</span><span class="p">)</span> <span class="c1"># !&gt; already initialized constant Creature</span>
+<span class="c1"># &gt;&gt; Creature</span>
+</code></pre></div>
+
+
+<p>これによりCreature定数には既にCreatureクラスがセットされていることが確認できます。なお上記によりCreatureクラスのサブクラスが生成され、それがCreature定数に再設定されたことになります。</p>
+
+<p>クラスには自身のためのselfメソッドを定義できます。これは通常「クラスメソッド」と呼ばれます。クラスに対しクラスメソッドを直接呼び出すことによって、クラス自身にアクセスできます。クラスメソッドはそこから派生したオブジェクト全体を管理するためなどに使うことができます。</p>
+
+<p>Creatureクラスにそこから派生したオブジェクトの数を返す<strong>count</strong>クラスメソッドを定義します。def式においてメソッド名の前に<strong>self</strong>を置くことでクラスメソッドが定義できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
+  <span class="vc">@@counter</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="vc">@@counter</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">count</span>
+    <span class="s2">&quot;You have </span><span class="si">#{</span><span class="vc">@@counter</span><span class="si">}</span><span class="s2"> creatures.&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">dog</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+<span class="n">alligator</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;thanks&#39;</span><span class="p">)</span>
+<span class="n">hippopotamus</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;idiot&#39;</span><span class="p">)</span>
+
+<span class="no">Creature</span><span class="o">.</span><span class="n">count</span>  <span class="c1"># =&gt; &quot;You have 3 creatures.&quot;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

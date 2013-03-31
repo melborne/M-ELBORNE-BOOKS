@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>40. 正規表現:POSIXブラケット</h2>
+
+<p>Ruby1.9では<code>\w</code>は日本語にマッチしなくなりました。1.9で日本語にもマッチさせたいときはPOSIXブラケットで<code>word</code>を使うといいかもしれません。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">need_japanese</span> <span class="o">=</span> <span class="s2">&quot;this-日本語*is*_really_/</span><span class="se">\\</span><span class="s2">変わってる!&quot;</span>
+<span class="n">need_japanese</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/\w+/</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;this&quot;, &quot;is&quot;, &quot;_really_&quot;]</span>
+<span class="n">need_japanese</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[[:word:]]+/</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;this&quot;, &quot;日本語&quot;, &quot;is&quot;, &quot;_really_&quot;, &quot;変わってる&quot;]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

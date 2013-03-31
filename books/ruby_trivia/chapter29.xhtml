@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>28. Structのデフォルト値</h2>
+
+<p>もう一つStructです。今度はBeverageオブジェクトを作ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Beverage</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:cost</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># または、Beverage = Struct.new(:name, :cost)</span>
+
+<span class="n">starbucks</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:staba</span><span class="p">,</span> <span class="mi">430</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:staba, cost=430&gt;</span>
+<span class="n">heineken</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:heineken</span><span class="p">,</span> <span class="mi">580</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:heineken, cost=580&gt;</span>
+</code></pre></div>
+
+
+<p>ここで<code>new</code>に引数を渡さないとその属性値にはnilがセットされてしまいます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Beverage</span><span class="o">.</span><span class="n">new</span> <span class="c1"># =&gt; #&lt;struct Beverage name=nil, cost=nil&gt;</span>
+</code></pre></div>
+
+
+<p>できればクラスの場合と同じようにデフォルト値をセットしたいです。そんなときはこうします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Beverage</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:cost</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="o">=</span><span class="ss">:water</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">starbucks</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:staba</span><span class="p">,</span> <span class="mi">430</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:staba, cost=430&gt;</span>
+<span class="n">heineken</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:heineken</span><span class="p">,</span> <span class="mi">580</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:heineken, cost=580&gt;</span>
+
+<span class="n">water</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:water, cost=0&gt;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

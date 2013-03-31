@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>46. String#gsub</h2>
+
+<p>文字列の中に現れる部分文字列の繰り返し回数を数えたい、というときがあります。普通、<code>String#scan</code>を使うと思います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">DATA</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/hello/i</span><span class="p">)</span><span class="o">.</span><span class="n">count</span> <span class="c1"># =&gt; 48</span>
+
+<span class="cp">__END__</span>
+<span class="cp">You say &quot;Yes&quot;, I say &quot;No&quot;.</span>
+<span class="cp">You say &quot;Stop&quot; and I say &quot;Go, go, go&quot;.</span>
+<span class="cp">Oh no.</span>
+<span class="cp">You say &quot;Goodbye&quot; and I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say goodbye, I say hello.</span>
+<span class="cp">I say &quot;High&quot;, you say &quot;Low&quot;.</span>
+<span class="cp">You say &quot;Why?&quot; And I say &quot;I don&#39;t know&quot;.</span>
+<span class="cp">Oh no.</span>
+<span class="cp">You say &quot;Goodbye&quot; and I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">(Hello, goodbye, hello, goodbye. Hello, goodbye.)</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello&quot;.</span>
+<span class="cp">(Hello, goodbye, hello, goodbye. Hello, goodbye. Hello, goodbye.)</span>
+<span class="cp">Why, why, why, why, why, why, do you</span>
+<span class="cp">Say &quot;Goodbye, goodbye, bye, bye&quot;.</span>
+<span class="cp">Oh no.</span>
+<span class="cp">You say &quot;Goodbye&quot; and I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello&quot;.</span>
+<span class="cp">You say &quot;Yes&quot;, I say &quot;No&quot;.</span>
+<span class="cp">(I say &quot;Yes&quot;, but I may mean &quot;No&quot;).</span>
+<span class="cp">You say &quot;Stop&quot;, I say &quot;Go, go, go&quot;.</span>
+<span class="cp">(I can stay still it&#39;s time to go).</span>
+<span class="cp">Oh, oh no.</span>
+<span class="cp">You say &quot;Goodbye&quot; and I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">I don&#39;t know why you say &quot;Goodbye&quot;, I say &quot;Hello-wow, oh. Hello&quot;.</span>
+<span class="cp">Hela, heba, helloa. Hela, heba, helloa. Hela, heba, helloa.</span>
+<span class="cp">Hela, heba, helloa. (Hela.) Hela, heba, helloa. Hela, heba, helloa.</span>
+<span class="cp">Hela, heba, helloa. Hela, heba, helloa. Hela, heba, helloa.</span>
+</code></pre></div>
+
+
+<p>いい歌詞ですね。</p>
+
+<p>しかし<code>String#gsub</code>はブロックを渡さないとEnumeratorを返すから、同じことができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">DATA</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/hello/i</span><span class="p">)</span><span class="o">.</span><span class="n">count</span> <span class="c1"># =&gt; 48</span>
+
+<span class="cp">__END__</span>
+<span class="cp">You say &quot;Yes&quot;, I say &quot;No&quot;.</span>
+<span class="cp">You say &quot;Stop&quot; and I say &quot;Go, go, go&quot;.</span>
+<span class="cp">Oh no.</span>
+<span class="cp">You say &quot;Goodbye&quot; and I say &quot;Hello, hello, hello&quot;.</span>
+<span class="cp">....</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

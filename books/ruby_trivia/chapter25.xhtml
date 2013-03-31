@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>24. 大文字メソッド</h2>
+
+<p>Rubyでは通常メソッド名には英小文字を使いますが、英大文字も許容されています。大文字メソッドは一見定数に見えます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Google</span>
+   <span class="k">def</span> <span class="nf">URL</span>
+     <span class="s1">&#39;www.google.com&#39;</span>
+   <span class="k">end</span>
+   <span class="kp">private</span> <span class="ss">:URL</span>
+
+   <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+     <span class="n">get</span><span class="p">(</span> <span class="no">URL</span><span class="p">(),</span> <span class="n">word</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>定数は継承サブクラスで参照されますが、これを非公開にしたいこともあるでしょう。そんなときには大文字メソッドがいいかもしれません。</p>
+
+<p>引数がないときでもカッコを省略できないという欠点はありますが、関連する複数の定数を定義するときなどにも便利に使えます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Google</span>
+   <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="ss">:us</span><span class="p">)</span>
+     <span class="n">get</span><span class="p">(</span> <span class="no">URL</span><span class="p">(</span><span class="n">code</span><span class="p">),</span> <span class="n">word</span> <span class="p">)</span>
+   <span class="k">end</span>
+
+   <span class="k">def</span> <span class="nf">URL</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+     <span class="p">{</span> <span class="ss">us</span><span class="p">:</span> <span class="s1">&#39;www.google.com&#39;</span><span class="p">,</span>
+       <span class="ss">ja</span><span class="p">:</span> <span class="s1">&#39;www.google.co.jp&#39;</span> <span class="p">}</span><span class="o">[</span><span class="n">code</span><span class="o">]</span>
+   <span class="k">end</span>
+   <span class="kp">private</span> <span class="ss">:URL</span>
+</code></pre></div>
+
+
+<p>「定数メソッド」という呼び方はどうでしょう。</p>
+  </body>
+</html>

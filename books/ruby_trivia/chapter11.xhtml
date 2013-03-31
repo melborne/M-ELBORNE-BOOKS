@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>10. String#succ / Integer#succ</h2>
+
+<p>ExcelのAから始まる横のラベルを作りたいんだけどどうする？といった問題が最近ありました。Rubyには<code>String#succ</code>または<code>next</code>があるからこれは簡単です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;@&#39;</span>
+<span class="mi">60</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">col</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">succ</span> <span class="p">}</span> <span class="c1"># =&gt; [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;, &quot;K&quot;, &quot;L&quot;, &quot;M&quot;, &quot;N&quot;, &quot;O&quot;, &quot;P&quot;, &quot;Q&quot;, &quot;R&quot;, &quot;S&quot;, &quot;T&quot;, &quot;U&quot;, &quot;V&quot;, &quot;W&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;, &quot;AA&quot;, &quot;AB&quot;, &quot;AC&quot;, &quot;AD&quot;, &quot;AE&quot;, &quot;AF&quot;, &quot;AG&quot;, &quot;AH&quot;, &quot;AI&quot;, &quot;AJ&quot;, &quot;AK&quot;, &quot;AL&quot;, &quot;AM&quot;, &quot;AN&quot;, &quot;AO&quot;, &quot;AP&quot;, &quot;AQ&quot;, &quot;AR&quot;, &quot;AS&quot;, &quot;AT&quot;, &quot;AU&quot;, &quot;AV&quot;, &quot;AW&quot;, &quot;AX&quot;, &quot;AY&quot;, &quot;AZ&quot;, &quot;BA&quot;, &quot;BB&quot;, &quot;BC&quot;, &quot;BD&quot;, &quot;BE&quot;, &quot;BF&quot;, &quot;BG&quot;, &quot;BH&quot;]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

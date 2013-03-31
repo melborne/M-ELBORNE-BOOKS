@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>23. 動的継承</h2>
+
+<p>Rubyのクラス継承では <code>&lt;</code> 記号の右辺にクラス定数だけでなくクラスを返す式が書けます。乱数でsuperclassを決める例です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Male</span>
+  <span class="k">def</span> <span class="nf">laugh</span>
+    <span class="s1">&#39;Ha ha ha!&#39;</span>
+  <span class="k">end</span>
+ <span class="k">end</span>
+
+ <span class="k">class</span> <span class="nc">Female</span>
+  <span class="k">def</span> <span class="nf">laugh</span>
+    <span class="s1">&#39;Fu fu fu..&#39;</span>
+  <span class="k">end</span>
+ <span class="k">end</span>
+
+ <span class="k">class</span> <span class="nc">Me</span> <span class="o">&lt;</span> <span class="o">[</span><span class="no">Male</span><span class="p">,</span> <span class="no">Female</span><span class="o">][</span><span class="nb">rand</span> <span class="mi">2</span><span class="o">]</span>
+ <span class="k">end</span>
+
+ <span class="no">Me</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># =&gt; Female</span>
+ <span class="no">Me</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">laugh</span> <span class="c1"># =&gt; &#39;Fu fu fu..&#39;</span>
+</code></pre></div>
+
+
+<p>環境に応じてIOを切り替える例も示します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">io</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="ss">:development</span><span class="p">)</span>
+   <span class="n">env</span><span class="o">==</span><span class="ss">:test</span> <span class="p">?</span> <span class="no">StringIO</span> <span class="p">:</span> <span class="no">IO</span>
+ <span class="k">end</span>
+
+ <span class="n">env</span> <span class="o">=</span> <span class="ss">:test</span>
+
+ <span class="k">class</span> <span class="nc">MyIO</span> <span class="o">&lt;</span> <span class="n">io</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+ <span class="k">end</span>
+
+ <span class="no">MyIO</span><span class="o">.</span><span class="n">superclass</span> <span class="c1">#=&gt; StringIO</span>
+</code></pre></div>
+
+
+<p>つまりRubyでは条件に応じて継承するクラスを動的に変えることができるのです。</p>
+  </body>
+</html>

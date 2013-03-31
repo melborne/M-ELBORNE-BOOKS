@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>オブジェクトの理解から始めるRuby</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>８章　extend</h2>
+
+<p>なおSingletonクラスはクラスに他ならないので、当然そこにモジュールをMix-inできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Business</span>
+  <span class="k">def</span> <span class="nf">job</span>
+    <span class="s2">&quot;Programmer&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="n">a_friend</span>
+  <span class="kp">include</span> <span class="no">Business</span>
+<span class="k">end</span>
+
+<span class="n">a_friend</span><span class="o">.</span><span class="n">job</span> <span class="c1"># =&gt; &quot;Programmer&quot;</span>
+</code></pre></div>
+
+
+<p>SingletonクラスにMix-inされたBusinessモジュールのjobメソッドは、a_friendオブジェクトのSingletonメソッドになります。</p>
+
+<p>しかしRubyではもっと簡単に、モジュールメソッドをSingletonメソッドとしてMix-inする方法があります。それが「extend」です。</p>
+
+<p>SingletonメソッドがSingletonクラスのメソッドを直接オブジェクトに追加できるようにするのと同様、extendはモジュールのメソッドを直接オブジェクトに追加できるようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a_friend</span><span class="o">.</span><span class="n">extend</span> <span class="no">Business</span>
+
+<span class="n">a_friend</span><span class="o">.</span><span class="n">job</span> <span class="c1"># =&gt; &quot;Programmer&quot;</span>
+</code></pre></div>
+
+
+<p>これによりモジュール内メソッドは特定のオブジェクトの機能になります。</p>
+
+<p><img src="images/ruby_extend.png" alt="Alt title noshadow" /></p>
+
+<br clear='all' />
+
+
+
+  </body>
+</html>

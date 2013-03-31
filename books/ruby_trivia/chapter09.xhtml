@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>8. Enumerator#with_index</h2>
+
+<p>任意のリストを標準出力するときに連番を同時に振る場合、普通は<code>Enumerable#each_with_index</code>を使います。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">names</span> <span class="o">=</span> <span class="no">Module</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">names</span><span class="o">.</span><span class="n">each_with_index</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">&quot;%d: %s&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">name</span><span class="o">]</span> <span class="p">}</span>
+<span class="c1"># &gt;&gt; 1: Object</span>
+<span class="c1"># &gt;&gt; 2: Module</span>
+<span class="c1"># &gt;&gt; 3: Class</span>
+<span class="c1"># &gt;&gt; 4: Kernel</span>
+<span class="c1"># &gt;&gt; 5: NilClass</span>
+<span class="c1"># &gt;&gt; 6: NIL</span>
+<span class="c1"># &gt;&gt; 7: Data</span>
+<span class="c1"># &gt;&gt; 8: TrueClass</span>
+<span class="c1"># &gt;&gt; 9: TRUE</span>
+<span class="c1"># &gt;&gt; 10: FalseClass</span>
+</code></pre></div>
+
+
+<p><code>i+1</code>ってのがイマイチですよね？そんな人には<code>Enumerator#with_index</code>があります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">names</span> <span class="o">=</span> <span class="no">Module</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">names</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">i</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">&quot;%d: %s&quot;</span> <span class="o">%</span> <span class="o">[</span><span class="n">i</span><span class="p">,</span> <span class="nb">name</span><span class="o">]</span> <span class="p">}</span>
+<span class="c1"># &gt;&gt; 1: Object</span>
+<span class="c1"># &gt;&gt; 2: Module</span>
+<span class="c1"># &gt;&gt; 3: Class</span>
+<span class="c1"># &gt;&gt; 4: Kernel</span>
+<span class="c1"># &gt;&gt; 5: NilClass</span>
+<span class="c1"># &gt;&gt; 6: NIL</span>
+<span class="c1"># &gt;&gt; 7: Data</span>
+<span class="c1"># &gt;&gt; 8: TrueClass</span>
+<span class="c1"># &gt;&gt; 9: TRUE</span>
+<span class="c1"># &gt;&gt; 10: FalseClass</span>
+</code></pre></div>
+
+
+<p>with_indexはindexのoffsetを引数に取れます。comparableなオブジェクトが取れたらもっとよかったのですが。</p>
+  </body>
+</html>

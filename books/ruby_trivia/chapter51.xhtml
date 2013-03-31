@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>50. DATA.rewind</h2>
+
+<p>DATAは__END__以降をFileとしたオブジェクトです。よってrewindメソッドが使えますが、これは__END__の最初の行に戻るのではなくてファイルのトップに戻るのです。したがってこれを使えば、なんちゃってQuineができるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#!/usr/bin/env ruby</span>
+<span class="nb">require</span> <span class="s2">&quot;g&quot;</span>
+<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+  <span class="n">op</span> <span class="o">=</span> <span class="sx">%w(\+ \* \/)</span>
+  <span class="n">digit</span> <span class="o">=</span> <span class="sr">/-*\d+/</span>
+  <span class="k">if</span> <span class="n">m</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/(</span><span class="si">#{</span><span class="n">op</span><span class="si">}</span><span class="sr">)\s+(</span><span class="si">#{</span><span class="n">digit</span><span class="si">}</span><span class="sr">)\s+(</span><span class="si">#{</span><span class="n">digit</span><span class="si">}</span><span class="sr">)/</span><span class="p">)</span>
+    <span class="n">op</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">captures</span>
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">to_i</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span>
+    <span class="n">str</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">pre_match</span> <span class="o">+</span> <span class="n">inner</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">post_match</span>
+    <span class="n">evaluate</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+  <span class="k">else</span>
+    <span class="n">str</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">g</span> <span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;+ * 3 4 5&quot;</span><span class="p">)</span>
+<span class="no">DATA</span><span class="o">.</span><span class="n">rewind</span>
+<span class="nb">puts</span> <span class="no">DATA</span><span class="o">.</span><span class="n">to_a</span>
+<span class="cp">__END__</span>
+</code></pre></div>
+
+
+<p>このコードを実行すると、evaluateの結果がgrowl出力されると共に、このコード自身が標準出力されます。</p>
+  </body>
+</html>

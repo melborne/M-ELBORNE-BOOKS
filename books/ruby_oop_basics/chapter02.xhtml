@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>オブジェクトの理解から始めるRuby</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>２章　クラスオブジェクト ─クラスとしての顔─</h2>
+
+<p>クラスオブジェクトは通常単に「クラス」と呼ばれ、主にRuby実行空間にオブジェクトを生み出すために存在します。生み出されるオブジェクトのデザインは、クラスに記述されており、ユーザがオブジェクトにアクセスしてその機能を実現しようとするとき、オブジェクトはクラスからその機能を借り出します。</p>
+
+<p>Rubyにはその設計者により予め多数のクラスが用意されています。これらは組み込みクラスと呼ばれます。ユーザは組み込みクラスを自由に使えますが、<strong>class</strong>式を使って独自クラスを定義することもできます。<strong>Creature</strong>クラスを定義してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>仮に、ユーザがclass式を使って既存クラスと同名のクラスを定義した場合、それは既存クラスの書き換えではなく拡張となります。その既存クラスが本来持っている機能は失われず、新たな機能がそこに付加されることになるのです。<strong>String#expand</strong>を定義します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/./</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">my_name</span> <span class="o">=</span> <span class="s2">&quot;charlie&quot;</span>
+<span class="n">my_name</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 7</span>
+<span class="n">my_name</span><span class="o">.</span><span class="n">expand</span> <span class="c1"># =&gt; &quot;cchhaarrlliiee&quot;</span>
+</code></pre></div>
+
+
+<p>もっとも同名のメソッドを再定義すれば、それは基のメソッドの上書きになるので注意を要します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">length</span>
+    <span class="s2">&quot;I don&#39;t wanna tell you.&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="s2">&quot;Charlie&quot;</span><span class="o">.</span><span class="n">length</span>  <span class="c1"># =&gt; &quot;I don&#39;t wanna tell you.&quot;</span>
+</code></pre></div>
+
+
+<p>特定のクラスからオブジェクトを生成するには、<strong>new</strong>メソッドを使います。"Doggie"という名の生物を生成しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Creatureクラスのnewメソッドでオブジェクトを生成する</span>
+<span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span> 
+</code></pre></div>
+
+
+<p>一方で、代表的な組み込みクラスでは「リテラル表記」を使って、簡易にオブジェクトを生成することができます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># 文字列オブジェクトの生成</span>
+<span class="n">my_name</span> <span class="o">=</span> <span class="s2">&quot;Charlie&quot;</span>
+<span class="c1"># 整数オブジェクトの生成</span>
+<span class="n">my_age</span> <span class="o">=</span> <span class="mi">195</span>
+<span class="c1"># 配列オブジェクトの生成</span>
+<span class="n">my_pets</span> <span class="o">=</span> <span class="o">[</span> <span class="s1">&#39;Dog&#39;</span><span class="p">,</span> <span class="s1">&#39;Crocodile&#39;</span><span class="p">,</span> <span class="s1">&#39;Hippopotamus&#39;</span> <span class="o">]</span>
+<span class="c1"># ハッシュオブジェクトの生成</span>
+<span class="n">my_favorite</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:number</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="ss">:language</span> <span class="o">=&gt;</span> <span class="s1">&#39;Ruby&#39;</span><span class="p">,</span> <span class="ss">:color</span> <span class="o">=&gt;</span> <span class="s1">&#39;Blue&#39;</span> <span class="p">}</span> 
+<span class="c1"># 範囲オブジェクトの生成</span>
+<span class="n">my_range</span> <span class="o">=</span> <span class="mi">9</span><span class="o">.</span><span class="n">.</span><span class="mi">21</span>
+<span class="c1"># 正規表現オブジェクトの生成</span>
+<span class="n">my_regexp</span> <span class="o">=</span> <span class="sr">/ruby/</span> 
+</code></pre></div>
+
+
+<p>オブジェクトの特性はそのクラスのメソッド定義でほぼ決まります。既に見てきたように、メソッドは<strong>def</strong>式を使って定義できます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">name</span>
+    <span class="vi">@name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+
+
+<p>クラスに定義されるこの種のメソッドを「インスタンスメソッド」と呼びます。インスタンスメソッドはこのクラスから派生するオブジェクトの挙動を決定付けます。つまり、クラスからオブジェクトが生成されたとき、インスタンスメソッドがあたかも、オブジェクト自身が持つメソッドのように振る舞います。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">my_pet</span> <span class="o">=</span> <span class="no">Creature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Doggie&#39;</span><span class="p">)</span>
+ <span class="n">my_pet</span><span class="o">.</span><span class="n">name</span>   <span class="c1"># =&gt; &quot;Doggie&quot;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

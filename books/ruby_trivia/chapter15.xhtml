@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>14. ハッシュのキー</h2>
+
+<p>ハッシュリテラルは次のように書きます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">{</span><span class="ss">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">c</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="ss">a</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="ss">e</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span> <span class="c1"># =&gt; {:a=&gt;4, :b=&gt;2, :c=&gt;3, :e=&gt;5}</span>
+</code></pre></div>
+
+
+<p>気が付きましたか？うっかりキーを重複させてもエラーにならないのです。</p>
+
+<p>特に配列をハッシュに変換するときなどには注意が必要です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">arr</span> <span class="o">=</span> <span class="o">[</span><span class="ss">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">c</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="ss">a</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="ss">e</span><span class="p">:</span> <span class="mi">5</span><span class="o">]</span>
+<span class="no">Hash</span><span class="o">[</span> <span class="o">*</span><span class="n">arr</span> <span class="o">]</span> <span class="c1"># =&gt; {:a=&gt;4, :b=&gt;2, :c=&gt;3, :e=&gt;5}</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

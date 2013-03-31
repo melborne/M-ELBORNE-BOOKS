@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>オブジェクトの理解から始めるRuby</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>５章　モジュールオブジェクト</h2>
+
+<p>単純継承はメソッド探索の複雑さを排除します。一方で継承の本来的意義を低下させ得ます。仮に異なる系譜の継承クラス群があり、その両方の系譜の特性を持ったクラスを生成したい場合、単純継承ではそれを一方の系譜のサブクラスとし、そこに他方の系譜の特性すべてを一から書き足す必要が生じます。これは継承の目的に反し極めて非生産的です。</p>
+
+<p>Rubyでは「モジュール」がこの問題を最小化します。</p>
+
+<p>モジュールは、継承関係に立つことができない独立したクラスです。そこからオブジェクトを生成することもできません。モジュールはその中に特定の機能のまとまりを持って、クラスに「Mix-in」つまり挿し木されます。モジュールをMix-inしたクラスは追加的にその機能を獲得することになります。ここでは<strong>Behavior</strong>モジュールを定義して、PersonInEarhクラスにMix-inしてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">module</span> <span class="nn">Behavior</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">description</span>  <span class="c1"># モジュールメソッドの定義</span>
+    <span class="s2">&quot;I&#39;m a Behavior Module.&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">sleep</span>  <span class="c1"># インスタンスメソッドの定義</span>
+    <span class="s2">&quot;I&#39;m sleeping.&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">eat</span>
+    <span class="s2">&quot;I&#39;m eating.&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="kp">include</span> <span class="no">Behavior</span>  <span class="c1"># Behaviorモジュールを読み込む</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">,</span><span class="n">country</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">age</span><span class="p">)</span>
+    <span class="vi">@country</span> <span class="o">=</span> <span class="n">country</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">country</span>
+    <span class="vi">@country</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernand&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+<span class="n">a_friend</span><span class="o">.</span><span class="n">eat</span> <span class="c1"># =&gt; &quot;I&#39;m eating.&quot;</span>
+<span class="n">a_friend</span><span class="o">.</span><span class="n">sleep</span> <span class="c1"># =&gt; &quot;I&#39;m sleeping.&quot;</span>
+<span class="no">Behavior</span><span class="o">.</span><span class="n">description</span> <span class="c1"># =&gt; &quot;I&#39;m a Behavior Module.&quot;</span>
+</code></pre></div>
+
+
+<p>モジュールの定義は<strong>module</strong>式で行います。クラスと同様モジュールには、オブジェクトのためのインスタンスメソッドと、自身のためのselfメソッドとを定義できます。モジュールのselfメソッドは一般に「モジュールメソッド」と呼ばれています。</p>
+
+<p>クラスにモジュールをMix-inするには<strong>include</strong>メソッドを使います。これによりあたかも、モジュールで定義したメソッドがクラスにあるかのように働きます。よって、クラスから生成されたオブジェクトは、それらのインスタンスメソッドを自由に使えるようになります。</p>
+
+<p>もっとも、モジュールのselfメソッドがMix-in先クラスのselfメソッドとして働くことはありません。つまりモジュールメソッドはクラスメソッドにはならないのです。この点が継承の場合とは異なっています。</p>
+
+<p>モジュールのMix-inによって継承におけるメソッド探索のルートが変わります。モジュールをMix-inしたクラス内が探索されると、そのスーパークラスに先立ってモジュール内が探索されます。多重継承におけるようなあいまいさはありません。<strong>ancestors</strong>メソッドでその順位を確認できます。PersonInEarthクラスでそれを確認します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">PersonInEarth</span><span class="o">.</span><span class="n">ancestors</span> <span class="c1"># =&gt; [PersonInEarth, Behavior, Person, Creature, Object, Kernel, BasicObject]</span>
+</code></pre></div>
+
+
+<p>PersonInEarthにおける継承関係とモジュールの位置づけを図にすると以下のようになります。</p>
+
+<p><img src="images/ruby_module.png" alt="Alt title noshadow" /></p>
+
+<br clear='all' />
+
+
+<p>オブジェクトにとって、その母がクラスであるならば、モジュールは、彼のベビーシッターのような存在です。母に代わって子をヘルプします。現実のベビーシッターがそうであるように、モジュールは、複数のクラスにおいて掛け持ちされ得ます。</p>
+
+<p>なお、モジュールは継承関係には立てませんが、モジュールに他のモジュールをMix-inすることはできます。しかし最終的にモジュールはクラスにMix-inされ、その継承関係に割り込まなければ機能しません（モジュールメソッドは直接呼ぶことができます）。</p>
+  </body>
+</html>

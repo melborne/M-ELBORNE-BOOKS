@@ -1,66 +1,60 @@
----
-layout: post
-title: RubyのObjectクラスは過去を再定義するタイムマシンだ！
-date: 2008-09-27
-comments: true
-categories:
----
+##付録１　RubyのObjectクラスは過去を再定義するタイムマシンだ！
 
-Objectクラスはすべてのクラスのスーパークラスである。だからObjectクラスに定義されたinstanceメソッドoは、すべてのクラスで定義されたinstanceメソッドoになる。
+Objectクラスはすべてのクラスのスーパークラスです。よってObjectクラスに定義されたインスタンスメソッドoは、すべてのクラスで定義されたインスタンスメソッドoになります。
 {% highlight ruby %}
-  class Object
-    def o
-      'o'
-    end
+class Object
+  def o
+    'o'
   end
-  class MyClass
-  end
-  Object.new.o # => "o"
-  Array.new.o # => "o"
-  Hash.new.o # => "o"
-  MyClass.new.o # => "o"
+end
+
+class MyClass
+
+end
+
+Object.new.o # => "o"
+Array.new.o # => "o"
+Hash.new.o # => "o"
+MyClass.new.o # => "o"
 {% endhighlight %}
-ClassクラスもObjectクラスのサブクラスだから、このinstanceメソッドoは当然、Classクラスのinstanceメソッドoにもなる。
+ClassクラスもObjectクラスのサブクラスなので、このインスタンスメソッドoは当然、Classクラスのインスタンスメソッドoにもなります。
 {% highlight ruby %}
-  Class.new.o # => "o"
+Class.new.o # => "o"
 {% endhighlight %}
 
-一方、Classクラスはすべてのクラスの生成クラスである。だからClassクラスのinstanceメソッドとなったoは、すべてのクラスのクラスメソッドself.oになる。
+一方、Classクラスはすべてのクラスの生成クラスです。よってClassクラスのインスタンスメソッドとなったoは、すべてのクラスのクラスメソッドself.oになります。
 {% highlight ruby %}
-  Array.o # => "o"
-  Hash.o # => "o"
-  MyClass.o # => "o"
+Array.o # => "o"
+Hash.o # => "o"
+MyClass.o # => "o"
 {% endhighlight %}
-この中には当然Objectクラスが含まれているから、Classクラスのinstanceメソッドoは、Objectクラスのクラスメソッドself.oにもなる。
+この中には当然Objectクラスが含まれているので、Classクラスのインスタンスメソッドoは、Objectクラスのクラスメソッドself.oにもなります。
 {% highlight ruby %}
-  Object.o # => "o"
+Object.o # => "o"
 {% endhighlight %}
 
-ところが、ObjectクラスはClassクラスのスーパークラスだから、Objectクラスのクラスメソッドになったself.oはClassクラスのクラスメソッドself.oにもなる。
+ところが、ObjectクラスはClassクラスのスーパークラスなので、Objectクラスのクラスメソッドになったself.oはClassクラスのクラスメソッドself.oにもなります。
 {% highlight ruby %}
-  Class.o # => "o"
+Class.o # => "o"
 {% endhighlight %}
 
-整理しよう。
+整理しましょう。
 
-Objectクラスが１つのinstanceメソッドoを持つと、それがClassクラスを含むすべてのクラスのinstanceメソッドoとなり、Objectを含むすべてのクラスのクラスメソッドself.oとなり、Classクラスのクラスメソッドself.oとなる。こうしてRuby空間に存在するすべてのクラスには、instanceメソッドoとクラスメソッドself.oが生まれることとなる。
+Objectクラスが１つのインスタンスメソッドoを持つと、それがClassクラスを含むすべてのクラスのインスタンスメソッドoとなり、Objectを含むすべてのクラスのクラスメソッドself.oとなり、Classクラスのクラスメソッドself.oとなります。こうしてRuby実行空間に存在するすべてのクラスには、インスタンスメソッドoとクラスメソッドself.oが生まれることとなるのです。
 
-ClassクラスはObjectクラスを含むすべてのクラスの母である。従って、すべてのクラスはClassクラスの特性に依存する。一方でClassクラスはその子であるObjectクラスの弟子である。従って、ClassクラスはObjectクラスの特性を受け継ぐ。
+ClassクラスはObjectクラスを含むすべてのクラスの母です。従って、すべてのクラスはClassクラスの特性に依存します。一方でClassクラスはその子であるObjectクラスの弟子（サブクラス）です。従って、ClassクラスはObjectクラスの特性を受け継ぎます。
 
-このような多層的循環構造によってObjectクラスが変わると、Classクラスが変わり、その変化はすべてのクラスを変える。つまりObjectクラスへのオペレーションは、過去の事実(Classクラス)を再定義し、延いては今の世界(すべてのクラス)を再構築する！
+このような多層的循環構造によってObjectクラスが変わると、Classクラスが変わり、その変化はすべてのクラスを変えるのです。つまりObjectクラスへのオペレーションは、過去の事実（Classクラス）を再定義し、延いては今の世界（すべてのクラス）を再構築するのです！
 
-そうRubyのObjectクラスは…
+そうRubyのObjectクラスは...
 
-時空を超えて過去を再定義し、世界を再構築するタイムマシンだったんだ！
+「時空を超えて過去を再定義し、世界を再構築するタイムマシン」なのです！
 
-ところでObjectクラスにはKernelモジュールがincludeされている。モジュールに定義されたinstanceメソッドはそれをincludeしたクラスのものになるから、KernelモジュールのinstanceメソッドはObjectクラスのものになる。
+ところでObjectクラスにはKernelモジュールがincludeされています。モジュールに定義されたインスタンスメソッドはそれをincludeしたクラスのものになるので、KernelモジュールのインスタンスメソッドはObjectクラスのものになります。
 
-つまりKernelモジュールはObjectクラスに過去を変えるためのメソッドを補給する。Kernelモジュールから補給されたメソッドは、Objectクラスに定義されたメソッドとして同様に、過去を再定義し今の世界を再構築する。
+つまりKernelモジュールはObjectクラスに過去を変えるためのメソッドを補給します。Kernelモジュールから補給されたメソッドは、Objectクラスに定義されたメソッドとして同様に、過去を再定義し今の世界を再構築します。
 
-そうRubyのKernelモジュールは…
+そうRubyのKernelモジュールは...
 
-タイムマシン補助燃料タンクだったんだ！
+「タイムマシン補助燃料タンク」だったのです！
 
-関連記事：[Rubyのクラスはオブジェクトの母、モジュールはベビーシッター]({{ site.url }}/2008/08/16/Ruby/)
-
-(追記:2008-9-29)Kernelモジュールのところを追加しました。

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>13. 変数のnil初期化</h2>
+
+<p>多数の変数を<code>nil</code>で初期化したいときってありませんか？そんなときはこうしますか？</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="o">[</span><span class="kp">nil</span><span class="o">]</span> <span class="o">*</span> <span class="mi">10</span>
+
+<span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="o">].</span><span class="n">all?</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:nil?</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+<p>しかし、多重代入で対応する値がない場合はnilが入るので、これは次で足ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="kp">nil</span>
+
+<span class="o">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="o">].</span><span class="n">all?</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:nil?</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

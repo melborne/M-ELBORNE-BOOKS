@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>32. ARGF</h2>
+
+<p>ARGFはいいですよね。これはコマンドライン引数をファイル名とした連結ファイルオブジェクトを表します。ところで、このオブジェクトのクラスは何だか知ってますか？classメソッドを送れば答えがわかりますね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">ARGF</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; ARGF.class</span>
+</code></pre></div>
+
+
+<p>そう、答えは<code>ARGF.class</code>クラスなのです。</p>
+
+<p>ならnewしたらARGFできるの？と思いますよね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">ARGF</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; ARGF.class</span>
+<span class="no">MYARGF</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">new</span>  <span class="c1"># =&gt; ARGF</span>
+<span class="no">MYARGF</span><span class="o">.</span><span class="n">class</span> <span class="c1"># =&gt; ARGF.class</span>
+
+<span class="nb">puts</span> <span class="no">MYARGF</span><span class="o">.</span><span class="n">filename</span>
+</code></pre></div>
+
+
+<p>できた！って思ったのも束の間、これはうまく動きません。</p>
+
+<div class="highlight"><pre><code class="bash">% ruby argf_test.rb abc.txt
+-
+</code></pre></div>
+
+
+<p>残念！</p>
+  </body>
+</html>

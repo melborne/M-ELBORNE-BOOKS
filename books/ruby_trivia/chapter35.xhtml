@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>34. 使わない変数</h2>
+
+<p>配列データの端の要素を捨てたいときがあります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">each_line</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span> <span class="p">}</span>
+<span class="n">header</span> <span class="c1"># =&gt; [&quot;name&quot;, &quot;age&quot;, &quot;job&quot;]</span>
+<span class="n">data</span> <span class="c1"># =&gt; [[&quot;charlie&quot;, &quot;12&quot;, &quot;:programmer&quot;], [&quot;tommy&quot;, &quot;17&quot;, &quot;:student&quot;], [&quot;nick&quot;, &quot;27&quot;, &quot;:doctor&quot;]]</span>
+
+<span class="cp">__END__</span>
+<span class="cp">name age job</span>
+<span class="cp">charlie 12 :programmer</span>
+<span class="cp">tommy 17 :student</span>
+<span class="cp">nick 27 :doctor</span>
+</code></pre></div>
+
+
+<p>ところが、ここで<code>header</code>変数を使わないと警告がでるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">each_line</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span> <span class="p">}</span> <span class="c1"># !&gt; assigned but unused variable - header</span>
+<span class="n">data</span> <span class="c1"># =&gt; [[&quot;charlie&quot;, &quot;12&quot;, &quot;:programmer&quot;], [&quot;tommy&quot;, &quot;17&quot;, &quot;:student&quot;], [&quot;nick&quot;, &quot;27&quot;, &quot;:doctor&quot;]]</span>
+</code></pre></div>
+
+
+<p>これを避けるには変数名を<code>_</code>（アンダースコア）にします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">each_line</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span> <span class="p">}</span>
+<span class="n">data</span> <span class="c1"># =&gt; [[&quot;charlie&quot;, &quot;12&quot;, &quot;:programmer&quot;], [&quot;tommy&quot;, &quot;17&quot;, &quot;:student&quot;], [&quot;nick&quot;, &quot;27&quot;, &quot;:doctor&quot;]]</span>
+</code></pre></div>
+
+
+<p>もしあなたが既に2.0ユーザなら、先頭に<code>_</code>を付けるだけでいいです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">_header</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="no">DATA</span><span class="o">.</span><span class="n">each_line</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="o">.</span><span class="n">chomp</span><span class="o">.</span><span class="n">split</span> <span class="p">}</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

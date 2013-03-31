@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>25. 関数部分適用</h2>
+
+<p>似たようなメソッドを複数書くことはDRY原則に反します。<code>Proc#curry</code>を使えばこれを回避できるかもしれません。四季判定関数の例を示します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;date&quot;</span>
+ 
+ <span class="n">season</span> <span class="o">=</span> <span class="o">-&gt;</span><span class="n">range</span><span class="p">,</span><span class="n">date</span><span class="p">{</span> <span class="n">range</span><span class="o">.</span><span class="n">include?</span> <span class="no">Date</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">mon</span> <span class="p">}</span><span class="o">.</span><span class="n">curry</span>
+ 
+ <span class="n">is_spring</span> <span class="o">=</span> <span class="n">season</span><span class="o">[</span><span class="mi">4</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span><span class="o">]</span>
+ <span class="n">is_summer</span> <span class="o">=</span> <span class="n">season</span><span class="o">[</span><span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="o">]</span>
+ <span class="n">is_autumn</span> <span class="o">=</span> <span class="n">season</span><span class="o">[</span><span class="mi">10</span><span class="o">.</span><span class="n">.</span><span class="mi">12</span><span class="o">]</span>
+ <span class="n">is_winter</span> <span class="o">=</span> <span class="n">season</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="o">]</span>
+ 
+ <span class="n">is_autumn</span><span class="o">[</span><span class="s1">&#39;11/23&#39;</span><span class="o">]</span> <span class="c1"># =&gt; true</span>
+ <span class="n">is_summer</span><span class="o">[</span><span class="s1">&#39;1/1&#39;</span><span class="o">]</span> <span class="c1"># =&gt; false</span>
+</code></pre></div>
+
+
+<p>こうなると変数名に<code>?</code>が使えるとうれしいですね。</p>
+  </body>
+</html>

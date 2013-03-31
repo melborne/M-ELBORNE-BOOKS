@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>2. Kernel#Array</h2>
+
+<p>異なる型の引数を統一的に処理するときには<code>Kernel#Array</code>が便利です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">Array</span> <span class="mi">1</span> <span class="c1"># =&gt; [1]</span>
+ <span class="nb">Array</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">]</span> <span class="c1"># =&gt; [1, 2]</span>
+ <span class="nb">Array</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5]</span>
+ 
+ <span class="nb">require</span> <span class="s2">&quot;date&quot;</span>
+ <span class="k">def</span> <span class="nf">int2month</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+   <span class="nb">Array</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="no">Date</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span> <span class="s2">&quot;%B&quot;</span>  <span class="p">}</span>
+ <span class="k">end</span>
+ 
+ <span class="n">int2month</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;March&quot;]</span>
+ <span class="n">int2month</span><span class="p">(</span><span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;February&quot;, &quot;June&quot;, &quot;September&quot;]</span>
+ <span class="n">int2month</span><span class="p">(</span><span class="mi">4</span><span class="o">.</span><span class="n">.</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

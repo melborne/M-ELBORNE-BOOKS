@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>5. Enumerable#each_with_object</h2>
+
+<p>Enumerable#injectは便利なメソッドですが、ブロック内で条件指定をするような場合でも各イテレーションで畳込みオブジェクトが返されることを保証しなければなりません。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">designers</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="p">(</span><span class="n">lang</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span><span class="o">|</span> <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="nb">name</span><span class="p">,</span><span class="n">lang</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">lang</span><span class="o">[</span><span class="sr">/l/</span><span class="o">]</span><span class="p">;</span> <span class="n">mem</span> <span class="p">}</span>
+  <span class="c1"># =&gt; [&quot;John McCarthy/lisp&quot;, &quot;Larry Wall/perl&quot;, &quot;Alan Kay/smalltalk&quot;, &quot;Martin Odersky/scala&quot;]</span>
+</code></pre></div>
+
+
+<p>ブロックの最後の「; mem」の部分です。</p>
+
+<p><code>Enumerable#each_with_object</code>ならその手間は要りません。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">designers</span><span class="o">.</span><span class="n">each_with_object</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="n">lang</span><span class="p">,</span> <span class="nb">name</span><span class="p">),</span> <span class="n">mem</span><span class="o">|</span> <span class="n">mem</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="nb">name</span><span class="p">,</span><span class="n">lang</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">lang</span><span class="o">[</span><span class="sr">/l/</span><span class="o">]</span> <span class="p">}</span>
+  <span class="c1"># =&gt; [&quot;John McCarthy/lisp&quot;, &quot;Larry Wall/perl&quot;, &quot;Alan Kay/smalltalk&quot;, &quot;Martin Odersky/scala&quot;]</span>
+</code></pre></div>
+
+
+<p>名前が長いのでどうしても避けちゃいますが...</p>
+  </body>
+</html>

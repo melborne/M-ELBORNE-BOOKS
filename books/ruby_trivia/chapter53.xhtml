@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>52. YAMLタグ指定</h2>
+
+<p>ユーザデータなどのプログラムに書き込みたくないデータをRubyで扱うには、<code>yamlライブラリ</code>が便利です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
+
+<span class="n">langs_array</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">DATA</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">langs_array</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">lang</span><span class="o">|</span> <span class="s2">&quot;My favorite language is &quot;</span> <span class="o">+</span> <span class="n">lang</span> <span class="p">}</span>
+
+<span class="c1"># &gt;&gt; My favorite language is Ruby</span>
+<span class="c1"># &gt;&gt; My favorite language is Lisp</span>
+<span class="c1"># &gt;&gt; My favorite language is C++</span>
+
+<span class="cp">__END__</span>
+<span class="cp">---</span>
+<span class="cp">- Ruby</span>
+<span class="cp">- Lisp</span>
+<span class="cp">- C++</span>
+</code></pre></div>
+
+
+<p>ここで<code>!ruby/</code>ではじまるタグを使えば、その文字列に対するクラス指定ができますが、<code>!ruby/object:&lt;クラス名&gt;</code>というタグを使えば、独自クラスの指定もできるのです。LanguageクラスのオブジェクトとしてYAMLデータを読みだしてみます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">require</span> <span class="s2">&quot;yaml&quot;</span>
+ <span class="k">class</span> <span class="nc">Language</span>
+   <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:born</span><span class="p">,</span> <span class="ss">:designer</span>
+   <span class="k">def</span> <span class="nf">profile</span>
+     <span class="o">[</span><span class="nb">name</span><span class="p">,</span> <span class="n">born</span><span class="p">,</span> <span class="n">designer</span><span class="o">]</span> <span class="o">*</span> <span class="s1">&#39;-&#39;</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">members</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">DATA</span><span class="p">)</span>
+ 
+ <span class="nb">puts</span> <span class="n">members</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">member</span><span class="o">|</span> <span class="n">member</span><span class="o">.</span><span class="n">profile</span> <span class="p">}</span>
+ 
+ <span class="c1"># &gt;&gt; Ruby-1993-Yukihiro Matsumoto</span>
+ <span class="c1"># &gt;&gt; Lisp-1958-Joh McCarthy</span>
+ <span class="c1"># &gt;&gt; C++-1983-Bjarne Stroustrup</span>
+ 
+ <span class="cp">__END__</span>
+<span class="cp"> --- </span>
+<span class="cp"> - !ruby/object:Language</span>
+<span class="cp">   name: Ruby</span>
+<span class="cp">   born: 1993</span>
+<span class="cp">   designer: Yukihiro Matsumoto</span>
+<span class="cp"> - !ruby/object:Language</span>
+<span class="cp">   name: Lisp</span>
+<span class="cp">   born: 1958</span>
+<span class="cp">   designer: Joh McCarthy</span>
+<span class="cp"> - !ruby/object:Language</span>
+<span class="cp">   name: C++</span>
+<span class="cp">   born: 1983</span>
+<span class="cp">   designer: Bjarne Stroustrup</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>1. Arrayスタック系メソッド</h2>
+
+<p><code>Array#&lt;&lt;</code>は一つのオブジェクトしか引数に取れませんが、<code>Array#push</code>は複数取れます。また<code>Array#pop</code>は一度に複数の値をポップできます。<code>Array#unshift</code> <code>Array#shift</code>も同じです。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">stack</span> <span class="o">=</span> <span class="o">[]</span>
+ <span class="n">stack</span><span class="o">.</span><span class="n">push</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="c1"># =&gt; [1, 2, 3]</span>
+ <span class="n">stack</span><span class="o">.</span><span class="n">pop</span> <span class="mi">2</span> <span class="c1"># =&gt; [2, 3]</span>
+ <span class="n">stack</span> <span class="c1"># =&gt; [1]</span>
+ <span class="n">stack</span><span class="o">.</span><span class="n">unshift</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span> <span class="c1"># =&gt; [4, 5, 6, 1]</span>
+ <span class="n">stack</span><span class="o">.</span><span class="n">shift</span> <span class="mi">3</span> <span class="c1"># =&gt; [4, 5, 6]</span>
+ <span class="n">stack</span> <span class="c1"># =&gt; [1]</span>
+</code></pre></div>
+
+
+<p>また任意位置の複数の値を取り出す場合は、<code>Array#values_at</code>が便利です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">lang</span> <span class="o">=</span> <span class="sx">%w(ruby python perl haskell lisp scala)</span>
+ <span class="n">lang</span><span class="o">.</span><span class="n">values_at</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span> <span class="c1"># =&gt; [&quot;ruby&quot;, &quot;perl&quot;, &quot;scala&quot;]</span>
+</code></pre></div>
+
+
+<p>これはHashにもあります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">lang</span> <span class="o">=</span> <span class="p">{</span><span class="ss">ruby</span><span class="p">:</span><span class="s1">&#39;matz&#39;</span><span class="p">,</span> <span class="ss">python</span><span class="p">:</span><span class="s1">&#39;guido&#39;</span><span class="p">,</span> <span class="ss">perl</span><span class="p">:</span><span class="s1">&#39;larry&#39;</span><span class="p">,</span> <span class="ss">lisp</span><span class="p">:</span><span class="s1">&#39;mccarthy&#39;</span><span class="p">}</span>
+
+<span class="n">lang</span><span class="o">.</span><span class="n">values_at</span> <span class="ss">:ruby</span><span class="p">,</span> <span class="ss">:perl</span> <span class="c1"># =&gt; [&quot;matz&quot;, &quot;larry&quot;]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>30. Array#zip</h2>
+
+<p><code>Array#zip</code>は知ってますよね？複数の配列を二次元配列に見立てて縦方向に組み替えるものです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="o">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[1, 4, 7], [2, 5, 8], [3, 6, 9]]</span>
+
+<span class="o">[</span><span class="ss">:A</span><span class="p">,</span> <span class="ss">:B</span><span class="p">,</span> <span class="ss">:C</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="o">[</span><span class="ss">:E</span><span class="p">,</span> <span class="ss">:F</span><span class="p">,</span> <span class="ss">:G</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:H</span><span class="p">,</span> <span class="ss">:I</span><span class="p">,</span> <span class="ss">:J</span><span class="o">]</span><span class="p">)</span> <span class="c1"># =&gt; [[:A, :E, :H], [:B, :F, :I], [:C, :G, :J]]</span>
+</code></pre></div>
+
+
+<p>zipは通常１または複数の配列を引数に取りますが、値が連続する場合はRangeを渡せるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="mi">4</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">)</span> <span class="c1"># =&gt; [[1, 4, 7], [2, 5, 8], [3, 6, 9]]</span>
+
+<span class="o">[</span><span class="ss">:A</span><span class="p">,</span> <span class="ss">:B</span><span class="p">,</span> <span class="ss">:C</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="ss">:E</span><span class="o">.</span><span class="n">.</span><span class="ss">:G</span><span class="p">,</span> <span class="ss">:H</span><span class="o">.</span><span class="n">.</span><span class="ss">:J</span><span class="p">)</span> <span class="c1"># =&gt; [[:A, :E, :H], [:B, :F, :I], [:C, :G, :J]]</span>
+</code></pre></div>
+
+
+<p>加えて、zipはブロックを取ることもできるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="mi">4</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">xyz</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">xyz</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
+<span class="c1"># &gt;&gt; 12</span>
+<span class="c1"># &gt;&gt; 15</span>
+<span class="c1"># &gt;&gt; 18</span>
+
+<span class="o">[</span><span class="ss">:A</span><span class="p">,</span> <span class="ss">:B</span><span class="p">,</span> <span class="ss">:C</span><span class="o">].</span><span class="n">zip</span><span class="p">(</span><span class="ss">:E</span><span class="o">.</span><span class="n">.</span><span class="ss">:G</span><span class="p">,</span> <span class="ss">:H</span><span class="o">.</span><span class="n">.</span><span class="ss">:J</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">xyz</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">xyz</span><span class="o">.</span><span class="n">join</span> <span class="p">}</span> <span class="c1"># =&gt; nil</span>
+<span class="c1"># &gt;&gt; AEH</span>
+<span class="c1"># &gt;&gt; BFI</span>
+<span class="c1"># &gt;&gt; CGJ</span>
+</code></pre></div>
+
+
+<p>ただ、返り値がnilになるので副作用しか使えない点注意が必要です。</p>
+  </body>
+</html>

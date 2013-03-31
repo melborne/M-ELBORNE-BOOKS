@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>オブジェクトの理解から始めるRuby</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>６章　インスタンスオブジェクト</h2>
+
+<p>インスタンスオブジェクトは通常単に「オブジェクト」あるいは「インスタンス」と呼ばれ、先に書いたようにクラスをnewすることでRuby実行空間に生み出されます。</p>
+
+<p>Ruby実行空間では、各種のクラスから生み出された多数のオブジェクトが、順次・分岐・繰り返しの制御構造の中で相互に働き掛けあうことによって、ユーザの所望する意味のある結果が返されることになります。</p>
+
+<p>Rubyでは「オブジェクト」が主役です。</p>
+
+<p>ところがその存在の重みとは裏腹に、オブジェクトの中身はほとんど空です。基本的にオブジェクトは自分の属性情報のみを保持し、他のオブジェクトとの相互作用のためのメソッド群を保持しません。つまりインスタンスオブジェクトは、自分が何者で誰が親なのかということは知っているけれども、ユーザから送られてくるメッセージの処理方法を知らないということです。</p>
+
+<p>オブジェクトへのアクセスはそれにメッセージを送ることで達成されます。より正確には、メッセージを送る以外にオブジェクトにアクセスする手段はありません。</p>
+
+<p>結局、メッセージを受け取ったオブジェクトは、それを自分の生成元のクラスに投げ、彼女がオブジェクトに代わって答えを用意します。そのクラス自身が対応するメソッドを備えていない場合、先に書いたように、モジュールを含むクラスツリーを辿ってメソッドが探索されます。</p>
+
+<p>PersonInEarthクラスの例で、メソッド探索の手順を追ってみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Creature</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">name</span>
+    <span class="vi">@name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Creature</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@age</span> <span class="o">=</span> <span class="n">age</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">age</span>
+    <span class="vi">@age</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">module</span> <span class="nn">Behavior</span>
+  <span class="k">def</span> <span class="nf">sleep</span>
+    <span class="s2">&quot;I&#39;m sleeping.&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">eat</span>
+    <span class="s2">&quot;I&#39;m eating.&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">PersonInEarth</span> <span class="o">&lt;</span> <span class="no">Person</span>
+  <span class="kp">include</span> <span class="no">Behavior</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">country</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="vi">@country</span> <span class="o">=</span> <span class="n">country</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">country</span>
+    <span class="vi">@country</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">a_friend</span> <span class="o">=</span> <span class="no">PersonInEarth</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;Fernando&#39;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">)</span>
+
+<span class="c1"># a_friendでラベル付けされたオブジェクトにメッセージnameを送る</span>
+<span class="n">a_friend</span><span class="o">.</span><span class="n">name</span> <span class="c1"># =&gt; &quot;Fernando&quot;</span>
+</code></pre></div>
+
+
+<p>この例でa_friendでラベル付けされたオブジェクトは、メッセージnameを受け取るとこれをその生成元であるPersonInEarthクラスへ送ります（後で述べるSingletonメソッドがある場合はまずそれを探索します）。PersonInEarthでは対応するnameメソッドを呼び出すために、まず自分自身がそれを持っているかが調べられます。次いで、そこにincludeしたBehaviorモジュール内が探索されます。PersonInEarthおよびBehaviorモジュールはnameメソッドを持っていないので、メッセージは今度はそのスーパークラスであるPersonに渡されます。</p>
+
+<p>ところが、Personクラスもnameメソッドを備えていないので、メッセージは更にそのスーパークラスであるCreatureクラスに渡されることになります。そしてここに定義されたnameメソッドが実行され、その結果が順次逆のルートを辿って、a_friendでラベル付けされたオブジェクトからユーザに返されるのです。</p>
+  </body>
+</html>

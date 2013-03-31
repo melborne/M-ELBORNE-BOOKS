@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>35. ファイル抽出</h2>
+
+<p>ファイル群の中から、特定の条件にマッチする一つのファイルだけを抜き出して別の変数に格納したいとします。<code>Array#delete</code>を使えばうまくいきそうですが、どうでしょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">files</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;Gemfile&#39;</span><span class="p">,</span> <span class="s1">&#39;LICENSE.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">,</span> <span class="s1">&#39;Rakefile&#39;</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;lib&#39;</span><span class="p">,</span> <span class="s1">&#39;maliq.gemspec&#39;</span><span class="p">,</span> <span class="s1">&#39;pkg&#39;</span><span class="p">,</span> <span class="s1">&#39;spec&#39;</span><span class="o">]</span>
+
+<span class="n">gemspec</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span>
+<span class="n">gemspec</span> <span class="c1"># =&gt; nil</span>
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;maliq.gemspec&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
+</code></pre></div>
+
+
+<p>残念ながらうまくいきません。これは、Array#deleteが<code>==</code>で一致判定するからですね。</p>
+
+<p>なら<code>Array#partition</code>と多重代入を使ってみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">gemspec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">gemspec</span> <span class="c1"># =&gt; [&quot;maliq.gemspec&quot;]</span>
+<span class="n">files</span>  <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
+</code></pre></div>
+
+
+<p>ちょっと惜しいですが、gemspecが配列になっているのでもう一歩です。しかしこれは多重代入＋括弧で解決します。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="n">gemspec</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">),</span> <span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">partition</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.gemspec$/</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">gemspec</span> <span class="c1"># =&gt; &quot;maliq.gemspec&quot;</span>
+<span class="n">files</span> <span class="c1"># =&gt; [&quot;Gemfile&quot;, &quot;LICENSE.txt&quot;, &quot;README.md&quot;, &quot;Rakefile&quot;, &quot;bin&quot;, &quot;lib&quot;, &quot;pkg&quot;, &quot;spec&quot;]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

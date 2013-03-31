@@ -1,0 +1,65 @@
+電子書籍「知って得する！５５のRubyのトリビアな記法」EPUB/MOBI版
+
+本書は、ブログ「hp12c」( http://melborne.github.com/ )における「知って得する！55のRubyのトリビアな記法」の電子書籍版で、あまり広くは知られていないけれども知っているとときには有益な、Rubyの小技５５個を紹介していく内容になっています。
+
+（目次）
+はじめに
+1. Arrayスタック系メソッド
+2. Kernel#Array
+3. 要素区切りコンマ
+4. ハッシュリテラル
+5. Enumerable#each_with_object
+6. splat展開
+7. 前置コロン
+8. Enumerator#with_index
+9. Integer#times
+10. String#succ / Integer#succ
+11. Comparable.between?
+12. Array#first/last
+13. 変数のnil初期化 
+14. ハッシュのキー
+15. メソッド引数のスペース
+16. 否定
+17. ％ノーテーション
+18. 文字列区切り
+19. Array#*
+20. Array#uniq
+21. 配列要素の一致判定
+22. 文字列リスト%w
+23. 動的継承
+24. 大文字メソッド
+25. 関数部分適用
+26. Procによるcase判定
+27. Structクラス
+28. Structのデフォルト値
+29. retryと引数デフォルト
+30. Array#zip
+31. Enumerable#zip
+32. ARGF
+33. Object#tap
+34. 使わない変数 
+35. ファイル抽出
+36. Symbolにコメント
+37. Kernel#loop
+38. BasicObject#instance_eval
+39. 正規表現:名前付き参照
+40. 正規表現:POSIXブラケット
+41. String#match
+42. String#unpack
+43. Enumerable#each_with_object
+44. Float::INFINITY
+45. Enumerable#grep
+46. String#gsub
+47. クラスメソッド定義 
+48. true, false, nil
+49. 強制型変換coerce
+50. DATA.rewind
+51. Rubyのキーワード 
+52. YAMLタグ指定
+53. 単項演算子 ~ (チルダ)
+54. マルチバイトメソッド
+55. 秘伝メソッド
+謝辞
+
+文庫本換算で120頁相当、DRMフリーです。
+

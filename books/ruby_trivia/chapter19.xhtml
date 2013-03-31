@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>18. 文字列区切り</h2>
+
+<p>文字列を各文字に区切るには、<code>String#split</code>か<code>String#chars</code>が使えます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">alpha</span> <span class="o">=</span> <span class="s2">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span>
+ <span class="n">alpha</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;, &quot;l&quot;, &quot;m&quot;, &quot;n&quot;, &quot;o&quot;, &quot;p&quot;, &quot;q&quot;, &quot;r&quot;, &quot;s&quot;, &quot;t&quot;, &quot;u&quot;, &quot;v&quot;, &quot;w&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</span>
+ 
+ <span class="n">alpha</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">to_a</span> <span class="c1"># =&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;, &quot;l&quot;, &quot;m&quot;, &quot;n&quot;, &quot;o&quot;, &quot;p&quot;, &quot;q&quot;, &quot;r&quot;, &quot;s&quot;, &quot;t&quot;, &quot;u&quot;, &quot;v&quot;, &quot;w&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</span>
+</code></pre></div>
+
+
+<p>ちなみに、ruby2.0ではcharsの後のto_aは不要です。</p>
+
+<p>しかし文字列を複数文字単位で区切るには<code>String#scan</code>が便利です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">alpha</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/.../</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqr&quot;, &quot;stu&quot;, &quot;vwx&quot;]</span>
+ <span class="n">alpha</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/.{1,3}/</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqr&quot;, &quot;stu&quot;, &quot;vwx&quot;, &quot;yz&quot;]</span>
+ 
+ <span class="n">number</span> <span class="o">=</span> <span class="s1">&#39;12345678&#39;</span>
+ <span class="k">def</span> <span class="nc">number</span><span class="o">.</span><span class="nf">comma_value</span>
+   <span class="n">reverse</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/.{1,3}/</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reverse</span>
+ <span class="k">end</span>
+ <span class="n">number</span><span class="o">.</span><span class="n">comma_value</span> <span class="c1"># =&gt; &quot;12,345,678&quot;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>43. Enumerable#each_with_object</h2>
+
+<p>Enumerable#mapではブロックの代わりに<code>&amp;</code>付きのシンボルを渡す技が知られています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">langs</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;ruby&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;lisp&quot;</span><span class="p">,</span> <span class="s2">&quot;haskell&quot;</span><span class="o">]</span>
+<span class="n">langs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:capitalize</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;Ruby&quot;, &quot;Python&quot;, &quot;Lisp&quot;, &quot;Haskell&quot;]</span>
+</code></pre></div>
+
+
+<p>しかし、この技は引数をとるようなメソッドには使えないという問題があります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">langs</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;ruby&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;lisp&quot;</span><span class="p">,</span> <span class="s2">&quot;haskell&quot;</span><span class="o">]</span>
+<span class="n">langs</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="s1">&#39;ist&#39;</span><span class="p">)</span> <span class="c1"># =&gt; </span>
+<span class="c1"># ~&gt; -:2:in `map&#39;: wrong number of arguments (2 for 0) (ArgumentError)</span>
+<span class="c1"># ~&gt;    from -:2:in `&lt;main&gt;&#39;</span>
+</code></pre></div>
+
+
+<p>こんなときは<code>each_with_object</code>が使えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">langs</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;ruby&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;lisp&quot;</span><span class="p">,</span> <span class="s2">&quot;haskell&quot;</span><span class="o">]</span>
+
+<span class="n">langs</span><span class="o">.</span><span class="n">each_with_object</span><span class="p">(</span><span class="s1">&#39;ist&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:+</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;rubyist&quot;, &quot;pythonist&quot;, &quot;lispist&quot;, &quot;haskellist&quot;]</span>
+
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">each_with_object</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:+</span><span class="p">)</span> <span class="c1"># =&gt; [11, 12, 13]</span>
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">each_with_object</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:**</span><span class="p">)</span> <span class="c1"># =&gt; [1, 4, 9, 16, 25]</span>
+</code></pre></div>
+
+
+<p>名前がちょっと長いですね。って、素直にmapにブロック渡せって話ですね。</p>
+
+<p>また、こんな技もあります（thanks to @tmaedaさん）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="mi">10</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="ss">:+</span><span class="p">))</span> <span class="c1"># =&gt; [11, 12, 13]</span>
+</code></pre></div>
+
+
+<p>レシーバと引数が逆転するので用途は限定的ですが。</p>
+  </body>
+</html>

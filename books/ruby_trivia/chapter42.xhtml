@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>41. String#match</h2>
+
+<p><code>String#match</code>はMatchDataオブジェクトを返すので次のように使えます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">date</span> <span class="o">=</span> <span class="s2">&quot;2012february14&quot;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\D+/</span><span class="p">)</span>
+<span class="n">mon</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">post_match</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">pre_match</span>
+<span class="s2">&quot;</span><span class="si">#{</span><span class="n">mon</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">day</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span> <span class="c1"># =&gt; &quot;February 14, 2012&quot;</span>
+</code></pre></div>
+
+
+<p>しかしmatchはブロックを取れるので、次のようにしてもいいです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">date</span> <span class="o">=</span> <span class="s2">&quot;2012february14&quot;</span>
+<span class="n">mon</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\D+/</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="o">[</span><span class="n">m</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">post_match</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">pre_match</span><span class="o">]</span> <span class="p">}</span>
+<span class="s2">&quot;</span><span class="si">#{</span><span class="n">mon</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">day</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span> <span class="c1"># =&gt; &quot;February 14, 2012&quot;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>53. 単項演算子 ~ (チルダ)</h2>
+
+<p>単項演算子<code>~</code>は実はメソッドですが、これはどこで定義されているか知ってますか？そう、<code>Fixnum</code>と<code>Bignum</code>でNOT演算をするために用意されているのです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="o">~</span><span class="mi">1</span> <span class="c1"># =&gt; -2</span>
+<span class="o">~</span><span class="mi">2</span> <span class="c1"># =&gt; -3</span>
+<span class="o">~</span><span class="mi">3</span> <span class="c1"># =&gt; -4</span>
+<span class="o">~</span><span class="mi">7</span> <span class="c1"># =&gt; -8</span>
+
+<span class="mi">1</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;1&quot;</span>
+<span class="mi">2</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;10&quot;</span>
+<span class="mi">3</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;11&quot;</span>
+<span class="mi">7</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;111&quot;</span>
+
+<span class="p">(</span><span class="o">~</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;-10&quot;</span>
+<span class="p">(</span><span class="o">~</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;-11&quot;</span>
+<span class="p">(</span><span class="o">~</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;-100&quot;</span>
+<span class="p">(</span><span class="o">~</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;-1000&quot;</span>
+</code></pre></div>
+
+
+<p>また、<code>Regexp</code>にも定義されています。これはgetsからの入力を受ける変数<code>$_</code>とのパターンマッチをするためのものです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="vg">$_</span> <span class="o">=</span> <span class="s1">&#39;Ruby is a dynamic, open source programming language with a focus on simplicity and productivity.&#39;</span>
+
+<span class="n">pos</span> <span class="o">=</span> <span class="o">~</span> <span class="sr">/\w{8,}/</span>
+<span class="nb">puts</span> <span class="s2">&quot;8+long-word `</span><span class="si">#{</span><span class="vg">$&amp;</span><span class="si">}</span><span class="s2">` appeared at </span><span class="si">#{</span><span class="n">pos</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># &gt;&gt; 8+long-word `programming` appeared at 31</span>
+</code></pre></div>
+
+
+<p>単項演算子がユニークなのは、レシーバーがメソッドの後ろに来る点です。こんなユニークで使い勝手のいいメソッドはどんどん定義するべきですね。結合強度も強いのでメソッドチェーン上も問題ありません。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">~</span>
+    <span class="n">reverse</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Symbol</span>
+  <span class="k">def</span> <span class="nf">~</span>
+    <span class="n">swapcase</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">~</span>
+    <span class="n">reverse</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Hash</span>
+  <span class="k">def</span> <span class="nf">~</span>
+    <span class="n">invert</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="o">~</span><span class="s1">&#39;よるなくたにし なんてしつけいい&#39;</span> <span class="c1"># =&gt; &quot;いいけつしてんな しにたくなるよ&quot;</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;godtoh&#39;</span>
+<span class="o">~</span><span class="n">s</span><span class="o">.</span><span class="n">swapcase</span> <span class="c1"># =&gt; &quot;HOTDOG&quot;</span>
+
+<span class="o">~</span><span class="ss">:Hello</span> <span class="c1"># =&gt; :hELLO</span>
+
+<span class="o">~[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">]</span> <span class="c1"># =&gt; [4, 3, 2, 1]</span>
+
+<span class="o">~</span><span class="p">{</span><span class="ss">ruby</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">lisp</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1"># =&gt; {1=&gt;:ruby, 2=&gt;:lisp}</span>
+</code></pre></div>
+
+
+<p>まあ確かに、<code>~(にょろ)</code>だけじゃ、メソッドの意図がわかりづらいですが。</p>
+  </body>
+</html>

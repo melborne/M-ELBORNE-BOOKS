@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>17. ％ノーテーション</h2>
+
+<p>String#%を使うことで文字列に指定フォーマットでオブジェクトを埋め込めますが、%は配列を受け取れるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">lang</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:ruby</span><span class="p">,</span> <span class="ss">:java</span><span class="o">]</span>
+ <span class="s2">&quot;I love %s, not %s&quot;</span> <span class="o">%</span> <span class="n">lang</span> <span class="c1"># =&gt; &quot;I love ruby, not java&quot;</span>
+</code></pre></div>
+
+
+<p>それだけじゃなく実はハッシュも取れるのです。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">lang</span> <span class="o">=</span> <span class="p">{</span><span class="ss">a</span><span class="p">:</span> <span class="ss">:java</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="ss">:ruby</span><span class="p">}</span>
+ <span class="s2">&quot;I love %{b}, not %{a}&quot;</span> <span class="o">%</span> <span class="n">lang</span> <span class="c1"># =&gt; &quot;I love ruby, not java&quot;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

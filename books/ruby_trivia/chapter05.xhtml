@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>4. ハッシュリテラル</h2>
+
+<p>Ruby1.9ではハッシュの新しい記法が導入されましたが、これは古い記法と混在できます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">designers1</span> <span class="o">=</span> <span class="p">{</span>
+               <span class="ss">:lisp</span> <span class="o">=&gt;</span> <span class="s2">&quot;John McCarthy&quot;</span><span class="p">,</span>
+               <span class="ss">:ruby</span> <span class="o">=&gt;</span> <span class="s2">&quot;Yukihiro Matsumoto&quot;</span><span class="p">,</span>
+               <span class="ss">:perl</span> <span class="o">=&gt;</span> <span class="s2">&quot;Larry Wall&quot;</span><span class="p">,</span>
+               <span class="ss">:smalltalk</span> <span class="o">=&gt;</span> <span class="s2">&quot;Alan Kay&quot;</span><span class="p">,</span>
+               <span class="ss">:&#39;C++&#39;</span> <span class="o">=&gt;</span>  <span class="s2">&quot;Bjarne Stroustrup&quot;</span><span class="p">,</span>
+             <span class="p">}</span>
+ 
+ <span class="n">designers2</span> <span class="o">=</span> <span class="p">{</span>
+               <span class="ss">java</span><span class="p">:</span> <span class="s2">&quot;James Gosling&quot;</span><span class="p">,</span>
+               <span class="ss">python</span><span class="p">:</span> <span class="s2">&quot;Guido van Rossum&quot;</span><span class="p">,</span>
+               <span class="ss">javascript</span><span class="p">:</span> <span class="s2">&quot;Brendan Eich&quot;</span><span class="p">,</span>
+               <span class="ss">scala</span><span class="p">:</span> <span class="s2">&quot;Martin Odersky&quot;</span><span class="p">,</span>
+             <span class="p">}</span>
+ 
+ <span class="n">designers</span> <span class="o">=</span> <span class="n">designers1</span><span class="o">.</span><span class="n">merge</span> <span class="n">designers2</span>
+  <span class="c1"># =&gt; {:lisp=&gt;&quot;John McCarthy&quot;, :ruby=&gt;&quot;Yukihiro Matsumoto&quot;, :perl=&gt;&quot;Larry Wall&quot;, :smalltalk=&gt;&quot;Alan Kay&quot;, :&quot;C++&quot;=&gt;&quot;Bjarne Stroustrup&quot;, :java=&gt;&quot;James Gosling&quot;, :python=&gt;&quot;Guido van Rossum&quot;, :javascript=&gt;&quot;Brendan Eich&quot;, :scala=&gt;&quot;Martin Odersky&quot;}</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

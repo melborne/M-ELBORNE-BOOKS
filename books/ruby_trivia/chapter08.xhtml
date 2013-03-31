@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>7. 前置コロン</h2>
+
+<p>文字列をシンボルに変換するときは通常、String#internかString#to_symを使いますが、文字列リテラルにコロンを前置することでも可能です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="s1">&#39;goodbye&#39;</span><span class="o">.</span><span class="n">intern</span> <span class="c1"># =&gt; :goodbye</span>
+ <span class="s1">&#39;goodbye&#39;</span><span class="o">.</span><span class="n">to_sym</span> <span class="c1"># =&gt; :goodbye</span>
+ 
+ <span class="ss">:&#39;goodbye&#39;</span> <span class="c1"># =&gt; :goodbye</span>
+ 
+ <span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;goodbye&#39;</span>
+ <span class="ss">:&quot;</span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="ss">&quot;</span> <span class="c1"># =&gt; :goodbye</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

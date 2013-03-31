@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>55. 秘伝メソッド</h2>
+
+<p>上で見たようにRubyではキーワードや記号文字をメソッド名に使えますが、使えないものもあります。例えば、<code>.</code>, <code>,</code>, <code>@</code>, <code>=</code>, <code>(</code>, <code>#</code>, <code>$</code> などはメソッド名には使えませんよね。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="o">.</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected &#39;.&#39;</span>
+
+<span class="k">def</span> <span class="p">,</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected &#39;,&#39;</span>
+
+<span class="k">def</span> <span class="err">@</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected $undefined</span>
+
+<span class="k">def</span> <span class="o">=</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected &#39;=&#39;</span>
+
+<span class="k">def</span> <span class="p">(</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:2: syntax error, unexpected keyword_end</span>
+
+<span class="k">def</span> <span class="c1">#</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:4: syntax error, unexpected $end</span>
+
+<span class="k">def</span> <span class="err">$</span>
+<span class="k">end</span>
+<span class="c1"># ~&gt; -:1: syntax error, unexpected $undefined</span>
+</code></pre></div>
+
+
+<p>と、普通思いますよね。ところが、実はこれらも<code>define_method</code>を使えば、定義できるのです。先のdef_methodを使ってこれらのメソッドを定義してみます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">def</span> <span class="nf">def_method</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">body</span><span class="p">)</span>
+  <span class="n">blk</span> <span class="o">=</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="n">body</span> <span class="p">:</span> <span class="o">-&gt;</span><span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">: not implemented yet.&quot;</span> <span class="p">}</span>
+  <span class="n">klass</span><span class="o">.</span><span class="n">class_eval</span> <span class="p">{</span> <span class="n">define_method</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">blk</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Trivia</span>
+  
+<span class="k">end</span>
+
+<span class="nb">methods</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;$&quot;</span><span class="o">]</span>
+<span class="nb">methods</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">meth</span><span class="o">|</span> <span class="n">def_method</span> <span class="n">meth</span><span class="p">,</span> <span class="no">Trivia</span> <span class="p">}</span>
+
+<span class="no">Trivia</span><span class="o">.</span><span class="n">public_instance_methods</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span> <span class="c1"># =&gt; [:&quot;.&quot;, :&quot;,&quot;, :&quot;@&quot;, :&quot;=&quot;, :&quot;(&quot;, :&quot;#&quot;, :&quot;$&quot;]</span>
+</code></pre></div>
+
+
+<p>ね？</p>
+
+<p>ただ、これらのメソッドにはひとつだけ問題があります..</p>
+
+<p>それは...</p>
+
+<p>呼び出しができないのです！ ^ ^;</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="o">.</span><span class="n">new</span>
+
+<span class="n">t</span><span class="o">.</span><span class="n">.</span> <span class="c1"># =&gt; </span>
+<span class="n">t</span><span class="o">.</span><span class="n">,</span> <span class="c1"># =&gt; </span>
+<span class="n">t</span><span class="o">.</span><span class="err">@</span> <span class="c1"># =&gt; </span>
+<span class="n">t</span><span class="o">.</span><span class="n">=</span> <span class="c1"># =&gt; </span>
+<span class="n">t</span><span class="o">.</span><span class="p">(</span> <span class="c1"># =&gt; </span>
+<span class="n">t</span><span class="o">.</span><span class="c1"># # =&gt; </span>
+<span class="n">t</span><span class="o">.</span><span class="err">$</span> <span class="c1"># =&gt; </span>
+
+<span class="c1"># ~&gt; -:42: syntax error, unexpected &#39;)&#39;</span>
+<span class="c1"># ~&gt; ...1335430361_15646_549583 = (t..);$stderr.puts(&quot;!XMP1335430361...</span>
+<span class="c1"># ~&gt; ...                               ^</span>
+<span class="c1"># ~&gt; -:43: syntax error, unexpected &#39;,&#39;</span>
+<span class="c1"># ~&gt; ..._1335430361_15646_549583 = (t.,);$stderr.puts(&quot;!XMP133543036...</span>
+<span class="c1"># ~&gt; ...                               ^</span>
+<span class="c1"># ~&gt; -:44: syntax error, unexpected $undefined</span>
+<span class="c1"># ~&gt; ..._1335430361_15646_549583 = (t.@);$stderr.puts(&quot;!XMP133543036...</span>
+<span class="c1"># ~&gt; ...                               ^</span>
+<span class="c1"># ~&gt; -:45: syntax error, unexpected &#39;=&#39;</span>
+<span class="c1"># ~&gt; ..._1335430361_15646_549583 = (t.=);$stderr.puts(&quot;!XMP133543036...</span>
+<span class="c1"># ~&gt; ...                               ^</span>
+<span class="c1"># ~&gt; -:48: syntax error, unexpected $undefined</span>
+<span class="c1"># ~&gt; ..._1335430361_15646_549583 = (t.$);$stderr.puts(&quot;!XMP133543036...</span>
+<span class="c1"># ~&gt; ...                               ^</span>
+<span class="c1"># ~&gt; -:65: syntax error, unexpected $end, expecting &#39;)&#39;</span>
+</code></pre></div>
+
+
+<p>ただ、<code>Object#send</code>や<code>Method#call</code>を使って呼び出す、という手段はあります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">t</span> <span class="o">=</span> <span class="no">Trivia</span><span class="o">.</span><span class="n">new</span>
+
+<span class="n">t</span><span class="o">.</span><span class="n">send</span> <span class="s1">&#39;.&#39;</span> <span class="c1"># =&gt; &quot;.: not implemented yet.&quot;</span>
+<span class="n">t</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">call</span> <span class="c1"># =&gt; &quot;,: not implemented yet.&quot;</span>
+
+<span class="n">def_method</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="no">Trivia</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+  <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="s1">&#39;@&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">def_method</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="no">Trivia</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">str</span><span class="o">|</span>
+  <span class="s2">&quot;( </span><span class="si">#{</span><span class="n">str</span><span class="si">}</span><span class="s2"> )&quot;</span>
+<span class="k">end</span>
+
+<span class="n">t</span><span class="o">.</span><span class="n">send</span> <span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="mi">12</span> <span class="c1"># =&gt; &quot;@@@Trivia@@@&quot;</span>
+<span class="n">t</span><span class="o">.</span><span class="n">send</span> <span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="s1">&#39;I love Ruby&#39;</span>  <span class="c1"># =&gt; &quot;( I love Ruby )&quot;</span>
+</code></pre></div>
+
+
+<p>つまり、これらの記号文字メソッドは、通常の方法では定義も呼び出しもできないが、通常でない特殊な方法を使えば定義も呼び出しもできる、特殊なメソッド群と言えます。僕はこれらのメソッド群を、特殊な方法で隠されたメソッド、つまり<code>秘伝(hidden)</code>メソッドと名付けました。使い道は...なさそうです..ね..</p>
+
+<p>以上、Rubyにおける55個のトリビアを駆け足で紹介しました。新しい発見はありましたか？口元は緩みましたか？</p>
+  </body>
+</html>

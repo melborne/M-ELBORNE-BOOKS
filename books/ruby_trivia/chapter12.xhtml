@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>11. Comparable.between?</h2>
+
+<p>値が一定範囲内にあるかどうかで処理を切り分けたいことがあります。普通は次のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">pos</span> <span class="o">=</span> <span class="mi">48</span>
+<span class="n">status</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">pos</span> <span class="o">&amp;&amp;</span> <span class="n">pos</span> <span class="o">&lt;=</span> <span class="mi">50</span>
+    <span class="ss">:you_are_in</span>
+  <span class="k">else</span>
+    <span class="ss">:you_are_out</span>
+  <span class="k">end</span>
+<span class="n">status</span> <span class="c1"># =&gt; :you_are_in</span>
+</code></pre></div>
+
+
+<p>そしてCoffeeScriptを見て悔しがるのです。しかし安心して下さい、Rubyには<code>between?</code>があります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">pos</span> <span class="o">=</span> <span class="mi">48</span>
+<span class="n">status</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">pos</span><span class="o">.</span><span class="n">between?</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="ss">:you_are_in</span>
+  <span class="k">else</span>
+    <span class="ss">:you_are_out</span>
+  <span class="k">end</span>
+<span class="n">status</span> <span class="c1"># =&gt; :you_are_in</span>
+
+<span class="n">pos</span> <span class="o">=</span> <span class="s1">&#39;D&#39;</span>
+<span class="n">grade</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">pos</span><span class="o">.</span><span class="n">between?</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+    <span class="ss">:you_are_good!</span>
+  <span class="k">else</span>
+    <span class="ss">:try_again!</span>
+  <span class="k">end</span>
+<span class="n">grade</span> <span class="c1"># =&gt; :try_again!</span>
+</code></pre></div>
+
+
+<p>もっとも僕はcase派ですが..</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">pos</span> <span class="o">=</span> <span class="mi">48</span>
+<span class="n">status</span> <span class="o">=</span>
+  <span class="k">case</span> <span class="n">pos</span>
+  <span class="k">when</span> <span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">50</span>
+    <span class="ss">:you_are_in</span>
+  <span class="k">else</span>
+    <span class="ss">:you_are_out</span>
+  <span class="k">end</span>
+<span class="n">status</span> <span class="c1"># =&gt; :you_are_in</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

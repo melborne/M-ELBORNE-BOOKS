@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>33. Object#tap</h2>
+
+<p><code>tap</code>はそのブロックの評価結果を捨てるという風変わりなメソッドですが、その結果を欲しいときもたまにあります。そんなときはbreakします（thanks to knuさん）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">average</span> <span class="o">=</span> <span class="o">[</span><span class="mi">56</span><span class="p">,</span> <span class="mi">87</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">65</span><span class="o">].</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">sco</span><span class="o">|</span> <span class="k">break</span> <span class="n">sco</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">sco</span><span class="o">.</span><span class="n">size</span> <span class="p">}</span> <span class="c1"># =&gt; 69</span>
+</code></pre></div>
+
+
+<p>カップ麺好きのあなたには次のコードを贈ります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">puts</span> <span class="s2">&quot;Eat!&quot;</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="nb">sleep</span> <span class="mi">180</span> <span class="p">}</span> <span class="c1"># ３分後に&#39;Eat!&#39;</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

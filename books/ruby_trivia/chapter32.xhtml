@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>31. Enumerable#zip</h2>
+
+<p>zipはEnumerableにも定義されています。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="mi">4</span><span class="o">.</span><span class="n">.</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">)</span> <span class="c1"># =&gt; [[1, 4, 7], [2, 5, 8], [3, 6, 9]]</span>
+
+<span class="p">(</span><span class="ss">:A</span><span class="o">.</span><span class="n">.</span><span class="ss">:C</span><span class="p">)</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="ss">:E</span><span class="o">.</span><span class="n">.</span><span class="ss">:G</span><span class="p">,</span> <span class="ss">:H</span><span class="o">.</span><span class="n">.</span><span class="ss">:J</span><span class="p">)</span> <span class="c1"># =&gt; [[:A, :E, :H], [:B, :F, :I], [:C, :G, :J]]</span>
+</code></pre></div>
+
+
+<p>StructもEnumerableなオブジェクトなので、こんなこともできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">water</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span>  <span class="c1"># =&gt; #&lt;struct Beverage name=:water, cost=0&gt;</span>
+<span class="n">starbucks</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:staba</span><span class="p">,</span> <span class="mi">430</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:staba, cost=430&gt;</span>
+<span class="n">heineken</span> <span class="o">=</span> <span class="no">Beverage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:heineken</span><span class="p">,</span> <span class="mi">580</span><span class="p">)</span> <span class="c1"># =&gt; #&lt;struct Beverage name=:heineken, cost=580&gt;</span>
+
+<span class="n">water</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">starbucks</span><span class="p">,</span> <span class="n">heineken</span><span class="p">)</span> <span class="c1"># =&gt; [[:water, :staba, :heineken], [0, 430, 580]]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

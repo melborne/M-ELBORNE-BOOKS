@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>47. クラスメソッド定義</h2>
+
+<p>クラスやモジュールのメソッドを定義するときは、普通次のようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Calc</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">&gt;&gt;</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+      <span class="nb">eval</span> <span class="n">exp</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Calc</span> <span class="o">&gt;&gt;</span> <span class="s1">&#39;1 + 2&#39;</span> <span class="c1"># =&gt; 3</span>
+<span class="no">Calc</span> <span class="o">&gt;&gt;</span> <span class="s1">&#39;10 ** 2&#39;</span> <span class="c1"># =&gt; 100</span>
+</code></pre></div>
+
+
+<p>外側のクラス定義を<code>Class.new</code>や<code>Module.new</code>で行えば、次のような書き方もできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">Calc</span> <span class="o">=</span> <span class="no">Class</span><span class="o">.</span><span class="n">new</span>
+  <span class="k">def</span> <span class="nf">&gt;&gt;</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+    <span class="nb">eval</span> <span class="n">exp</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Calc</span> <span class="o">&gt;&gt;</span> <span class="s1">&#39;123 / 4.0&#39;</span> <span class="c1"># =&gt; 30.75</span>
+<span class="no">Calc</span> <span class="o">&gt;&gt;</span> <span class="s1">&#39;2 * Math::PI&#39;</span> <span class="c1"># =&gt; 6.283185307179586</span>
+</code></pre></div>
+
+
+<p>このネタは大したことありませんが、<code>Calc.&gt;&gt;</code>ってメソッド名、irb風で良くないですか？</p>
+  </body>
+</html>

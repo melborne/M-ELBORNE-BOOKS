@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>44. Float::INFINITY</h2>
+
+<p>任意の数列を作りたい、しかしその大きさは事前に決めたくないというときがあります。ここで思いつくのは<code>Enumerator</code>です。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">sequence</span> <span class="o">=</span> <span class="no">Enumerator</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">y</span><span class="o">|</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="kp">loop</span> <span class="p">{</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span> <span class="n">i</span><span class="o">+=</span><span class="mi">1</span> <span class="p">}</span> <span class="p">}</span>
+
+<span class="n">sequence</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+<span class="mi">100</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">sequence</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]</span>
+</code></pre></div>
+
+
+<p>ただ<code>Enumerator</code>を使わなくても、似たようなことは無限大定数の<code>Float::INFINITY</code>でできます。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">sequence</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="ss">Float</span><span class="p">:</span><span class="ss">:INFINITY</span>
+<span class="n">sequence</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+
+<span class="n">seq</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">to_enum</span>
+<span class="mi">100</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">seq</span><span class="o">.</span><span class="n">next</span> <span class="p">}</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]</span>
+</code></pre></div>
+
+
+<p>Infinityはゼロ除算で取れるので、次のように書いてもいいです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+
+<span class="mi">1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># =&gt; [1.0, 2.5, 4.0, 5.5, 7.0, 8.5, 10.0, 11.5, 13.0, 14.5, 16.0, 17.5, 19.0, 20.5, 22.0, 23.5, 25.0, 26.5, 28.0, 29.5]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

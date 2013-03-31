@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>付録１　RubyのObjectクラスは過去を再定義するタイムマシンだ！</h2>
+
+<p>Objectクラスはすべてのクラスのスーパークラスです。よってObjectクラスに定義されたインスタンスメソッドoは、すべてのクラスで定義されたインスタンスメソッドoになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="k">class</span> <span class="nc">Object</span>
+  <span class="k">def</span> <span class="nf">o</span>
+    <span class="s1">&#39;o&#39;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span>
+
+<span class="k">end</span>
+
+<span class="no">Object</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+<span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+<span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+<span class="no">MyClass</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+</code></pre></div>
+
+
+<p>ClassクラスもObjectクラスのサブクラスなので、このインスタンスメソッドoは当然、Classクラスのインスタンスメソッドoにもなります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Class</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+</code></pre></div>
+
+
+<p>一方、Classクラスはすべてのクラスの生成クラスです。よってClassクラスのインスタンスメソッドとなったoは、すべてのクラスのクラスメソッドself.oになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="nb">Array</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+<span class="no">Hash</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+<span class="no">MyClass</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+</code></pre></div>
+
+
+<p>この中には当然Objectクラスが含まれているので、Classクラスのインスタンスメソッドoは、Objectクラスのクラスメソッドself.oにもなります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Object</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+</code></pre></div>
+
+
+<p>ところが、ObjectクラスはClassクラスのスーパークラスなので、Objectクラスのクラスメソッドになったself.oはClassクラスのクラスメソッドself.oにもなります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="no">Class</span><span class="o">.</span><span class="n">o</span> <span class="c1"># =&gt; &quot;o&quot;</span>
+</code></pre></div>
+
+
+<p>整理しましょう。</p>
+
+<p>Objectクラスが１つのインスタンスメソッドoを持つと、それがClassクラスを含むすべてのクラスのインスタンスメソッドoとなり、Objectを含むすべてのクラスのクラスメソッドself.oとなり、Classクラスのクラスメソッドself.oとなります。こうしてRuby実行空間に存在するすべてのクラスには、インスタンスメソッドoとクラスメソッドself.oが生まれることとなるのです。</p>
+
+<p>ClassクラスはObjectクラスを含むすべてのクラスの母です。従って、すべてのクラスはClassクラスの特性に依存します。一方でClassクラスはその子であるObjectクラスの弟子（サブクラス）です。従って、ClassクラスはObjectクラスの特性を受け継ぎます。</p>
+
+<p>このような多層的循環構造によってObjectクラスが変わると、Classクラスが変わり、その変化はすべてのクラスを変えるのです。つまりObjectクラスへのオペレーションは、過去の事実（Classクラス）を再定義し、延いては今の世界（すべてのクラス）を再構築するのです！</p>
+
+<p>そうRubyのObjectクラスは...</p>
+
+<p>「時空を超えて過去を再定義し、世界を再構築するタイムマシン」なのです！</p>
+
+<p>ところでObjectクラスにはKernelモジュールがincludeされています。モジュールに定義されたインスタンスメソッドはそれをincludeしたクラスのものになるので、KernelモジュールのインスタンスメソッドはObjectクラスのものになります。</p>
+
+<p>つまりKernelモジュールはObjectクラスに過去を変えるためのメソッドを補給します。Kernelモジュールから補給されたメソッドは、Objectクラスに定義されたメソッドとして同様に、過去を再定義し今の世界を再構築します。</p>
+
+<p>そうRubyのKernelモジュールは...</p>
+
+<p>「タイムマシン補助燃料タンク」だったのです！</p>
+  </body>
+</html>

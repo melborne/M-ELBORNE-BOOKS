@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>42. String#unpack</h2>
+
+<p>数字列を決まった長さ基準で区切りたいときはどうしますか？正規表現を使うのでしょうか。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a_day</span> <span class="o">=</span> <span class="s1">&#39;20120214&#39;</span>
+<span class="n">a_day</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/(.{4})(.{2})(.{2})/</span><span class="p">)</span><span class="o">.</span><span class="n">captures</span> <span class="c1"># =&gt; [&quot;2012&quot;, &quot;02&quot;, &quot;14&quot;]</span>
+</code></pre></div>
+
+
+<p><code>String#unpack</code>を使うともっと簡単かもしれません（thanks to @no6v1さん）。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">a_day</span> <span class="o">=</span> <span class="s1">&#39;20120214&#39;</span>
+<span class="n">a_day</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;A4A2A2&#39;</span><span class="p">)</span> <span class="c1"># =&gt; [&quot;2012&quot;, &quot;02&quot;, &quot;14&quot;]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

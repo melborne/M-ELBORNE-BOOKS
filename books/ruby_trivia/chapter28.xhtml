@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title>知って得する！５５のRubyのトリビアな記法</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2>27. Structクラス</h2>
+
+<p>属性主体のクラスを生成するときには<code>Struct</code>が便利です。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">module</span> <span class="nn">Fortune</span>
+   <span class="k">class</span> <span class="nc">Teller</span>
+     <span class="nb">require</span> <span class="s2">&quot;date&quot;</span>
+     <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">ask</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">occupation</span><span class="p">)</span>
+       <span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="o">.</span><span class="n">next_day</span><span class="p">(</span><span class="nb">rand</span> <span class="mi">10</span><span class="p">)</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:occupation</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">length_of_life</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+     <span class="p">(</span><span class="ss">Fortune</span><span class="p">:</span><span class="ss">:Teller</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">occupation</span><span class="p">)</span> <span class="o">-</span> <span class="no">Date</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">date</span><span class="p">))</span><span class="o">.</span><span class="n">to_i</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">charlie</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;charlie&#39;</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
+ <span class="n">charlie</span><span class="o">.</span><span class="n">length_of_life</span><span class="p">(</span><span class="s1">&#39;2013/3/1&#39;</span><span class="p">)</span> <span class="c1"># =&gt; 6</span>
+</code></pre></div>
+
+
+<p>実はStruct.newはブロックを取れるので、下のような書き方もできます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">Person</span> <span class="o">=</span> <span class="no">Struct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:age</span><span class="p">,</span> <span class="ss">:occupation</span><span class="p">)</span> <span class="k">do</span>
+   <span class="k">def</span> <span class="nf">length_of_life</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+     <span class="p">(</span><span class="ss">Fortune</span><span class="p">:</span><span class="ss">:Teller</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">occupation</span><span class="p">)</span> <span class="o">-</span> <span class="no">Date</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">date</span><span class="p">))</span><span class="o">.</span><span class="n">to_i</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+
+ <span class="n">charlie</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;charlie&#39;</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="ss">:programmer</span><span class="p">)</span>
+ <span class="n">charlie</span><span class="o">.</span><span class="n">length_of_life</span><span class="p">(</span><span class="s1">&#39;2013/3/1&#39;</span><span class="p">)</span> <span class="c1"># =&gt; 3</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>
