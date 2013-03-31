@@ -4,7 +4,7 @@
   gumroad: RjRO
   summary: 主として他言語におけるプログラミング経験者向けに書かれたプログラミング言語「Ruby」の入門書
   author: kyoendo 
-  format: EPUB / DRMフリー
+  format: EPUB / MOBI / DRMフリー
   pages: 文庫本50頁相当
   price: 100円
   release: 2012年12月1日
@@ -26,10 +26,10 @@
   gumroad: xfJY
   summary: ブログサイトの構築を通してJekyllの基礎を学ぶチュートリアル
   author: kyoendo
-  format: EPUB / DRMフリー
+  format: EPUB / MOBI / DRMフリー
   pages: 文庫本50頁相当
   price: 100円
-  release: 2012年12月1日
+  release: 2012年12月7日
   toc:
     - １章　Jekyllとは
     - ２章　Jekyllを知る
@@ -51,7 +51,7 @@
   gumroad: PjVk
   summary: fork, thread, actor, EventMachineなどのRubyの並列処理の基礎を学ぶチュートリアル
   author: kyoendo
-  format: EPUB / DRMフリー
+  format: EPUB / MOBI / DRMフリー
   pages: 文庫本30頁相当
   price: 100円
   release: 2012年12月13日
@@ -70,7 +70,7 @@
   gumroad: wNxf
   summary: Rubyにおけるオブジェクト指向と対比しながらJavaScriptのオブジェクト指向を学ぶチュートリアル
   author: kyoendo
-  format: EPUB / DRMフリー
+  format: EPUB / MOBI / DRMフリー
   pages: 文庫本115頁相当
   price: 100円
   release: 2012年12月15日
@@ -103,7 +103,7 @@
   gumroad: ZqRt
   summary: rackupコマンドの実行に対するエラー出力を追っていきながら、Rackを学ぶチュートリアル
   author: kyoendo
-  format: EPUB / DRMフリー
+  format: EPUB / MOBI / DRMフリー
   pages: 文庫本145頁相当
   price: 100円
   release: 2012年12月24日
@@ -118,3 +118,99 @@
     "/2012/08/06/use-rack-middleware/": エラーメッセージから学ぶRack - Middlewareの魔法
     "/2012/08/08/learn-rack-with-lack/": Rackをminifyした僅か100行のLackで学ぶRackの中身
     "/2012/08/10/build-a-matryoshka-with-ruby/": マトリョーシカはRackだけのものじゃない、あなたのRubyにもマトリョーシカを！
+20130207understand_ruby_object:
+  title: オブジェクトの理解から始めるRuby
+  image: 2013/02/ruby_object_cover.png
+  gumroad: zxUk
+  summary: Rubyにおけるクラス、モジュール、オブジェクトの基礎を学ぶための入門書
+  author: kyoendo
+  format: EPUB / MOBI / DRMフリー
+  pages: 文庫本50頁相当
+  price: 100円
+  release: 2013年2月7日
+  toc:
+    - １章　Rubyにおけるオブジェクトの種類
+    - ２章　クラスオブジェクト ─クラスとしての顔─
+    - ３章　クラスオブジェクト ─オブジェクトとしての顔─
+    - ４章　継承（Inheritance）
+    - ５章　モジュールオブジェクト
+    - ６章　インスタンスオブジェクト
+    - ７章　Singletonメソッド（抽象メソッド）
+    - ８章　extend
+    - ９章　まとめ
+    - 付録１　RubyのObjectクラスは過去を再定義するタイムマシンだ！
+    - 付録２　RubyのModuleクラスはすべてのモジュールの母であり同時にすべてのクラスの父である！
+    - 謝辞
+  blog:
+    "/2013/02/07/understand-ruby-object/": オブジェクトの理解から始めるRuby
+20130304ruby_trivia:
+  title: 知って得する！５５のRubyのトリビアな記法
+  image: 2013/03/ruby_trivia_cover.png
+  gumroad: owIqH 
+  summary: あまり広くは知られていないけれども知っているとときには有益な、Rubyの小技５５個を紹介
+  author: kyoendo
+  format: EPUB / MOBI / DRMフリー
+  pages: 文庫本120頁相当
+  price: 100円
+  release: 2013年3月4日
+  toc:
+    - はじめに
+    - 1. Arrayスタック系メソッド
+    - 2. Kernel#Array
+    - 3. 要素区切りコンマ
+    - 4. ハッシュリテラル
+    - 5. Enumerable#each_with_object
+    - 6. splat展開
+    - 7. 前置コロン
+    - 8. Enumerator#with_index
+    - 9. Integer#times
+    - 10. String#succ / Integer#succ
+    - 11. Comparable.between?
+    - 12. Array#first/last
+    - 13. 変数のnil初期化 
+    - 14. ハッシュのキー
+    - 15. メソッド引数のスペース
+    - 16. 否定
+    - 17. ％ノーテーション
+    - 18. 文字列区切り
+    - 19. Array#*
+    - 20. Array#uniq
+    - 21. 配列要素の一致判定
+    - 22. 文字列リスト%w
+    - 23. 動的継承
+    - 24. 大文字メソッド
+    - 25. 関数部分適用
+    - 26. Procによるcase判定
+    - 27. Structクラス
+    - 28. Structのデフォルト値
+    - 29. retryと引数デフォルト
+    - 30. Array#zip
+    - 31. Enumerable#zip
+    - 32. ARGF
+    - 33. Object#tap
+    - 34. 使わない変数 
+    - 35. ファイル抽出
+    - 36. Symbolにコメント
+    - 37. Kernel#loop
+    - 38. BasicObject#instance_eval
+    - 39. 正規表現:名前付き参照
+    - 40. 正規表現:POSIXブラケット
+    - 41. String#match
+    - 42. String#unpack
+    - 43. Enumerable#each_with_object
+    - 44. Float::INFINITY
+    - 45. Enumerable#grep
+    - 46. String#gsub
+    - 47. クラスメソッド定義 
+    - 48. true, false, nil
+    - 49. 強制型変換coerce
+    - 50. DATA.rewind
+    - 51. Rubyのキーワード 
+    - 52. YAMLタグ指定
+    - 53. 単項演算子 ~ (チルダ)
+    - 54. マルチバイトメソッド
+    - 55. 秘伝メソッド
+    -  謝辞
+  blog:
+    "/2013/03/04/ruby-trivias-you-should-know-4/": 知って得する！５５のRubyのトリビアな記法
+
