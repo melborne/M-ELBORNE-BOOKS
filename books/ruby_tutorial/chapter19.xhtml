@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version12" class="version">バージョン12（DRY再び）</h2>
+
+
+<p>lambda {|v| v }という手続きを返すoptというメソッドを定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">Hash</span>
+   <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">blk</span> <span class="o">=</span> <span class="n">opt</span> <span class="k">unless</span> <span class="n">blk</span>
+     <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">opt</span><span class="p">(</span><span class="kp">false</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">bottom_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">blk</span> <span class="o">=</span> <span class="n">opt</span> <span class="k">unless</span> <span class="n">blk</span>    
+     <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
+     <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="k">yield</span> <span class="n">val</span> <span class="p">}</span>
+     <span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">opt</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kp">true</span><span class="p">)</span>
+     <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">flag</span> <span class="p">?</span> <span class="n">v</span> <span class="p">:</span> <span class="o">-</span><span class="n">v</span> <span class="p">}</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>optメソッドのflag引数にデフォルトでtrueをセットしておきます。そうすればvalueがマイナスのときだけfalseを渡せばいいのです。</p>
+
+<p>果たしてこれでコードが読みやすくなったのか、わたしにはわかりません。これはちょっとやり過ぎかもしれませんが、達人に怒られないということがここでは重要なのです。</p>
+  </body>
+</html>

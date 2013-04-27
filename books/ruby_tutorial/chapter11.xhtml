@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2 id="version04" class="version">バージョン04（sort_byメソッド）</h2>
+
+
+<p>先のスクリプトにわたしは何の不満もありません。でもリファクタリングはクセになります。3行目のsortのブロックが気になる人には気になります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>少し直しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>sortに代えてsort_byを使いました。辞書の要素数が多ければこちらのほうが速度的に有利です。これは好みの問題かもしれませんが。[]に代えてsliceを使いました。sort_byが昇順ソートになっているので、sliceの範囲オブジェクトは最後尾(-1)から指定しています。</p>
+  </body>
+</html>

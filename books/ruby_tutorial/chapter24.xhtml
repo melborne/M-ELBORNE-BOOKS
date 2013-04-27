@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2 id="version17" class="version">バージョン17（top_by_lengthの定義）</h2>
+
+
+<p>次にバージョン07で示したような、最長ワードトップ30を出力するメソッドtop_by_lengthも定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="k">def</span> <span class="nf">top_by_length</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">list</span> <span class="o">=</span> <span class="n">take_by_key</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="o">|</span> <span class="o">-</span><span class="n">key</span><span class="o">.</span><span class="n">length</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">list</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="o">[</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">word</span><span class="o">.</span><span class="n">length</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ 
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
+     <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">take_by_key</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
+     <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">key</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>ここでは将来に備えて、take_by_valueと同じようにtake_by_keyを定義して、top_by_lengthはこれを使うようにします。</p>
+
+<p>top_by_lengthはその語と出現数に加えて、語長を返すようにしています。Arrayクラスのmapメソッドをここでは使っています。mapメソッドはinjectメソッド同様とても便利なメソッドです。配列の各要素の内容をブロックの処理結果で置き換えます。上の例は list.map { |item| item &lt;&lt; item[0].length } でもいいです。</p>
+
+<p>出力はこんな感じです。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1">#&gt; [[&quot;illustration&quot;, 160, 12], [&quot;therefore&quot;, 127, 9], [&quot;catherine&quot;, 126, 9], [&quot;jerusalem&quot;, 120, 9], [&quot;gutenberg&quot;, 285, 9], [&quot;elizabeth&quot;, 636, 9], [&quot;prophecy&quot;, 322, 8], [&quot;together&quot;, 105, 8], [&quot;anything&quot;, 117, 8], [&quot;pleasure&quot;, 103, 8], [&quot;judgment&quot;, 134, 8], [&quot;believe&quot;, 110, 7], [&quot;collins&quot;, 180, 7], [&quot;between&quot;, 114, 7], [&quot;wickham&quot;, 194, 7], [&quot;bingley&quot;, 306, 7], [&quot;replied&quot;, 136, 7], [&quot;history&quot;, 189, 7], [&quot;himself&quot;, 178, 7], [&quot;against&quot;, 164, 7], [&quot;because&quot;, 116, 7], [&quot;however&quot;, 179, 7], [&quot;through&quot;, 185, 7], [&quot;nothing&quot;, 235, 7], [&quot;sabbath&quot;, 215, 7], [&quot;herself&quot;, 312, 7], [&quot;another&quot;, 144, 7], [&quot;project&quot;, 262, 7], [&quot;without&quot;, 263, 7], [&quot;thought&quot;, 215, 7]]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

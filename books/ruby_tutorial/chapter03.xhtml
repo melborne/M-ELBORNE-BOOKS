@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="ruby_object">Rubyはオブジェクト指向です</h2>
+
+
+<p>依然として現在主流のプログラミング言語は手続き型です。手続き型言語では手続きは関数などのかたちでモジュール化されていますが、データ構造はそれとは別に管理されています。</p>
+
+<p>でもRubyではデータ構造も手続きと一緒にパッケージ化されており、それはオブジェクトと呼ばれています。つまりRubyではプログラムを組成する最小単位はオブジェクトです。そのためRubyプログラマのやるべきことは、「メモリ空間に必要なオブジェクトを生成し、それにメッセージを送ってその結果としてのオブジェクトを得る」というかたちでプログラムを組成することになります。</p>
+
+<p>例えば、次の例はメモリ空間に文字列オブジェクトを生成し、それにlengthというメッセージを送っています。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 12</span>
+</code></pre></div>
+
+
+<p>文字列をクォートすれば文字列オブジェクトが生成されます。生成された文字列オブジェクト'hippopotamus'は、内部に多数のメソッドを持っており、lengthメッセージが送られるとこれに対応するメソッドを検索し、あればそれを起動し結果を返します。</p>
+
+<p>通常反応するメソッドは、送られるメッセージ名と同じ名前を持っています。ですからこれからはメッセージとメソッドを区別しないで用います。メッセージを受けるオブジェクトのことを、レシーバと言うことがあります。</p>
+
+<p>注目して頂きたいのは、オブジェクトがメッセージを受けて返す値は、オブジェクトであるということです。つまり上で返された整数12は単なる整数ではなく、整数オブジェクト（正確には固定長整数オブジェクト）なのです。従ってこの返された値もメッセージを受け取ることができます。ですからRubyではこんな記述が許されます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">even?</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+<p>これはメソッドチェーンと呼ばれることがあります。</p>
+
+<p>別の例を示します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="o">[</span><span class="s1">&#39;donkey&#39;</span><span class="p">,</span> <span class="s1">&#39;alligator&#39;</span><span class="p">,</span> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># =&gt; &quot;donkey&quot;</span>
+</code></pre></div>
+
+
+<p>これはメモリ空間に3つの文字列オブジェクトを要素として含んだ、１つの配列オブジェクトを生成し、それにatメソッドを0整数オブジェクトを引数に付けて送っているコードです。任意のオブジェクトを[ ]で括ると配列オブジェクトが生成されます</p>
+
+<p>このようにメッセージには引数を付けることができます。ただしRubyはオブジェクトしか相手にしませんから、この引数はオブジェクトでなければなりません。返される結果は配列の先頭要素の'donkey'文字列オブジェクトです。確認のためこの結果にもメソッドチェーンを試みてみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="o">[</span><span class="s1">&#39;donkey&#39;</span><span class="p">,</span> <span class="s1">&#39;alligator&#39;</span><span class="p">,</span> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># =&gt; &quot;donkey&quot;</span>
+ <span class="o">[</span><span class="s1">&#39;donkey&#39;</span><span class="p">,</span> <span class="s1">&#39;alligator&#39;</span><span class="p">,</span> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">length</span> <span class="c1"># =&gt; 6</span>
+ <span class="o">[</span><span class="s1">&#39;donkey&#39;</span><span class="p">,</span> <span class="s1">&#39;alligator&#39;</span><span class="p">,</span> <span class="s1">&#39;hippopotamus&#39;</span><span class="o">].</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">even?</span> <span class="c1"># =&gt; true</span>
+</code></pre></div>
+
+
+<p>メソッドチェーンの個数に制限はありません。暇つぶしをしたいのなら次のようにしてもかまいません。</p>
+
+<div class="highlight"><pre><code class="bash"> 1.next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="se">\</span>
+  .next.next.next.next.next.next.next.next.next <span class="c"># =&gt; 100</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

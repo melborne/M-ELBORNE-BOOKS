@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2 id="version02" class="version">バージョン02（処理の分離）</h2>
+
+
+<p>10行程度のスクリプトで目的を達成できました。前置きばかりが長かったこの連載もこれで終えられます。</p>
+
+<p>でも...</p>
+
+<p>わたしはどうも気に入りません。先のコードは分かりにくいというか、Rubyっぽくないというか...</p>
+
+<p>もう一度スクリプトを見てみます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">dic</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+ <span class="k">while</span> <span class="n">line</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">gets</span>
+   <span class="n">line</span><span class="o">.</span><span class="n">downcase!</span>
+   <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+     <span class="n">word</span> <span class="o">=</span> <span class="vg">$&amp;</span>
+     <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="nb">p</span> <span class="n">dic</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>不満点を言えば...</p>
+
+<p>!を忘れただけで無限ループに陥るのがヤです。「こら」と「こら！」で確かに雰囲気は変わりますが、怒っていることに変わりはありません。</p>
+
+<p>「$&amp;」記号が意味不明です。しかも中途半端です。「$&amp;♀」なら納得しますが...（ええ、男には無くてはならないものです）。</p>
+
+<p>subの第2引数も何かを忘れちゃったようでヤです。できれば省略したい。</p>
+
+<p>なによりもオブジェクト指向してません。</p>
+
+<p>そうです。気に入らないなら改良しましょう。リファクタリングです。</p>
+
+<p>単語を切り出す処理をdicを作る処理と切り分けましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+ <span class="n">dic</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+ <span class="k">for</span> <span class="n">word</span> <span class="k">in</span> <span class="no">WORDS</span>
+   <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span>
+ <span class="k">end</span>
+ <span class="nb">p</span> <span class="n">dic</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>一行目を見てください。「Rubyはオブジェクト指向です」のところで説明した、メソッドチェーンです。ここではARGFに対しreadメソッドで一気にファイルを読み出し、まとめて小文字化した文字列オブジェクトを得ています。そしてscanメソッドを使ってそこから単語を切り出しています。scanメソッドはマッチした単語の配列を返します。これをWORDSで参照できるようにします。</p>
+
+<p>次にfor文でWORDSから単語を一つずつ取り出し辞書を作ります。</p>
+
+<p>1行目がオブジェクト指向的なコードになり、機能的にも(1)単語の切り出し(2)辞書dicの作成(3)ソートの各処理が分離して全体がすっきりしました。大分好きなかたちになりました。</p>
+  </body>
+</html>

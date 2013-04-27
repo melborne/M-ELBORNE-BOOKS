@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2 id="version25" class="version">バージョン25（クラスの拡張）</h2>
+
+
+<p>さてGUIで出力も魅力的なものになりました。もうやり残すことはなさそうです。当初単なる制御構造であったスクリプトが、WordDictionaryという立派なクラスになりました。これで将来このクラスを拡張したり、このクラスをベースにしたアプリケーションを作れます。</p>
+
+<p>で、将来っていつ？</p>
+
+<p>...</p>
+
+<p>そうです。DogYearのこの時代に、いつ来るか分からない将来を待っているゆとりなんて私たちにはないのです！自分たちから未来に向かって進むのです！何らかの形ある結果を残すのです！！</p>
+
+<p>...</p>
+
+<p>ということで...</p>
+
+<p>なんか息巻いている人がいるので、もう少し進みましょう。
+まずはもう少し機能拡張しましょう。WordDictionaryクラスから生成した複数の単語辞書オブジェクトを、相互作用させるような機能があったら楽しそうです。</p>
+
+<p>まずは2つのオブジェクトを結合する +メソッドを定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">attr_reader</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+   <span class="kp">protected</span> <span class="ss">:words</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p><strong>+</strong>メソッドは他の単語辞書オブジェクトを引数に取って、自身と引数の単語を結合した単語辞書オブジェクトを返します。つまりAオブジェクトにrubyという単語が32個あり、Bオブジェクトに18個あった場合、これらを結合したCオブジェクトにはrubyは50個あることになります。</p>
+
+<p>attr_reader :wordsは、<strong>+</strong>メソッドの実装において他のオブジェクトの@wordsインスタンス変数にアクセスできるようにします。protected :wordsにおいてその可視性を、同系のオブジェクトからのアクセスに限定します。</p>
+
+<p><strong>+</strong>メソッドのresultには2つの単語オブジェクトの単語をスペースで結合してなる文字列が入り、その文字列でWordDictionaryクラスのオブジェクトを作って返り値とします。@wordsは配列を指していますから、実装においては配列の+メソッドが使えます。</p>
+
+<p>これによって通常の算術演算のような記法で、2つの単語辞書オブジェクトを結合できるようになりました。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">alice</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/alice.txt&#39;</span><span class="p">)</span>
+ <span class="n">romeo_juliet</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;public/romeo_juliet.txt&#39;</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">alice</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="n">romeo_juliet</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="p">(</span><span class="n">alice</span> <span class="o">+</span> <span class="n">romeo_juliet</span><span class="p">)</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">}</span>
+ <span class="c1">#&gt; [[&quot;caterpillar&quot;, 28, 11], [&quot;everything&quot;, 14, 10], [&quot;adventures&quot;, 12, 10], [&quot;foundation&quot;, 25, 10], [&quot;electronic&quot;, 27, 10], [&quot;paragraph&quot;, 11, 9], [&quot;anxiously&quot;, 14, 9], [&quot;beautiful&quot;, 13, 9], [&quot;agreement&quot;, 18, 9], [&quot;trademark&quot;, 11, 9]]</span>
+ <span class="c1">#&gt; [[&quot;distributed&quot;, 18, 11], [&quot;shakespeare&quot;, 17, 11], [&quot;electronic&quot;, 19, 10], [&quot;therefore&quot;, 23, 9], [&quot;gentleman&quot;, 14, 9], [&quot;gutenberg&quot;, 24, 9], [&quot;gentlemen&quot;, 11, 9], [&quot;copyright&quot;, 16, 9], [&quot;benvolio&quot;, 17, 8], [&quot;daughter&quot;, 17, 8]]</span>
+<span class="no">Argument</span> <span class="n">has</span> <span class="n">assumed</span> <span class="n">as</span> <span class="n">a</span> <span class="n">text</span> <span class="n">string</span>
+ <span class="c1">#&gt; [[&quot;distribution&quot;, 16, 12], [&quot;shakespeare&quot;, 18, 11], [&quot;caterpillar&quot;, 28, 11], [&quot;opportunity&quot;, 11, 11], [&quot;information&quot;, 13, 11], [&quot;distributed&quot;, 22, 11], [&quot;everything&quot;, 15, 10], [&quot;adventures&quot;, 12, 10], [&quot;foundation&quot;, 25, 10], [&quot;permission&quot;, 16, 10]]</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

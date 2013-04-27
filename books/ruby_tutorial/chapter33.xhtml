@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version26" class="version">バージョン26（他の演算メソッドの定義）</h2>
+
+
+<p>じゃあ次に<strong>-</strong>メソッドを定義しましょう。ついでに<strong>&amp;</strong>メソッドと<strong>|</strong>メソッドも定義しましょう。 <strong>-</strong>メソッドは2つのオブジェクトの差分を、<strong>&amp;</strong>メソッドと<strong>|</strong>メソッドはそれぞれそれらの積と和を出力します。なお先のrubyの例を<strong>-</strong>メソッドに適用した場合、Cオブジェクトのrubyの個数は14でなく0になります。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">attr_reader</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+   <span class="kp">protected</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+
+  </body>
+</html>

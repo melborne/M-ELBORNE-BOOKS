@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<nav epub:type="toc" id="toc">
+
+<h2>目次</h2>
+
+<ol class='toc'>
+
+  <li><a href='chapter01.xhtml'>序章</a></li>
+  <li><a href='chapter02.xhtml'> １章　Rubyの特徴</a></li>
+    <ol class='toc' id='sub'>
+      <li><a href='chapter03.xhtml#ruby_object'> Rubyはオブジェクト指向です</a></li>
+      <li><a href='chapter04.xhtml#ruby_block'>Rubyのブロックは仮装オブジェクトです</a></li>
+      <li><a href='chapter05.xhtml#ruby_class'>クラスはオブジェクトの母であってクラスの子であるオブジェクトです</a></li>
+      <li><a href='chapter06.xhtml#user_friendly'>Rubyはユーザフレンドリです</a></li>
+    </ol>
+  <li><a href='chapter07.xhtml'> ２章　最頻出ワードを見つける</a></li>
+    <ol class='toc' id='sub'>
+     <li><a href='chapter08.xhtml#version01'>バージョン01（最初の一歩）</a></li>
+     <li><a href='chapter09.xhtml#version02'>バージョン02（処理の分離）</a></li>
+     <li><a href='chapter10.xhtml#version03'>バージョン03（injectメソッド）</a></li>
+     <li><a href='chapter11.xhtml#version04'>バージョン04（sort_byメソッド）</a></li>
+     <li><a href='chapter12.xhtml#version05'>バージョン05（takeメソッド）</a></li>
+     <li><a href='chapter13.xhtml#version06'>バージョン06（take_byメソッドの定義）</a></li>
+     <li><a href='chapter14.xhtml#version07'>バージョン07（Enumerable#take_byの定義）</a></li>
+     <li><a href='chapter15.xhtml#version08'>バージョン08（top_by_valueの定義）</a></li>
+     <li><a href='chapter16.xhtml#version09'>バージョン09（top_by_valueの改良）</a></li>
+     <li><a href='chapter17.xhtml#version10'>バージョン10（DRY原則）</a></li>
+     <li><a href='chapter18.xhtml#version11'>バージョン11（block_given?メソッド）</a></li>
+     <li><a href='chapter19.xhtml#version12'>バージョン12（DRY再び）</a></li>
+     <li><a href='chapter20.xhtml#version13'>バージョン13（block_given?の移動）</a></li>
+     <li><a href='chapter21.xhtml#version14'>バージョン14（ARGF.take_wordsの定義）</a></li>
+     <li><a href='chapter22.xhtml#version15'>バージョン15（make_freq_dicの定義）</a></li>
+     <li><a href='chapter23.xhtml#version16'>バージョン16（スクリプトのクラス化）</a></li>
+     <li><a href='chapter24.xhtml#version17'>バージョン17（top_by_lengthの定義）</a></li>
+     <li><a href='chapter25.xhtml#version18'>バージョン18（DRY三度）</a></li>
+     <li><a href='chapter26.xhtml#version19'>バージョン19（入力の拡張）</a></li>
+     <li><a href='chapter27.xhtml#version20'>バージョン20（ネットアクセス）</a></li>
+     <li><a href='chapter28.xhtml#version21'>バージョン21（メソッドの追加）</a></li>
+     <li><a href='chapter29.xhtml#version22'>バージョン22（出力形式の再考）</a></li>
+     <li><a href='chapter30.xhtml#version23'>バージョン23（pretty_printの定義）</a></li>
+     <li><a href='chapter31.xhtml#version24'>バージョン24（GUI版）</a></li>
+     <li><a href='chapter32.xhtml#version25'>バージョン25（クラスの拡張）</a></li>
+     <li><a href='chapter33.xhtml#version26'>バージョン26（他の演算メソッドの定義）</a></li>
+     <li><a href='chapter34.xhtml#version27'>バージョン27（DRY四度）</a></li>
+     <li><a href='chapter35.xhtml#version28'>バージョン28（ユニークワードの抽出）</a></li>
+     <li><a href='chapter36.xhtml#version29'>バージョン29（仕上げ）</a></li>
+    </ol>
+  <li><a href='chapter37.xhtml'>終章</a></li>
+  <li><a href='chapter37.xhtml'> 謝辞</a></li>
+</ol>
+</nav>
+  </body>
+</html>

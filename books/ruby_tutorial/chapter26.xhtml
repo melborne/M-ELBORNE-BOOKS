@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version19" class="version">バージョン19（入力の拡張）</h2>
+
+
+<p>さて次は何ですか？そうですね...</p>
+
+<p>せっかくクラスを作ったのに、コマンド引数しか取れないっていうのは寂しいです。では次はWordDictionaryクラスがファイル名か文字列を直接受け取れるようにしましょう。</p>
+
+<p>そのためにinput_to_stringメソッドを定義し、initializeメソッドで入力を適切に変換するようにします。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+     <span class="n">input</span> <span class="o">=</span> <span class="n">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+     <span class="vi">@words</span> <span class="o">=</span> <span class="n">input</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+     <span class="vi">@freq_dic</span> <span class="o">=</span> <span class="vi">@words</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+   <span class="k">end</span>
+   
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">input</span>
+    <span class="k">when</span> <span class="nb">String</span>
+      <span class="k">begin</span>
+        <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="s2">&quot;r:utf-8&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+      <span class="k">rescue</span>
+        <span class="nb">puts</span> <span class="s2">&quot;Argument has assumed as a text string&quot;</span> 
+        <span class="n">input</span>
+      <span class="k">end</span>
+    <span class="k">when</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">class</span>
+      <span class="n">input</span><span class="o">.</span><span class="n">read</span>
+    <span class="k">else</span>
+      <span class="k">raise</span> <span class="s2">&quot;Wrong argument. ARGF, file or string are acceptable.&quot;</span>
+    <span class="k">end</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ <span class="n">wdic1</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="n">wdic2</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;11.txt&#39;</span><span class="p">)</span>
+ <span class="n">wdic3</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">&lt;&lt;-</span><span class="no">EOS</span><span class="p">)</span>
+<span class="sh"> It was all very well to say &#39;Drink me,&#39; but the wise little Alice was not going to do THAT in a hurry. &#39;No, I&#39;ll look first,&#39; she said, &#39;and see whether it&#39;s marked &quot;poison&quot; or not&#39;; for she had read several nice little histories about children who had got burnt, and eaten up by wild beasts and other unpleasant things, all because they WOULD not remember</span>
+<span class="sh"> the simple rules their friends had taught them: such as, that a red-hot poker will burn you if you hold it too long; and that if you cut your finger VERY deeply with a knife, it usually bleeds; and she had never forgotten that, if you drink much from a bottle marked &#39;poison,&#39; it is almost certain to disagree with you, sooner or later.</span>
+<span class="no">EOS</span>
+ <span class="nb">p</span> <span class="n">wdic1</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">wdic2</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">wdic3</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+ 
+ <span class="c1">#&gt; [[&quot;the&quot;, 4507], [&quot;to&quot;, 4243], [&quot;of&quot;, 3728], [&quot;and&quot;, 3658], [&quot;her&quot;, 2225], [&quot;i&quot;, 2069], [&quot;a&quot;, 2012], [&quot;in&quot;, 1936], [&quot;was&quot;, 1848], [&quot;she&quot;, 1710]]</span>
+ <span class="c1">#&gt; [[&quot;the&quot;, 1818], [&quot;and&quot;, 940], [&quot;to&quot;, 809], [&quot;a&quot;, 690], [&quot;of&quot;, 631], [&quot;it&quot;, 610], [&quot;she&quot;, 553], [&quot;i&quot;, 545], [&quot;you&quot;, 481], [&quot;said&quot;, 462]]</span>
+ <span class="c1">#&gt; [[&quot;it&quot;, 5], [&quot;you&quot;, 5], [&quot;and&quot;, 5], [&quot;that&quot;, 4], [&quot;had&quot;, 4], [&quot;a&quot;, 4], [&quot;if&quot;, 3], [&quot;she&quot;, 3], [&quot;to&quot;, 3], [&quot;not&quot;, 3]]</span>
+</code></pre></div>
+
+
+<p>input_to_stringにおいて、case式を使って入力の種類を切り分けました。when Stringでは最初ファイル名として処理できるか試み、できない場合は文字列として処理できるようにしました。うまくいっているようです。</p>
+
+<p>WordDictionary.new(&lt;&lt;-EOS)...は、ヒアドキュメントという記法を使っています。任意記号EOSで挟まれた行が文字列として解釈されます。</p>
+  </body>
+</html>

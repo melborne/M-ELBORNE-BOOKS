@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2 id="version16" class="version">バージョン16（スクリプトのクラス化）</h2>
+
+
+<p>でも待ってください。そこまで汎用性がある汎用性があるって言うのなら...</p>
+
+<p>クラスにでもしたらどうですか？</p>
+
+<p>それならArrayクラスなどの組み込みクラスにも迷惑は掛かりませんし、なるほどいい考えかもしれません。</p>
+
+<p>では、テキストファイルを受け取ると、英単語頻度辞書を生成するWordDictionaryクラスを作りましょう。まず現在のスクリプト全体を掲載します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">module</span> <span class="nn">Enumerable</span>
+   <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+     <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Hash</span>
+   <span class="k">def</span> <span class="nf">top_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">bottom_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
+     <span class="nb">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}</span>
+     <span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="no">ARGF</span>
+   <span class="k">def</span> <span class="nf">take_words</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+     <span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">regexp</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">Array</span>
+   <span class="k">def</span> <span class="nf">make_freq_dic</span>
+     <span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">take_words</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">make_freq_dic</span>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">top_by_value</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>これらのコードにおける各メソッドをWordDictionaryクラスに実装します。このクラスはARGFオブジェクトを引数に取って、そこからワード辞書オブジェクトを生成します。Enumerableのtake_byはWordDictionary以外でも使えそうなのでこのまま残します。</p>
+
+<p>上のスクリプトは次のように生まれ変わりました。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">module</span> <span class="nn">Enumerable</span>
+   <span class="k">def</span> <span class="nf">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+     <span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">include</span> <span class="no">Enumerable</span>
+ 
+   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">argf</span><span class="p">)</span>
+     <span class="vi">@words</span> <span class="o">=</span> <span class="n">argf</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+     <span class="vi">@freq_dic</span> <span class="o">=</span> <span class="vi">@words</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">each</span>
+     <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="k">yield</span> <span class="n">elem</span> <span class="p">}</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">top_by_frequency</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="o">-</span><span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">bottom_by_frequency</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+     <span class="n">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span> <span class="p">},</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">take_by_value</span><span class="p">(</span><span class="n">nth</span><span class="p">,</span> <span class="n">sort_opt</span><span class="p">)</span>
+     <span class="vi">@freq_dic</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">:</span> <span class="n">val</span> <span class="p">}</span>
+              <span class="o">.</span><span class="n">take_by</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">sort_opt</span><span class="o">[</span><span class="n">val</span><span class="o">]</span> <span class="p">}</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+ <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">bottom_by_frequency</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>ざっと眺めてみると先のコードが大体そのまま移管されているのが分かると思います。top_by_valueとbottom_by_valueは、目的を分かりやすくするために名前をそれぞれ、top_by_frequencyとbottom_by_frequencyに変えました。</p>
+
+<p>変わったところを列挙してみます。</p>
+
+<ol>
+<li>WordDictionaryクラス</li>
+<li>include Enumerable</li>
+<li>initializeメソッド</li>
+<li>eachメソッド</li>
+</ol>
+
+
+<p>クラス定義はキーワードclassに続き、大文字で始まるクラス名を指定して行います。スクリプトが実行されたとき、このクラス定義からそのクラス名で参照可能なクラスオブジェクトが生成されます。</p>
+
+<p>include EnumerableによってEnumerableモジュールに追加したtake_byメソッドが使えるようになります。</p>
+
+<p>initializeメソッドは、WordDictionaryクラスを生成するnewメソッドが呼ばれたときに自動で実行されるメソッドです。通常ここにオブジェクトの初期化処理を書きます。</p>
+
+<p>WordDictionaryでは単語を切り出してその結果の配列を@wordsというインスタンス変数で参照できるようにします。次いで頻出ワード辞書を作り出しその結果のハッシュを、@freq_dicインスタンス変数で参照できるようにしています。</p>
+
+<p>eachメソッドにはちょっとしたマジックがあります。Enumerableモジュールには繰り返し処理のための便利なメソッドが多数存在しますが、eachメソッドをうまく定義すればWordDictionaryで生成されるオブジェクトでも、これらの便利なメソッドが使えるようになるのです。例をあとで示します。</p>
+
+<p>スクリプトの最後の3行でこのWordDictionaryクラスの使い方が分かると思います。</p>
+
+<p>ARGFを引数に取ったnewメソッドをWordDictionaryクラスに送り、これによって単語辞書オブジェクトを生成します。</p>
+
+<p>「newメソッドなんて定義してないのに何故呼べるの？」と考えた人は鋭いです。理由はこうです。</p>
+
+<p>すべてのクラスは何らかのクラスの継承クラスです。明示的に継承元クラスを指定する場合はclass WordDictionary &lt; Hash のようにします。明示的な指定がない場合Rubyは自動でObjectクラスをその継承元クラスとして指定します。ですからWordDictionaryクラスはObjectクラスの被継承者です。そして被継承者は継承元のメソッドすべてを自由に使えるのです。</p>
+
+<p>さて、eachメソッドのマジックを１つ見せます。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="n">wdic</span><span class="o">.</span><span class="n">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span> <span class="n">word</span><span class="o">.</span><span class="n">length</span> <span class="p">}</span>
+     <span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">len</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">len</span> <span class="o">&gt;</span> <span class="mi">14</span> <span class="p">}</span>
+     <span class="o">.</span><span class="n">sort</span>
+     <span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">len</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">len</span><span class="si">}</span><span class="s2"> =&gt; </span><span class="si">#{</span><span class="n">word</span><span class="o">.</span><span class="n">transpose</span><span class="o">.</span><span class="n">first</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">}</span>
+
+ <span class="c1">#&gt; 15 =&gt; [&quot;representations&quot;, &quot;merchantibility&quot;, &quot;accomplishments&quot;, &quot;acknowledgments&quot;, &quot;inconsistencies&quot;, &quot;conscientiously&quot;, &quot;superintendence&quot;, &quot;congratulations&quot;, &quot;thoughtlessness&quot;, &quot;recommendations&quot;, &quot;uncompanionable&quot;, &quot;disappointments&quot;, &quot;condescendingly&quot;, &quot;transformations&quot;, &quot;transfiguration&quot;, &quot;ecclesiasticism&quot;, &quot;notwithstanding&quot;, &quot;representatives&quot;, &quot;appropriateness&quot;, &quot;characteristics&quot;, &quot;contemporaneous&quot;, &quot;unrighteousness&quot;, &quot;remorselessness&quot;, &quot;comprehensively&quot;]</span>
+ <span class="c1">#&gt; 16 =&gt; [&quot;unenforceability&quot;, &quot;superciliousness&quot;, &quot;incomprehensible&quot;, &quot;discontentedness&quot;, &quot;inextinguishable&quot;, &quot;internationalism&quot;]</span>
+ <span class="c1">#&gt; 17 =&gt; [&quot;disinterestedness&quot;, &quot;misrepresentation&quot;, &quot;communicativeness&quot;, &quot;congregationalist&quot;, &quot;indestructibility&quot;]</span>
+</code></pre></div>
+
+
+<p>Enumerableモジュールに定義されているgroup_byメソッドを、WordDictionaryクラスのオブジェクトで使った例です。ワード長が15以上のものをグループ別に表示させています。自作のクラスがこれでずっと高級になりました。Enumerableモジュールが持っているメソッドは以下で調べられます。</p>
+
+<p><a href="http://doc.ruby-lang.org/ja/1.9.3/class/Enumerable.html" title="module Enumerable">module Enumerable</a></p>
+  </body>
+</html>

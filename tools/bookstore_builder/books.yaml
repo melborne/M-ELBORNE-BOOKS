@@ -213,4 +213,21 @@
     -  謝辞
   blog:
     "/2013/03/04/ruby-trivias-you-should-know-4/": 知って得する！５５のRubyのトリビアな記法
-
+20130426ruby_tutorial:
+  title: Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!
+  image: 2013/04/ruby_tutorial_cover.png
+  gumroad: DBgJ
+  summary: 英文小説の最頻出ワードを見つけるプログラムの作成を通してRubyの基礎を学ぶチュートリアル
+  author: kyoendo
+  format: EPUB / MOBI / DRMフリー
+  pages: 文庫本170頁相当
+  price: 100円
+  release: 2013年4月26日
+  toc:
+    - 序章
+    - １章　Rubyの特徴
+    - ２章　最頻出ワードを見つける
+    - 終章
+    - 謝辞
+  blog:
+    "/2013/04/26/find-most-frequently-words-with-ruby/": Rubyチュートリアル ─ 英文小説の最頻出ワードを見つけよう! ─ 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version01" class="version">バージョン01（最初の一歩）</h2>
+
+
+<p>突然ですが、この方針による最初のスクリプトは次のようになりました。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="n">dic</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+ <span class="k">while</span> <span class="n">line</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">gets</span>
+   <span class="n">line</span><span class="o">.</span><span class="n">downcase!</span>
+   <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">sub!</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+     <span class="n">word</span> <span class="o">=</span> <span class="vg">$&amp;</span>
+     <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="nb">p</span> <span class="n">dic</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>最初に単語と出現数のリストを格納するハッシュオブジェクトを用意します。ハッシュは通常 dic = {}で簡単に生成できますが、ここでは対応するキーがない場合のデフォルト値0を設定するために、newメソッドを呼んでいます。これにより6行目の増分が可能になります。</p>
+
+<p>Rubyはスクリプトに指定した引数をファイル名とみなして、その内容を持ったARGFというオブジェクトを作り出します。ARGFオブジェクトは、その内容にアクセスするためのメソッド群を持っており、ここではその１つであるgetsメソッドを使って、ファイルの各行を文字列オブジェクトとして得ています。</p>
+
+<p>ARGFといわれてもピンと来ませんが、何かの略です。たぶんAiR GolFかARGument Filesです。</p>
+
+<p>いえ、わかりました。ARt GarFunkelの略です。そのうちPRSMというのも出てくると思います。</p>
+
+<p>以下のサイトで「ARGF」を検索しリンクを辿れば、ARGFが持っているメソッドを調べられます。</p>
+
+<p><a href="http://rbref.heroku.com/">Ruby 1.9.3 Methods List</a></p>
+
+<p>whileループで順次ファイルの行を変数lineに読み込みます。getsメソッドはファイルの終わりに来るとnilを返しますから、ここでループが終わります。読み込まれた行はdowncase!メソッドで小文字に変換され、次にsub!メソッドでそこから単語を切り出します。</p>
+
+<p>sub!メソッドは第1引数の正規表現の条件にマッチしたものを、第2引数(ここでは空文字)に置き換えます。sub!メソッドは元のline文字列オブジェクト自体を変更します。つまりlineはマッチするたびに短くなっていき、最後にはマッチするものが無くなってnilが返りループが終わります。マッチした単語はその都度変数$&amp;でアクセスできます。</p>
+
+<p>取得したwordでハッシュdicのキーにアクセスし、対応するバリューを増分します。dicに対応wordが無い場合、デフォルト値0で項目が作成され1増分されます。</p>
+
+<p>次にハッシュオブジェクトであるdicをソートします。sortメソッドはハッシュの[key, value]を要素とする配列の配列を作り、ブロックの条件でこれをソートした結果を返します。ここではvalue値の大小でソートします。降順ソートとするためa,bを逆に書きます。</p>
+
+<p>最後に[ ]メソッドに0...30の範囲オブジェクトを渡して、対象の配列オブジェクトのみを取り出します。ドットが3つであることに注意してください。この場合は30つまり31番目の要素は範囲外になります。</p>
+
+<p>では、実際に入手したファイルでこのスクリプトを実行してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="err">$</span> <span class="n">ruby</span> <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span> <span class="mi">11</span><span class="o">.</span><span class="n">txt</span> <span class="mi">1342</span><span class="o">.</span><span class="n">txt</span> <span class="mi">18503</span><span class="o">.</span><span class="n">txt</span> 
+ <span class="o">[[</span><span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="mi">16077</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;of&quot;</span><span class="p">,</span> <span class="mi">9823</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="mi">7482</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="mi">7098</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="mi">4456</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">3841</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;that&quot;</span><span class="p">,</span> <span class="mi">3161</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;was&quot;</span><span class="p">,</span> <span class="mi">3040</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;it&quot;</span><span class="p">,</span> <span class="mi">2919</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="mi">2881</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;her&quot;</span><span class="p">,</span> <span class="mi">2550</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;she&quot;</span><span class="p">,</span> <span class="mi">2313</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;as&quot;</span><span class="p">,</span> <span class="mi">2134</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;you&quot;</span><span class="p">,</span> <span class="mi">2071</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="mi">2057</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;be&quot;</span><span class="p">,</span> <span class="mi">2044</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;is&quot;</span><span class="p">,</span> <span class="mi">2033</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;his&quot;</span><span class="p">,</span> <span class="mi">2009</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;he&quot;</span><span class="p">,</span> <span class="mi">1940</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;for&quot;</span><span class="p">,</span> <span class="mi">1927</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;with&quot;</span><span class="p">,</span> <span class="mi">1875</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;on&quot;</span><span class="p">,</span> <span class="mi">1638</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;had&quot;</span><span class="p">,</span> <span class="mi">1567</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;but&quot;</span><span class="p">,</span> <span class="mi">1519</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">1495</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="mi">1363</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;at&quot;</span><span class="p">,</span> <span class="mi">1344</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;by&quot;</span><span class="p">,</span> <span class="mi">1308</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;this&quot;</span><span class="p">,</span> <span class="mi">1249</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="s2">&quot;have&quot;</span><span class="p">,</span> <span class="mi">1201</span><span class="o">]]</span>
+</code></pre></div>
+
+
+<p>うまくいきました。'the'が英文小説における最頻出ワードであることが分かりました。上の正規表現は「'」にうまく対応していないので完全ではありませんが、一応これで仕事が片づきました。上司に報告が必要な人は、この結果をプリントアウトしてください。</p>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version03" class="version">バージョン03（injectメソッド）</h2>
+
+
+<p>でもこうなると、(2)がオブジェクト指向的でなく、制御構造中心になっているところが気になる人は気になります。</p>
+
+<p>リファクタリングしましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">b</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=&gt;</span> <span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">}</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="mi">30</span><span class="o">]</span>
+</code></pre></div>
+
+
+<p>配列のinjectメソッドは畳み込みという処理をする便利なメソッドです。injectは引数とブロックを取って引数で渡されたオブジェクトに、配列の各要素をブロック内の条件で投入していきます。</p>
+
+<p>次のコードは配列要素を順次引数10に加算した結果を返します。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="nb">p</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">mem</span><span class="p">,</span> <span class="n">var</span><span class="o">|</span> <span class="n">mem</span> <span class="o">+</span> <span class="n">var</span> <span class="p">}</span> 
+ <span class="c1"># &gt;&gt; 16</span>
+</code></pre></div>
+
+
+<p>上のスクリプトでは引数に初期値0のハッシュを与えて、ブロック内で辞書を作ります。なおinjectメソッドからの返り値をハッシュオブジェクトとするために、ブロックの返り値をdicとする必要があります。</p>
+
+<p>スクリプトが3行になりました。極めてワードエコなコードです。Rubyのパワーを垣間見ます。これなら上司も喜びます。</p>
+
+<p>オブジェクト指向の良いところは、文章を読むように左から右にコードを読めるところです。ファイルを読んで小文字にして単語を取り出す。単語からその出現数の辞書を作る。辞書をソートして先頭の30件を取り出す。</p>
+
+<p>さあ目的は達成できました。スクリプトもRubyっぽくなりました。気分がいいです。</p>
+  </body>
+</html>

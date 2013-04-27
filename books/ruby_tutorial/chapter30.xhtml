@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version23" class="version">バージョン23（pretty_printの定義）</h2>
+
+
+<p>単語の出現数を*の数で視覚化する、pretty_printメソッドを定義しましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+   <span class="n">max_stars</span> <span class="o">=</span> <span class="mi">60</span>
+   <span class="n">max_value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">max_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+   <span class="n">data</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">freq</span><span class="o">|</span>
+     <span class="n">stars</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_stars</span> <span class="o">*</span> <span class="p">(</span><span class="n">freq</span><span class="o">/</span><span class="n">max_value</span><span class="o">.</span><span class="n">to_f</span><span class="p">))</span><span class="o">.</span><span class="n">ceil</span>
+     <span class="nb">printf</span> <span class="s2">&quot;%5d:%-5s %s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">stars</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+ 
+ <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">ARGF</span><span class="p">)</span>
+ <span class="n">pretty_print</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_frequency</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>出力は次のようになります。</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="mi">16077</span><span class="ss">:the</span>   <span class="o">************************************************************</span>
+ <span class="mi">9823</span><span class="ss">:of</span>    <span class="o">*************************************</span>
+ <span class="mi">7482</span><span class="ss">:and</span>   <span class="o">****************************</span>
+ <span class="mi">7098</span><span class="ss">:to</span>    <span class="o">***************************</span>
+ <span class="mi">4456</span><span class="ss">:in</span>    <span class="o">*****************</span>
+ <span class="mi">3841</span><span class="ss">:a</span>     <span class="o">***************</span>
+ <span class="mi">3161</span><span class="ss">:that</span>  <span class="o">************</span>
+ <span class="mi">3040</span><span class="ss">:was</span>   <span class="o">************</span>
+ <span class="mi">2919</span><span class="ss">:it</span>    <span class="o">***********</span>
+ <span class="mi">2881</span><span class="ss">:i</span>     <span class="o">***********</span>
+ <span class="mi">2550</span><span class="ss">:her</span>   <span class="o">**********</span>
+ <span class="mi">2313</span><span class="ss">:she</span>   <span class="o">*********</span>
+ <span class="mi">2134</span><span class="ss">:as</span>    <span class="o">********</span>
+ <span class="mi">2071</span><span class="ss">:you</span>   <span class="o">********</span>
+ <span class="mi">2057</span><span class="ss">:not</span>   <span class="o">********</span>
+ <span class="mi">2044</span><span class="ss">:be</span>    <span class="o">********</span>
+ <span class="mi">2033</span><span class="ss">:is</span>    <span class="o">********</span>
+ <span class="mi">2009</span><span class="ss">:his</span>   <span class="o">********</span>
+ <span class="mi">1940</span><span class="ss">:he</span>    <span class="o">********</span>
+ <span class="mi">1927</span><span class="ss">:for</span>   <span class="o">********</span>
+</code></pre></div>
+
+
+<p>いい感じですね。</p>
+
+<p>prinftを使って出力をフォーマットしています。フォーマットについては、公式マニュアルの以下の頁が参考になります。</p>
+
+<p><a href="http://doc.ruby-lang.org/ja/1.9.3/method/Kernel/m/format.html" title="module function Kernel.#format">module function Kernel.#format</a></p>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h1>２章　最頻出ワードを見つける</h1>
+
+<p>さてこれまでに得た知識を基礎として、目的のRubyスクリプトを作ります。最初にベースとなるコードを提示して、これを少しずつ改良していきながらRubyを学びます。</p>
+
+<p>まずは手元にRubyで処理できる英文小説のテキストファイルを用意します。以下のサイトがよさそうです。</p>
+
+<p><a href="http://www.gutenberg.org/browse/scores/top" title="Top 100 - Project Gutenberg">Top 100 - Project Gutenberg</a></p>
+
+<p>ここから気に入った小説をplain text形式で2、3ダウンロードします。</p>
+
+<p>もしrubyインタプリタが手元にないか、ヴァージョンが古いのなら、<a href="http://www.ruby-lang.org/ja/">Ruby公式サイト</a>にアクセスして入手します。4.8.10があればいいですが1.9.3でも2.0でも足ります。ターミナルを開いて ruby -v と打てばインストールされているrubyのヴァージョンが分かります。</p>
+
+<p>さて準備が整ったら、まずは入力と出力をイメージしましょう。このRubyスクリプトの名前をtopwords.rbとします。もちろんtop10.rbでもtopoftheworld.rbでもかまいません。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="err">$</span> <span class="n">ruby</span> <span class="n">topwords</span><span class="o">.</span><span class="n">rb</span> <span class="n">novel1</span><span class="o">.</span><span class="n">txt</span> <span class="n">novel2</span><span class="o">.</span><span class="n">txt</span> <span class="n">novel3</span><span class="o">.</span><span class="n">txt</span>
+ <span class="p">{</span><span class="s1">&#39;this&#39;</span> <span class="o">=&gt;</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span> <span class="o">=&gt;</span> <span class="mi">85</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="mi">65</span><span class="p">,</span> <span class="s1">&#39;ruby&#39;</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">,</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="p">}</span>
+</code></pre></div>
+
+
+<p>rubyインタプリタにスクリプト名と上で入手したファイルを渡します。その実行結果として、最頻出単語とその出現数のリストが得られる、そんなイメージがよさそうです。</p>
+
+<p>次にRubyスクリプトの大ざっぱなプランを描きます。</p>
+
+<p>例えば次のように、</p>
+
+<ol>
+<li>コマンド引数として渡したファイルをスクリプトに取り込むためにARGFというオブジェクトを使う</li>
+<li>ARGFから順次ファイルの行を読み出す</li>
+<li>読み出した行から単語を切り出す</li>
+<li>ハッシュオブジェクトを用意して単語とその出現数の対を格納する</li>
+<li>ハッシュオブジェクトの内容をその出現数の順位で並べ替える</li>
+<li>その上位30を取り出す</li>
+</ol>
+
+  </body>
+</html>

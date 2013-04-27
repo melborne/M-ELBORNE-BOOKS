@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version05" class="version">バージョン05（takeメソッド）</h2>
+
+
+<p>でも次の方がもっとすっきりします。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="no">WORDS</span> <span class="o">=</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">downcase</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">)</span>
+ <span class="no">DICTIONARY</span> <span class="o">=</span> <span class="no">WORDS</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span> <span class="o">|</span><span class="n">dic</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">dic</span><span class="o">[</span><span class="n">word</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span> <span class="n">dic</span> <span class="p">}</span>
+ <span class="nb">p</span> <span class="no">DICTIONARY</span><span class="o">.</span><span class="n">sort_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="o">-</span><span class="n">val</span> <span class="p">}</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>valを負数にすれば降順ソートになります。takeメソッドは先頭から30要素を取ります。</p>
+
+<h3>TMTOWTDI</h3>
+
+<p>「同じことをやるのに複数のやり方があっていい」というのがPerlの流れを汲むRubyの流儀です。ですからRubyではこのように同じ処理を複数の方法で実現できます。</p>
+
+<p>この「同じことをやるのに複数のやり方があっていい」という考え方は、英語では -TMTOWTDI- といいます。</p>
+
+<blockquote><p>There's More Than One Way To Do It</p></blockquote>
+
+<p>だそうです。最初に見たとき、</p>
+
+<blockquote><p>TiMe TO WheTher Die or Ill</p></blockquote>
+
+<p>かと思いました。</p>
+
+<p>でもいま、本当の答えに気が付きました。 -TMTOWTDI- は正規表現だったんです。</p>
+
+<blockquote><p>/Today's (Mon|Tue) Or (Wed|Thu) Day/I</p></blockquote>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+<h2 id="version20" class="version">バージョン20（ネットアクセス）</h2>
+
+
+<p>ここまで来たらもう一歩。</p>
+
+<p>小説データは元々ネットにあるんですから、いちいちファイルにダウンロードしないで、直接ネットから取れたらうれしいです。</p>
+
+<p>open-uriライブラリというのを使うと、httpに簡単にアクセスできるようになります。</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="nb">require</span> <span class="s2">&quot;open-uri&quot;</span>
+  <span class="k">class</span> <span class="nc">WordDictionary</span>
+    <span class="kp">private</span>
+    <span class="k">def</span> <span class="nf">input_to_string</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+     <span class="k">case</span> <span class="n">input</span>
+     <span class="k">when</span> <span class="sr">/^http/</span>
+       <span class="k">begin</span>
+         <span class="nb">open</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+       <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">e</span>
+         <span class="nb">puts</span> <span class="n">e</span>
+         <span class="nb">exit</span>
+       <span class="k">end</span>
+     <span class="k">when</span> <span class="nb">String</span>
+       <span class="k">begin</span>
+         <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="s2">&quot;r:utf-8&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">}</span>
+       <span class="k">rescue</span>
+         <span class="nb">puts</span> <span class="s2">&quot;Argument has assumed as a text string&quot;</span> 
+         <span class="n">input</span>
+       <span class="k">end</span>
+     <span class="k">when</span> <span class="no">ARGF</span><span class="o">.</span><span class="n">class</span>
+       <span class="n">input</span><span class="o">.</span><span class="n">read</span>
+     <span class="k">else</span>
+       <span class="k">raise</span> <span class="s2">&quot;Wrong argument. ARGF, file or string are acceptable.&quot;</span>
+     <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">wdic</span> <span class="o">=</span> <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;http://www.gutenberg.org/files/245/245.txt&#39;</span><span class="p">)</span>
+  <span class="nb">p</span> <span class="n">wdic</span><span class="o">.</span><span class="n">top_by_length</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="c1">#&gt; [[&quot;inconsequentialities&quot;, 1, 20], [&quot;straightforwardly&quot;, 1, 17], [&quot;unenforceability&quot;, 1, 16], [&quot;acquaintanceship&quot;, 3, 16], [&quot;reproachlessness&quot;, 1, 16], [&quot;misunderstanding&quot;, 1, 16], [&quot;stenographically&quot;, 1, 16], [&quot;preposterousness&quot;, 1, 16], [&quot;responsibilities&quot;, 1, 16], [&quot;incomprehensible&quot;, 1, 16], [&quot;charlottesville&quot;, 1, 15], [&quot;acknowledgments&quot;, 1, 15], [&quot;unrighteousness&quot;, 2, 15], [&quot;multitudinously&quot;, 1, 15], [&quot;unphilosophical&quot;, 1, 15], [&quot;impossibilities&quot;, 2, 15], [&quot;inconspicuously&quot;, 1, 15], [&quot;inconsequential&quot;, 2, 15], [&quot;conscientiously&quot;, 1, 15], [&quot;notwithstanding&quot;, 3, 15], [&quot;merchantibility&quot;, 1, 15], [&quot;architecturally&quot;, 2, 15], [&quot;daguerreotypist&quot;, 1, 15], [&quot;representations&quot;, 1, 15], [&quot;unhandkerchiefs&quot;, 1, 15], [&quot;correspondingly&quot;, 3, 15], [&quot;picturesqueness&quot;, 2, 15], [&quot;proportionately&quot;, 1, 15], [&quot;unconsciousness&quot;, 1, 15], [&quot;exemplification&quot;, 1, 15]]</span>
+</code></pre></div>
+
+
+<p>open-uriライブラリをrequireして、input_to_stringに新しい分岐条件を加えます。ネットアクセスがうまくいかない場合は、エラーメッセージを表示してスクリプトの実行を終了します。</p>
+
+<p>これで一層便利になりました。</p>
+  </body>
+</html>

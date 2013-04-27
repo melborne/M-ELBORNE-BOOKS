@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ja">
+  <head>
+    <title></title>
+    <link href='css/style.css' rel='stylesheet' type='text/css'/>
+<link href='css/syntax.css' rel='stylesheet' type='text/css'/>
+  </head>
+  <body>
+
+
+<h2 id="version27" class="version">バージョン27（DRY四度）</h2>
+
+
+<p>さて次にやるべきことは分かってますね？そう、Don't Repeat Yourself!です。</p>
+
+<p>上の4つの演算はその中の演算子が異なるだけです。先の例のようにこれをブロックやオブジェクト化して渡す方法がありますが、ここではもっとスマートにシンボルを使って渡してみましょう。</p>
+
+<div class="highlight"><pre><code class="ruby"> <span class="k">class</span> <span class="nc">WordDictionary</span>
+   <span class="kp">attr_reader</span> <span class="ss">:words</span>
+   <span class="k">def</span> <span class="nf">+</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:+</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">-</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:-</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">&amp;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:&amp;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="k">def</span> <span class="nf">|</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+     <span class="n">arithmetics</span><span class="p">(</span><span class="ss">:|</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+   <span class="k">end</span>
+ 
+   <span class="kp">private</span>
+   <span class="k">def</span> <span class="nf">arithmetics</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@words</span><span class="o">.</span><span class="n">send</span> <span class="n">op</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+     <span class="no">WordDictionary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+</code></pre></div>
+
+
+<p>arithmeticsメソッド内でsendメソッドを使っている点がポイントです。sendメソッドは、シンボルで表現されたメソッドを実行できるようにします。これでコードがすっきりしました。</p>
+  </body>
+</html>
