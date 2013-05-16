@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta name="dtb:uid" content="[&quot;http://melborne.github.io/books/20130426ruby_tutorial.html&quot;, &quot;BookID&quot;, &quot;URL&quot;]"/>
+    <meta name="dtb:depth" content="1"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>Rubyチュートリアル ～英文小説の最頻出ワードを見つけよう!</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="item_cover1" playOrder="1">
+      <navLabel>
+        <text>Cover</text>
+      </navLabel>
+      <content src="cover.xhtml"/>
+    </navPoint>
+    <navPoint id="item_chapter01" playOrder="2">
+      <navLabel>
+        <text>序章</text>
+      </navLabel>
+      <content src="chapter01.xhtml"/>
+    </navPoint>
+    <navPoint id="item_chapter02" playOrder="3">
+      <navLabel>
+        <text>１章　Rubyの特徴</text>
+      </navLabel>
+      <content src="chapter02.xhtml"/>
+      <navPoint id="item_chapter03" playOrder="4">
+        <navLabel>
+          <text>Rubyはオブジェクト指向です</text>
+        </navLabel>
+        <content src="chapter03.xhtml#ruby_object"/>
+      </navPoint>
+      <navPoint id="item_chapter04" playOrder="5">
+        <navLabel>
+          <text>Rubyのブロックは仮装オブジェクトです</text>
+        </navLabel>
+        <content src="chapter04.xhtml#ruby_block"/>
+      </navPoint>
+      <navPoint id="item_chapter05" playOrder="6">
+        <navLabel>
+          <text>クラスはオブジェクトの母であってクラスの子であるオブジェクトです</text>
+        </navLabel>
+        <content src="chapter05.xhtml#ruby_class"/>
+      </navPoint>
+      <navPoint id="item_chapter06" playOrder="7">
+        <navLabel>
+          <text>Rubyはユーザフレンドリです</text>
+        </navLabel>
+        <content src="chapter06.xhtml#user_friendly"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="item_chapter07" playOrder="8">
+      <navLabel>
+        <text>２章　最頻出ワードを見つける</text>
+      </navLabel>
+      <content src="chapter07.xhtml"/>
+      <navPoint id="item_chapter08" playOrder="9">
+        <navLabel>
+          <text>バージョン01（最初の一歩）</text>
+        </navLabel>
+        <content src="chapter08.xhtml#version01"/>
+      </navPoint>
+      <navPoint id="item_chapter09" playOrder="10">
+        <navLabel>
+          <text>バージョン02（処理の分離）</text>
+        </navLabel>
+        <content src="chapter09.xhtml#version02"/>
+      </navPoint>
+      <navPoint id="item_chapter10" playOrder="11">
+        <navLabel>
+          <text>バージョン03（injectメソッド）</text>
+        </navLabel>
+        <content src="chapter10.xhtml#version03"/>
+      </navPoint>
+      <navPoint id="item_chapter11" playOrder="12">
+        <navLabel>
+          <text>バージョン04（sort_byメソッド）</text>
+        </navLabel>
+        <content src="chapter11.xhtml#version04"/>
+      </navPoint>
+      <navPoint id="item_chapter12" playOrder="13">
+        <navLabel>
+          <text>バージョン05（takeメソッド）</text>
+        </navLabel>
+        <content src="chapter12.xhtml#version05"/>
+      </navPoint>
+      <navPoint id="item_chapter13" playOrder="14">
+        <navLabel>
+          <text>バージョン06（take_byメソッドの定義）</text>
+        </navLabel>
+        <content src="chapter13.xhtml#version06"/>
+      </navPoint>
+      <navPoint id="item_chapter14" playOrder="15">
+        <navLabel>
+          <text>バージョン07（Enumerable#take_byの定義）</text>
+        </navLabel>
+        <content src="chapter14.xhtml#version07"/>
+      </navPoint>
+      <navPoint id="item_chapter15" playOrder="16">
+        <navLabel>
+          <text>バージョン08（top_by_valueの定義）</text>
+        </navLabel>
+        <content src="chapter15.xhtml#version08"/>
+      </navPoint>
+      <navPoint id="item_chapter16" playOrder="17">
+        <navLabel>
+          <text>バージョン09（top_by_valueの改良）</text>
+        </navLabel>
+        <content src="chapter16.xhtml#version09"/>
+      </navPoint>
+      <navPoint id="item_chapter17" playOrder="18">
+        <navLabel>
+          <text>バージョン10（DRY原則）</text>
+        </navLabel>
+        <content src="chapter17.xhtml#version10"/>
+      </navPoint>
+      <navPoint id="item_chapter18" playOrder="19">
+        <navLabel>
+          <text>バージョン11（block_given?メソッド）</text>
+        </navLabel>
+        <content src="chapter18.xhtml#version11"/>
+      </navPoint>
+      <navPoint id="item_chapter19" playOrder="20">
+        <navLabel>
+          <text>バージョン12（DRY再び）</text>
+        </navLabel>
+        <content src="chapter19.xhtml#version12"/>
+      </navPoint>
+      <navPoint id="item_chapter20" playOrder="21">
+        <navLabel>
+          <text>バージョン13（block_given?の移動）</text>
+        </navLabel>
+        <content src="chapter20.xhtml#version13"/>
+      </navPoint>
+      <navPoint id="item_chapter21" playOrder="22">
+        <navLabel>
+          <text>バージョン14（ARGF.take_wordsの定義）</text>
+        </navLabel>
+        <content src="chapter21.xhtml#version14"/>
+      </navPoint>
+      <navPoint id="item_chapter22" playOrder="23">
+        <navLabel>
+          <text>バージョン15（make_freq_dicの定義）</text>
+        </navLabel>
+        <content src="chapter22.xhtml#version15"/>
+      </navPoint>
+      <navPoint id="item_chapter23" playOrder="24">
+        <navLabel>
+          <text>バージョン16（スクリプトのクラス化）</text>
+        </navLabel>
+        <content src="chapter23.xhtml#version16"/>
+      </navPoint>
+      <navPoint id="item_chapter24" playOrder="25">
+        <navLabel>
+          <text>バージョン17（top_by_lengthの定義）</text>
+        </navLabel>
+        <content src="chapter24.xhtml#version17"/>
+      </navPoint>
+      <navPoint id="item_chapter25" playOrder="26">
+        <navLabel>
+          <text>バージョン18（DRY三度）</text>
+        </navLabel>
+        <content src="chapter25.xhtml#version18"/>
+      </navPoint>
+      <navPoint id="item_chapter26" playOrder="27">
+        <navLabel>
+          <text>バージョン19（入力の拡張）</text>
+        </navLabel>
+        <content src="chapter26.xhtml#version19"/>
+      </navPoint>
+      <navPoint id="item_chapter27" playOrder="28">
+        <navLabel>
+          <text>バージョン20（ネットアクセス）</text>
+        </navLabel>
+        <content src="chapter27.xhtml#version20"/>
+      </navPoint>
+      <navPoint id="item_chapter28" playOrder="29">
+        <navLabel>
+          <text>バージョン21（メソッドの追加）</text>
+        </navLabel>
+        <content src="chapter28.xhtml#version21"/>
+      </navPoint>
+      <navPoint id="item_chapter29" playOrder="30">
+        <navLabel>
+          <text>バージョン22（出力形式の再考）</text>
+        </navLabel>
+        <content src="chapter29.xhtml#version22"/>
+      </navPoint>
+      <navPoint id="item_chapter30" playOrder="31">
+        <navLabel>
+          <text>バージョン23（pretty_printの定義）</text>
+        </navLabel>
+        <content src="chapter30.xhtml#version23"/>
+      </navPoint>
+      <navPoint id="item_chapter31" playOrder="32">
+        <navLabel>
+          <text>バージョン24（GUI版）</text>
+        </navLabel>
+        <content src="chapter31.xhtml#version24"/>
+      </navPoint>
+      <navPoint id="item_chapter32" playOrder="33">
+        <navLabel>
+          <text>バージョン25（クラスの拡張）</text>
+        </navLabel>
+        <content src="chapter32.xhtml#version25"/>
+      </navPoint>
+      <navPoint id="item_chapter33" playOrder="34">
+        <navLabel>
+          <text>バージョン26（他の演算メソッドの定義）</text>
+        </navLabel>
+        <content src="chapter33.xhtml#version26"/>
+      </navPoint>
+      <navPoint id="item_chapter34" playOrder="35">
+        <navLabel>
+          <text>バージョン27（DRY四度）</text>
+        </navLabel>
+        <content src="chapter34.xhtml#version27"/>
+      </navPoint>
+      <navPoint id="item_chapter35" playOrder="36">
+        <navLabel>
+          <text>バージョン28（ユニークワードの抽出）</text>
+        </navLabel>
+        <content src="chapter35.xhtml#version28"/>
+      </navPoint>
+      <navPoint id="item_chapter36" playOrder="37">
+        <navLabel>
+          <text>バージョン29（仕上げ）</text>
+        </navLabel>
+        <content src="chapter36.xhtml#version29"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="item_chapter37" playOrder="38">
+      <navLabel>
+        <text>終章</text>
+      </navLabel>
+      <content src="chapter37.xhtml"/>
+    </navPoint>
+    <navPoint id="item_chapter38" playOrder="39">
+      <navLabel>
+        <text>謝辞</text>
+      </navLabel>
+      <content src="chapter38.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>
+
