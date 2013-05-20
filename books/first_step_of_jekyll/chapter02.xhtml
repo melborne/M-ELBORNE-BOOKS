@@ -13,7 +13,7 @@
 
 <p>本書の目的は、チュートリアルを通してJekyllの概要を理解することです。Jekyllに対する理解が深まれば、上記フレームワークを使った場合でもその運用が楽になるはずです。</p>
 
-<p>チュートリアルでは上記フレームワークを使わずに、Jekyllだけでブログの基礎となるファイル群を１つずつ構築していきます。ここではUnix系OSの使用を前提にしていますので、他OSの場合は適宜読み替えて下さい。</p>
+<p>チュートリアルでは上記フレームワークを使わずに、Jekyllだけでブログの基礎となるファイル群を１つずつ構築していきます。ここではUnix系OSの使用を前提にしていますので、他OSの場合は適宜読み替えて下さい。Jekyllの対応バージョンは1.0.2です。</p>
 
 <h3>トップページ</h3>
 
@@ -23,7 +23,7 @@
 </code></pre></div>
 
 
-<p>jkディレクトリに移動してトップページを作ります（jkはJekyllの略と理解してください）。JekyllではMarkdownが使えるので、index.mdを作ります。Markdownの文法については以下を参考にしてください。</p>
+<p>jkディレクトリに移動してトップページを作ります（jkはJekyllの略です）。JekyllではMarkdownが使えるので、index.mdを作ります。Markdownの文法については以下を参考にしてください。</p>
 
 <p><a href="http://blog.2310.net/archives/6" title="blog::2310 » Markdown文法の全訳">blog::2310 » Markdown文法の全訳</a></p>
 
@@ -32,13 +32,15 @@
 </code></pre></div>
 
 
-<p>そしてjekyllコマンドを実行します。</p>
+<p>そして<code>jekyll build</code>コマンドを実行します。</p>
 
-<div class="highlight"><pre><code class="bash">% jekyll
+<div class="highlight"><pre><code class="bash">% jekyll build
 </code></pre></div>
 
 
-<p>エラーメッセージが出ますが無視して<code>tree</code>します。</p>
+<p>（version1.0でサブコマンドが導入されました。）</p>
+
+<p><code>tree</code>します。</p>
 
 <div class="highlight"><pre><code class="bash">% tree
 .
@@ -57,9 +59,9 @@
 #Welcome to my JK Home Page!
 </code></pre>
 
-<p>もう一度<code>jekyll</code>して<code>tree</code>します。</p>
+<p>もう一度<code>jekyll build</code>して<code>tree</code>します。</p>
 
-<div class="highlight"><pre><code class="bash">% jekyll
+<div class="highlight"><pre><code class="bash">% jekyll build
 % tree
 .
 ├── _site
@@ -74,14 +76,19 @@
 
 <p>では結果をブラウザで確認します。次のようにします。</p>
 
-<div class="highlight"><pre><code class="bash">% jekyll --server
+<div class="highlight"><pre><code class="bash">% jekyll serve
 
-<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> regeneration: 1 files changed
-<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> INFO  WEBrick 1.3.1
-<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> INFO  ruby 1.9.3 <span class="o">(</span>2012-02-16<span class="o">)</span> <span class="o">[</span>x86_64-darwin10.8.0<span class="o">]</span>
-<span class="o">[</span>2012-05-12 10:33:43<span class="o">]</span> INFO  WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span>5476 <span class="nv">port</span><span class="o">=</span>4000
+Configuration file: none
+            Source: /Users/keyes/Google Drive/playground/jk
+       Destination: /Users/keyes/Google Drive/playground/jk/_site
+      Generating... <span class="k">done</span>.
+<span class="o">[</span>2013-05-16 21:48:12<span class="o">]</span> INFO  WEBrick 1.3.1
+<span class="o">[</span>2013-05-16 21:48:12<span class="o">]</span> INFO  ruby 2.0.0 <span class="o">(</span>2013-02-24<span class="o">)</span> <span class="o">[</span>x86_64-darwin12.2.0<span class="o">]</span>
+<span class="o">[</span>2013-05-16 21:48:12<span class="o">]</span> INFO  WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span>11794 <span class="nv">port</span><span class="o">=</span>4000
 </code></pre></div>
 
+
+<p>（version1.0で従来の<code>jekyll --server</code>からserveまたはserverサブコマンドを利用するようになりました。）</p>
 
 <p>4000番ポートでWEBrickが立ち上がりました。http://localhost:4000を開きます。</p>
 
@@ -107,14 +114,14 @@
 
 <p>当然ながらHTMLによる構造化レイアウトができていません。早速用意します。</p>
 
-<p>まずはルートに<code>_layouts</code>ディレクトリを作ります。layoutファイルをlayout.htmlとしてここに配置します。</p>
+<p>まずはルートに<code>_layouts</code>ディレクトリを作ります。layoutファイルをdefault.htmlとしてここに配置します。</p>
 
 <div class="highlight"><pre><code class="bash">% mkdir _layouts
-% touch _layouts/layout.html
+% touch _layouts/default.html
 </code></pre></div>
 
 
-<p>layout.htmlをエディタで開いて、次のような内容にします。</p>
+<p>default.htmlをエディタで開いて、次のような内容にします。</p>
 
 <div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
@@ -130,11 +137,13 @@
 
 <p>html内の<code>{{  }}</code>はLiquidテンプレートによる埋め込み指定です。Jekyllでは<a href="https://github.com/Shopify/liquid" title="Shopify/liquid">Liquid</a>というテンプレートエンジンが使えます。titleでは<code>page.title</code>により対象ページのタイトルを、bodyでは<code>content</code>により対象ページのコンテンツを埋め込むように指定しています。ここではこのlayoutが読み込まれたことを分かるようにするために、<strong>rendered with layout template</strong>という文字を入れました。</p>
 
-<p>再度サーバーを起動して変化を見ます。ここでは<code>--auto</code>オプションを付けて起動してみます。</p>
+<p>再度サーバーを起動して変化を見ます。ここでは<code>--watch</code>オプションを付けて起動してみます。</p>
 
-<div class="highlight"><pre><code class="bash">% jekyll --server --auto
+<div class="highlight"><pre><code class="bash">% jekyll serve --watch
 </code></pre></div>
 
+
+<p>（version1.0では従来の<code>jekyll --auto</code>からserveサブコマンドに--watchオプションを渡すようになりました。）</p>
 
 <p>ブラウザで確認します。
 <img src="images/jk01.png" alt="Alt title" /></p>
@@ -147,7 +156,7 @@
 <p>これはindex.mdでどのテンプレートを使うかをちゃんと指定していないからです。ここでYAML Front-Matterの出番です。<code>index.md</code>を次のように直します。</p>
 
 <pre><code>---
-layout: layout
+layout: default
 title: Oh! My JK
 ---
 #Welcome to my JK Home Page!
@@ -155,12 +164,12 @@ title: Oh! My JK
 
 <p>ここでは同時にタイトルもセットしました。サーバーはそのままにブラウザをリロードします。</p>
 
-<p><img src="images/jk03.png" alt="Alt title" /></p>
+<p><img src="images/jk02.png" alt="Alt title" /></p>
 
 <br clear='all' />
 
 
-<p>今度はうまくいきました。<code>--auto</code>オブション指定により、変更が直ちに反映されました。ソースも見てみます。</p>
+<p>今度はうまくいきました。<code>--watch</code>オブション指定により、変更が直ちに反映されました。ソースも見てみます。</p>
 
 <div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;head&gt;</span>

@@ -7,26 +7,24 @@
 <link href='css/syntax.css' rel='stylesheet' type='text/css'/>
   </head>
   <body>
-<h2>本書について</h2>
+<h2>１２章　まとめ</h2>
 
-<p>本書は、ブログ「<a href="http://melborne.github.com/" title="hp12c">hp12c</a>」における以下の記事の電子書籍版です。</p>
+<p>チュートリアルは以上です。</p>
 
-<blockquote><p><a href="http://melborne.github.com/2012/05/13/first-step-of-jekyll/" title="30分のチュートリアルでJekyllを理解する">30分のチュートリアルでJekyllを理解する</a></p></blockquote>
+<p>最後にここに記述したJekyllの機能をまとめておきます。</p>
 
-<p>メディア向けの調整および誤記の修正を行って電子書籍化しました。EPUBデータの生成には、Rubyで作られた<a href="https://github.com/melborne/maliq" title="melborne/maliq">melborne/maliq</a>を使っています。</p>
+<ol>
+<li><p><code>jekyll</code>コマンドは<code>_site</code>ディレクトリ以下に変換ファイルを生成する。</p></li>
+<li><p>YAML Front-Matter付きのファイルはその設定に従い変換され、YAML Front-Matter無しのファイルはそのままコピーされる。</p></li>
+<li><p>ページごとの設定はそのYAML Front-Matterで行い、サイト全体の設定は_config.ymlで行う。</p></li>
+<li><p>記事ファイルは<code>:year-:month-:day-:title</code>のフォーマットで、_postsディレクトリ以下に配置する。</p></li>
+<li><p>レイアウトファイルは_layoutディレクトリ以下に配置する。</p></li>
+<li><p>サイト情報にはグローバル変数<code>site</code>でアクセスできる。</p></li>
+<li><p>ページ情報にはグローバル変数<code>page</code>でアクセスできる。</p></li>
+<li><p>Liquidテンプレート<code>{{ }}</code>または<code>{% %}</code>を使ってサイトまたはページオブジェクトの埋め込みができる。</p></li>
+<li><p><code>_plugins</code>ディレクトリ以下にPlugin Scriptを配置することにより、機能拡張が可能である。</p></li>
+<li><p><code>jekyll new</code>コマンドでブログのひな形が生成できる。</p></li>
+</ol>
 
-<h2>著者について</h2>
-
-<p><strong>kyoendo(a.k.a melborne)</strong></p>
-
-<p>Rubyを愛するブログ「<a href="http://melborne.github.com/" title="hp12c">hp12c</a>」の管理者。東京在住。妻と二人暮らし。</p>
-
-<blockquote><p>github: <a href="https://github.com/melborne" title="melborne (kyoendo)">melborne (kyoendo)</a></p>
-
-<p>twitter: <a href="https://twitter.com/merborne" title="kyoendo (merborne) on Twitter">kyoendo (merborne) on Twitter</a></p></blockquote>
-
-<hr />
-
-<p>2012年12月7日　初版発行</p>
   </body>
 </html>

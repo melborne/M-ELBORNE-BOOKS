@@ -9,9 +9,20 @@
   <body>
 <h2>１章　Jekyllとは</h2>
 
-<p><a href="http://jekyllrb.com/" title="jekyll">Jekyll</a>は、ブログのような静的サイトを構築するためのRuby製ファイルジェネレータです。<code>Jekyll</code>はあくまでファイルジェネレータであり、<a href="http://rubyonrails.org/" title="Ruby on Rails">Rails</a>のように、コマンド一つでサイトの基礎を全部構築してくれるフレームワークではありません。むしろ<a href="http://www.sinatrarb.com/" title="Sinatra">Sinatra</a>の思想に近く、静的サイト版Sinatraといった趣のツールです。従って、Jekyllを使ってブログサイトを構築しようとする場合、その規約に従って、自分で１つずつファイルを用意していく必要があります。</p>
+<p><a href="http://jekyllrb.com/" title="jekyll">Jekyll</a>は、ブログのような静的サイトを構築するためのRuby製ファイルジェネレータです。Jekyllの特徴としては、以下の様な点が挙げられます。</p>
 
-<p>一方で、Sinatraに<a href="http://jp.padrinorb.com/" title="Padrino で素敵なウェブ開発を - Padrino Ruby Web Framework">Padrino</a>があるように、Jekyllにもそれをフレームワーク化するツールがあります。<a href="http://octopress.org/" title="Octopress">Octopress</a>と<a href="http://jekyllbootstrap.com/" title="Jekyll-Bootstrap">Jekyll-Bootstrap</a>です。</p>
+<ol>
+<li><p>HTML簡略記法としてMarkdownまたはTextile記法が使える。</p></li>
+<li><p>テンプレート言語Liquidを使って、シンタックスハイライト、gist、その他のタグの埋め込みによる拡張が簡単にできる。</p></li>
+<li><p>Githubが提供するホスティングサービス「GitHub Pages」のエンジンとして利用されているので、Jekyllで構築されたサイトを無料で簡単に公開できると共に、gitによりそのソースおよび記事データの一元管理ができる。</p></li>
+<li><p>Jekyllは静的サイトを構築するため軽いサイトが構築しやすい。</p></li>
+<li><p>HTML整形後の文章をローカル環境で確認することができる。</p></li>
+</ol>
+
+
+<p>一方で、<code>Jekyll</code>はあくまでファイルジェネレータであり、<a href="http://rubyonrails.org/" title="Ruby on Rails">Rails</a>のように、コマンド一つでサイトの基礎を全部構築してくれるフレームワークではありません。むしろ<a href="http://www.sinatrarb.com/" title="Sinatra">Sinatra</a>の思想に近く、静的サイト版Sinatraといった趣のツールです。従って、Jekyllを使ってブログサイトを構築しようとする場合、その規約に従って、自分で１つずつファイルを用意していく必要があります。</p>
+
+<p>しかしながら、Sinatraに<a href="http://jp.padrinorb.com/" title="Padrino で素敵なウェブ開発を - Padrino Ruby Web Framework">Padrino</a>があるように、Jekyllにもそれをフレームワーク化するツールがあります。<a href="http://octopress.org/" title="Octopress">Octopress</a>と<a href="http://jekyllbootstrap.com/" title="Jekyll-Bootstrap">Jekyll-Bootstrap</a>です。</p>
 
 <h3>Octopress</h3>
 
@@ -26,5 +37,9 @@
 <p>Octopressは簡単な一方で、少しお仕着せのところがあり自由度が少なく感じます。自分の好みにあわせてデザインを変更したり、他の人の作ったデザインを適用したりしたい人は、<code>Jekyll-Bootstrap</code>をより気に入ると思います。Octopressよりもデザインテーマのモジュール化が進んでいて、簡単にその切り替えができるように作られています。現状ではまだテーマが少ないですが（http://themes.jekyllbootstrap.com/を参照のこと）、他の人のテーマを参考に、そのいいとこ取りをして自分のテーマを用意することもできます。本家サイトの解説が非常に充実していますので、その使い方は概ねこれで足ります。日本語の解説は次のサイトが参考になります。</p>
 
 <blockquote><p><a href="http://krakenbeal.blogspot.jp/2012/05/ruby-jekyll-jekyll-bootstrap.html" title="ruby と jekyll と jekyll-bootstrap で静的サイトを作る - KRAKENBEAL RECORDS">ruby と jekyll と jekyll-bootstrap で静的サイトを作る - KRAKENBEAL RECORDS</a></p></blockquote>
+
+<h3>jekyll newコマンド</h3>
+
+<p>Jekyll version 1.0より<code>new</code>というサブコマンドが導入されました。これはコマンド一つでブログサイトのひな形を構築するいわゆるscaffoldingを実現します。生成されるひな形にはコメントシステムやソーシャルサービスとの連携機能などはないものの、ブログの基本的要素は既に揃っています。ブログを運用しつつ全体を理解しながら少しづつ独自の改良を加えていく、といった場合には上記フレームワークに頼らないこの方法が最適でしょう。<code>new</code>の使い方については第１１章で触れます。</p>
   </body>
 </html>

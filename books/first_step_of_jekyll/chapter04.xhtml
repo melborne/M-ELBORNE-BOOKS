@@ -9,17 +9,17 @@
   <body>
 <h2>４章　デフォルト設定の変更</h2>
 
-<p>前のソースにおいてはファイル名から<strong>Jekyll  tutorial</strong>というタイトルが自動的にセットされていることが分かります。Front-Matterを使って、タイトルとついでに投稿日も変えてみましょう。<code>_posts/2012-05-01-Jekyll-Tutorial.md</code>を修正します。</p>
+<p>前のソースにおいてはファイル名から<strong>Jekyll Tutorial</strong>というタイトルが自動的にセットされていることが分かります。Front-Matterを使って、タイトルとついでに投稿日も変えてみましょう。<code>_posts/2013-05-16-Jekyll-Tutorial.md</code>を修正します。</p>
 
 <pre><code>---
 layout: post
 title: Jekyllのチュートリアル
-date: 2012-05-02
+date: 2013-05-17
 ---
 Jekyll is a simple, blog aware, static site generator.
 </code></pre>
 
-<p>日付を変えたので<strong>http://localhost:4000/2012/05/02/Jekyll-Tutorial.html</strong>にアクセスします。</p>
+<p>日付を変えたので<strong>http://localhost:4000/2013/05/17/Jekyll-Tutorial.html</strong>にアクセスします。</p>
 
 <p><img src="images/jk05.png" alt="Alt title" /></p>
 
@@ -33,17 +33,17 @@ Jekyll is a simple, blog aware, static site generator.
 <p>個別ページの設定はそのFront-Matterで行うということが分かりました。では全体的な設定はどこでするのでしょうか。それはルートに_config.ymlというファイルを用意して、そこで行います。試しに記事のパス形式を変えてみます。ここではサーバーの再起動が必要です。</p>
 
 <pre><code>% echo permalink: /:categories/:year-:month-:day/:title &gt; _config.yml
-% jekyll
+% jekyll build
 % tree
 .
 ├── _config.yml
 ├── _layouts
-│   ├── layout.html
+│   ├── default.html
 │   └── post.html
 ├── _posts
-│   └── 2012-05-01-Jekyll-Tutorial.md
+│   └── 2013-05-16-Jekyll-Tutorial.md
 ├── _site
-│   ├── 2012-05-02
+│   ├── 2013-05-17
 │   │   └── Jekyll-Tutorial
 │   │       └── index.html
 │   └── index.html
@@ -53,5 +53,41 @@ Jekyll is a simple, blog aware, static site generator.
 </code></pre>
 
 <p><code>_site</code>ディレクトリを見てわかるように、記事のパスが変わりました。</p>
+
+<p>更に、記事にカテゴリーを付けてみます。ここでは<code>_posts/2013-05-16-Jekyll-Tutorial.md</code>を<strong>blog</strong>,<strong>technology</strong>カテゴリーに属するよう設定します。記事ファイルを開いてそのFront-matterにcategories設定を追加します。</p>
+
+<pre><code>---
+layout: post
+title: Jekyllのチュートリアル
+date: 2013-05-17
+categories: blog technology     &lt;-- ここを追加
+---
+Jekyll is a simple, blog aware, static site generator.
+</code></pre>
+
+<p>再度ビルドします。</p>
+
+<pre><code>% jekyll build
+% tree
+.
+├── _config.yml
+├── _layouts
+│   ├── default.html
+│   └── post.html
+├── _posts
+│   └── 2013-05-16-Jekyll-Tutorial.md
+├── _site
+│   ├── blog
+│   │   └── technology
+│   │       └── 2013-05-17
+│   │           └── Jekyll-Tutorial
+│   │               └── index.html
+│   └── index.html
+└── index.md
+
+5 directories, 7 files
+</code></pre>
+
+<p>_siteディレクトリを見ると、記事が/blog/technology/パス以下に配置されているのが確認できます。先に進む前にcategories設定は削除しておいて下さい。</p>
   </body>
 </html>

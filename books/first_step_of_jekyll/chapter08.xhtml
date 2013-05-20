@@ -12,12 +12,12 @@
 <p>変数siteはサイト全体の情報を持ったオブジェクトでした。一方で、個々のページの情報はグローバル変数pageが持っています。同様に<code>index.md</code>で読みだしてみます。</p>
 
 <pre><code>---
-layout: layout
+layout: default
 title: Oh! My JK
 ---
 #Welcome to my JK Home Page!
 
-server_port: {{ site.server_port }}
+port: {{ site.port }}
 
 markdown: {{ site.markdown }}
 
@@ -25,7 +25,7 @@ permalink: {{ site.permalink }}
 
 &lt;!-- {{ site }} --&gt;
 
-**Copyright © {{ site.author.name }} 2012 All rights reserved. Please contact to {{ site.author.email }}.**
+**Copyright © {{ site.author.name }} 2013 All rights reserved. Please contact to {{ site.author.email }}.**
 
 {{ page }} &lt;!-- ここを追加 --&gt;
 </code></pre>
@@ -35,9 +35,9 @@ permalink: {{ site.permalink }}
 <br clear='all' />
 
 
-<p>トップページにアクセスすると変数<code>page</code>は、<strong>layout</strong>, <strong>title</strong>, <strong>url</strong>, <strong>content</strong>の各要素を持っていることが分かります。</p>
+<p>トップページにアクセスすると変数<code>page</code>は、<strong>layout</strong>, <strong>url</strong>, <strong>content</strong>, <strong>path</strong>の各要素を持っていることが分かります。</p>
 
-<p>同じことを記事のページ(Post)でもしてみます。<code>_posts/2012-05-03-Ruby-is-Great.md</code>に追加します。</p>
+<p>同じことを記事のページ(Post)でもしてみます。<code>_posts/2013-05-18-Ruby-is-Great.md</code>に追加します。</p>
 
 <pre><code>---
 layout: post
@@ -47,7 +47,7 @@ tags: [ruby, language]
 ##Rubyとは
 Rubyは、手軽なオブジェクト指向プログラミングを実現するための種々の機能を持つオブジェクト指向スクリプト言語です。
 
-{{ page }}
+{{ page }} &lt;!-- ここを追加 --&gt;
 </code></pre>
 
 <p>アクセスします。</p>
@@ -57,6 +57,6 @@ Rubyは、手軽なオブジェクト指向プログラミングを実現する�
 <br clear='all' />
 
 
-<p>Postでは、<strong>layout</strong>, <strong>title</strong>, <strong>date</strong>, <strong>url</strong>, <strong>id</strong>, <strong>categories</strong>, <strong>next</strong>, <strong>previous</strong>, <strong>tags</strong>, <strong>content</strong>の各情報にアクセスできることが分かります。</p>
+<p>Postでは、<strong>layout</strong>, <strong>title</strong>, <strong>tags</strong>, <strong>url</strong>, <strong>date</strong>, <strong>id</strong>, <strong>categories</strong>, <strong>next</strong>, <strong>previous</strong>, <strong>content</strong>, <strong>path</strong>の各情報にアクセスできることが分かります。</p>
   </body>
 </html>

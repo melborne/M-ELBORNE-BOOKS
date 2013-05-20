@@ -10,12 +10,12 @@ h1, h2, h3 {
   color: #8B1A1A;
 }
 
-ol {
+ol.toc {
   list-style-type: none;
 }
 
-ol.wrapup {
-  list-style-type: decimal;
+ol.toc#sub li {
+  font-size:90%; 
 }
 
 pre {

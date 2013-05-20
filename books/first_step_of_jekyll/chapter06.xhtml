@@ -12,7 +12,7 @@
 <p>Jekyllでは生成されたサイトに対する情報は、グローバル変数siteを通してアクセスできます。siteがどんな情報を持っているか、ちょっと見てみます。<code>index.md</code>に戻って、次の一行を追加します。</p>
 
 <pre><code>---
-layout: layout
+layout: default
 title: Oh! My JK
 ---
 #Welcome to my JK Home Page!
@@ -30,12 +30,12 @@ title: Oh! My JK
 <p><code>site</code>で読みだし可能な設定情報が表示されました。情報はHash形式で記録されていますが、これら情報へのアクセスはメソッド呼び出しのようにドットチェーンで行えます。幾つか見てみます。index.mdを書き換えます。</p>
 
 <pre><code>---
-layout: layout
+layout: default
 title: Oh! My JK
 ---
 #Welcome to my JK Home Page!
 
-server_port: {{ site.server_port }}
+port: {{ site.port }}
 
 markdown: {{ site.markdown }}
 
@@ -67,12 +67,12 @@ permalink: {{ site.permalink }}
 <p>index.mdにauthorに関する事項を追記します。</p>
 
 <pre><code>---
-layout: layout
+layout: default
 title: Oh! My JK
 ---
 #Welcome to my JK Home Page!
 
-server_port: {{ site.server_port }}
+port: {{ site.port }}
 
 markdown: {{ site.markdown }}
 
@@ -80,7 +80,7 @@ permalink: {{ site.permalink }}
 
 {{ site }}
 
-**Copyright © {{ site.author.name }} 2012 All rights reserved. Please contact to {{ site.author.email }}.**
+**Copyright © {{ site.author.name }} 2013 All rights reserved. Please contact to {{ site.author.email }}.**
 </code></pre>
 
 <p>サーバーを再起動してからアクセスします。</p>

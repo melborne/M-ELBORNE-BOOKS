@@ -9,9 +9,7 @@
   <body>
 <h2>９章　Liquidによるシンタックスハイライト</h2>
 
-<p>さて、次にRubyの記事にプログラムコードを書いてみます。JekyllではLiquidタグを利用することによって、<a href="http://pygments.org/" title="Pygments — Python syntax highlighter">Pygments</a>によるシンタックスハイライト（Syntax Highlighting）が可能です。前準備が必要です。以下を参考にPygmentsをインストールします。</p>
-
-<p><a href="https://github.com/mojombo/jekyll/wiki/Install" title="Install · mojombo/jekyll Wiki">Install · mojombo/jekyll Wiki</a></p>
+<p>さて、次にRubyの記事にプログラムコードを書いてみます。JekyllではLiquidタグを利用することによって、<a href="http://pygments.org/" title="Pygments — Python syntax highlighter">Pygments</a>によるシンタックスハイライト（Syntax Highlighting）が可能です（version1.0でPygmentsは組み込みとなり別途インストールが不要となったようです）。</p>
 
 <p>次のコマンドを実行して<code>syntax.css</code>を生成します。</p>
 
@@ -19,7 +17,11 @@
 </code></pre></div>
 
 
-<p>_layouts/layout.htmlでこれを読み込めるようにします。</p>
+<p>pygmentizeが利用できない場合は以下のサイトなどから取得出来ます（後述するjekyll newでもsyntax.cssが得られます）。</p>
+
+<p><a href="https://github.com/mojombo/tpw/blob/master/css/syntax.css" title="tpw/css/syntax.css at master · mojombo/tpw · GitHub">tpw/css/syntax.css at master · mojombo/tpw · GitHub</a></p>
+
+<p>_layouts/default.htmlでこれを読み込めるようにします。</p>
 
 <div class="highlight"><pre><code class="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
@@ -35,18 +37,7 @@
 </code></pre></div>
 
 
-<p>そして、_config.ymlにpygmentsを使う設定を追加します。</p>
-
-<pre><code>permalink: /:categories/:year-:month-:day/:title
-author:
-  name: Charlie
-  email: charlie@gmail.com
-
-markdown: rdiscount
-pygments: true
-</code></pre>
-
-<p>準備ができました。<code>_posts/2012-05-03-Ruby-is-Great.md</code>にRubyのコードを書きます。コードは{% highlight ruby %}と{% endhighlight %}というタグで囲みます。</p>
+<p>準備ができました（version1.0ではpygmentsの_config.ymlへの設定は不要になったようです）。<code>_posts/2013-05-18-Ruby-is-Great.md</code>にRubyのコードを書きます。コードは{% highlight ruby %}と{% endhighlight %}というタグで囲みます。</p>
 
 <pre><code>---
 layout: post
@@ -79,12 +70,59 @@ puts charlie.hello
 {{ page }}
 </code></pre>
 
-<p>サーバーを再起動してブラウザで確認します。
-<img src="images/jk15.png" alt="Alt title" /></p>
+<p>サーバーを再起動してブラウザで確認します。</p>
+
+<p><img src="images/jk15.png" alt="Alt title" /></p>
 
 <br clear='all' />
 
 
-<p>あとは好きなようにsyntax.cssを弄るだけです。gistに似せた僕のsytax.cssは<a href="https://github.com/melborne/melborne.github.com/blob/source/assets/themes/twitter-ext/css/syntax.css" title="melborne.github.com/assets/themes/twitter-ext/css/syntax.css at source · melborne/melborne.github.com · GitHub">ここ</a>にありますので、利用してください。</p>
+<h3>gistタグ</h3>
+
+<p>gistタグを使って、シンタックスハイライトされた「<a href="https://gist.github.com/" title="Gists">Gists（コードスニペットサービス）</a>」のコードを貼り付けることも可能です（version1.0でgist pluginが組み込みになりました）。</p>
+
+<p>Rubyの記事でgistタグを使ってみます。</p>
+
+<pre><code>---
+layout: post
+title: Rubyは最高
+tags: [ruby, language]
+---
+##Rubyとは
+Rubyは、手軽なオブジェクト指向プログラミングを実現するための種々の機能を持つオブジェクト指向スクリプト言語です。
+
+{% gist 5598133 creature.rb %}  &lt;-- ここを追加
+
+##Try Ruby
+{% highlight ruby linenos %}
+class Person
+  def initialize(name)
+    @name = name
+  end
+
+  def hello
+    "Hello, friend!\nMy name is #{@name}!"
+  end
+end
+
+charlie = Person.new('Charlie')
+puts charlie.hello
+
+# &gt;&gt; Hello, friend!
+# &gt;&gt; My name is Charlie!
+{% endhighlight %}
+
+
+{{ page }}
+</code></pre>
+
+<p>結果を見てみます。</p>
+
+<p><img src="images/jk20.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>Gistsにアップロードしておいたコードが貼り付けられました。</p>
   </body>
 </html>

@@ -13,7 +13,7 @@
 
 <p>その前に記事をもう一つ増やしておきます。</p>
 
-<div class="highlight"><pre><code class="bash">% touch _posts/2012-05-03-Ruby-is-Great.md
+<div class="highlight"><pre><code class="bash">% touch _posts/2013-05-18-Ruby-is-Great.md
 </code></pre></div>
 
 
@@ -31,7 +31,7 @@ Rubyは、手軽なオブジェクト指向プログラミングを実現する�
 <p>そしてindex.mdを次のようにします。</p>
 
 <pre><code>---
-layout: layout
+layout: default
 title: Oh! My JK
 ---
 #Welcome to my JK Home Page!
@@ -46,7 +46,7 @@ title: Oh! My JK
 &lt;/ul&gt;
 &lt;!--  --&gt;
 
-server_port: {{ site.server_port }}
+port: {{ site.port }}
 
 markdown: {{ site.markdown }}
 
@@ -54,7 +54,7 @@ permalink: {{ site.permalink }}
 
 {{ site }}
 
-**Copyright © {{ site.author.name }} 2012 All rights reserved. Please contact to {{ site.author.email }}.**
+**Copyright © {{ site.author.name }} 2013 All rights reserved. Please contact to {{ site.author.email }}.**
 </code></pre>
 
 <p><code>for post in site.posts</code>でpostオブジェクトをイテレートして、<strong>url</strong>, <strong>date</strong>, <strong>title</strong>の各要素を読み出し、リンクを生成します。</p>
@@ -74,5 +74,65 @@ permalink: {{ site.permalink }}
 
 
 <p>いいですね。</p>
+
+<h3>記事の引用</h3>
+
+<p>一歩進んで、version1.0で導入された<code>excerpt</code>という機能を使って、記事の引用を見出しとともに表示させてみましょう。</p>
+
+<p>index.mdを修正します。</p>
+
+<pre><code>---
+layout: default
+title: Oh! My JK
+---
+#Welcome to my JK Home Page!
+
+&lt;ul&gt;
+{% for post in site.posts %}
+  &lt;li&gt;
+    &lt;a href="{{ post.url }}"&gt;{{ post.date | date_to_long_string }} : {{ post.title }}&lt;/a&gt;
+    &lt;p&gt;{{ post.excerpt }}&lt;/p&gt;  &lt;!-- ここを追加 --&gt;
+  &lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+
+port: {{ site.port }}
+
+markdown: {{ site.markdown }}
+
+permalink: {{ site.permalink }}
+
+{{ site }}
+
+**Copyright © {{ site.author.name }} 2013 All rights reserved. Please contact to {{ site.author.email }}.**
+</code></pre>
+
+<p>ブラウザで見てみます。</p>
+
+<p><img src="images/jk17.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>自動で記事の最初の行が引用として読み出されました。</p>
+
+<p>Rubyの記事がタイトルが含まれた見づらいものになってしまったので、手動で設定してみます。記事のFront-matterに<code>excerpt</code>属性をセットします。</p>
+
+<pre><code>---
+layout: post
+title: Rubyは最高
+tags: [ruby, language]
+excerpt: A dynamic, open source programming language with a focus on simplicity and productivity.
+---
+##Rubyとは
+Rubyは、手軽なオブジェクト指向プログラミングを実現するための種々の機能を持つオブジェクト指向スクリプト言語です。
+</code></pre>
+
+<p><img src="images/jk19.png" alt="Alt title" /></p>
+
+<br clear='all' />
+
+
+<p>手動設定した引用が表示されました。</p>
   </body>
 </html>
